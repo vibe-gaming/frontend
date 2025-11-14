@@ -120,3 +120,5 @@ yarn generate:cert
 -   [Stylelint](https://stylelint.io/) Для стайлгайда стилей
 -   [Commitlint](https://www.conventionalcommits.org/ru/v1.0.0/) Соглашения о коммитах
 
+## Используемая архитектура
+Данное приложение реализовано по архитектурному подходу Page first [Feature-Sliced Design](https://feature-sliced.design/)
