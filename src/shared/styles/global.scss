@@ -1,0 +1,84 @@
+@use './reset';
+@use './variables';
+
+* {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    &:focus {
+        outline: none;
+    }
+
+    &:not(input, textarea):focus-visible {
+        box-shadow: 0 0 0 2px var(--extensions-background-light-brand);
+        outline: none;
+    }
+}
+
+html {
+    font-family: var(--font-family-noto), system-ui, Avenir, Helvetica, Arial, sans-serif;
+    font-optical-sizing: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-style: normal;
+    font-synthesis: none;
+    font-variation-settings: 'slnt' 0;
+    font-weight: 400;
+    line-height: 1.5;
+    text-rendering: optimizelegibility;
+}
+
+input,
+textarea,
+button {
+    font-family: var(--font-family-noto), system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+a {
+    color: var(--text-and-icon-accent);
+    text-decoration: none;
+}
+
+strong {
+    font-weight: bold;
+}
+
+.map-container:focus,
+.map-container:focus-visible {
+    box-shadow: none;
+    outline: none;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    margin: 0;
+    appearance: none;
+}
+
+/* Firefox */
+input[type='number'] {
+    appearance: textfield;
+}
+
+body,
+#app {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    margin: 0;
+    background-color: var(--background-secondary);
+}
+
+
+// Example of media queries
+// @media (max-width: 1440px) {
+// }
+
+// @media (max-width: 1200px) {
+// }
+
+// @media (max-width: 1024px) {
+// }
+
+// @media (max-width: 768px) {
+// }

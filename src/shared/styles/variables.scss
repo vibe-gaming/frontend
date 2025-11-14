@@ -1,0 +1,177 @@
+:root {
+    --background-primary: rgb(255 255 255 / 100%);
+    --background-secondary: rgb(245 245 246 / 100%);
+    --background-tertiary: rgb(213 216 223 / 100%);
+    --background-disabled: rgb(250 250 250 / 100%);
+    --background-accent: rgb(35 178 35 / 100%);
+    --background-brand: rgb(20 100 20 / 100%);
+    --background-brand-pressed: rgb(20 100 20 / 100%);
+    --text-and-icon-primary: #323942;
+    --text-and-icon-secondary: #848E9C;
+    --text-and-icon-on-color: rgb(255 255 255 / 100%);
+    --text-and-icon-disabled: rgb(175 181 194 / 100%);
+    --text-and-icon-accent: rgb(20 100 20 / 100%);
+    --border-primary: rgb(224 226 230 / 100%);
+    --border-disabled: rgb(235 236 237 / 100%);
+    --extensions-background-surface: rgb(255 255 255 / 100%);
+    --extensions-background-inverse-primary: rgb(50 57 66 / 100%);
+    --extensions-background-overlay-dark: rgb(0 0 0 / 50%);
+    --extensions-background-overlay-light: rgb(255 255 255 / 70%);
+    --extensions-background-error: rgb(209 61 53 / 100%);
+    --extensions-background-warning: rgb(255 193 60 / 100%);
+    --extensions-background-success: rgb(35 178 35 / 100%);
+    --extensions-background-info: rgb(64 135 225 / 100%);
+    --extensions-background-light-success: rgb(209 246 209 / 100%);
+    --extensions-background-light-brand: rgb(235 251 235 / 100%);
+    --extensions-background-light-accent: rgb(227 240 255 / 100%);
+    --extensions-background-light-error: rgb(255 231 221 / 100%);
+    --extensions-background-light-warning: rgb(255 230 178 / 100%);
+    --extensions-background-control: rgb(50 57 66 / 100%);
+    --extensions-background-always-dark: #1c2024;
+    --extensions-background-always-light: #fff;
+    --extensions-text-and-icon-error: rgb(209 61 53 / 100%);
+    --extensions-text-and-icon-warning: rgb(255 193 60 / 100%);
+    --extensions-text-and-icon-success: rgb(35 178 35 / 100%);
+    --extensions-text-and-icon-always-dark: rgb(50 57 66 / 100%);
+    --extensions-text-and-icon-always-light: rgb(255 255 255 / 100%);
+    --extensions-text-and-icon-on-brand: rgb(255 255 255 / 100%);
+    --extensions-border-accent: rgb(35 178 35 / 100%);
+    --extensions-border-error: rgb(209 61 53 / 100%);
+    --extensions-border-success: rgb(35 178 35 / 100%);
+    --additional-background-additional01: #ff6500;
+    --statement-background-secondary-pressed: #ebeced;
+    --statement-background-error-pressed: #a53531;
+    --statement-background-primary-pressed: #f5f5f6;
+    --statement-border-error-pressed: #a53531;
+    --statement-background-additional01pressed: #e55f12;
+    --statement-border-primary-pressed: #e0e2e6;
+    --statement-background-warning-pressed: #ffb423;
+    --statement-text-and-icon-warning-pressed: #d87b00;
+    --statement-text-and-icon-on-color-pressed: #f5f5f6;
+    --statement-text-and-icon-primary-pressed: #495563;
+    --statement-text-and-icon-secondary-pressed: #bdc2ce;
+    --statement-text-and-icon-error-pressed: #a53531;
+    --statement-background-tertiary-pressed: #bdc2ce;
+    --additional-background-additional03: #fff1c0;
+    --statement-background-inverse-primary-pressed: #1c2024;
+    --additional-shadow-primary: #000;
+    --statement-background-always-light-pressed: #f5f5f6;
+    --statement-text-and-icon-always-dark-pressed: #495563;
+    --statement-text-and-icon-on-brand-pressed: #495563;
+    --additional-background-additional02: #848e9c;
+    --additional-background-splashscreen: #0050c8;
+    --statement-border-focused: #70f077;
+    --statement-border-accent-pressed: #2c76c0;
+    --statement-text-and-icon-accent-pressed: #2c76c0;
+    --statement-background-accent-pressed: #2c76c0;
+    --statement-background-control-pressed: #495563;
+    --additional-background-progress-button-accent: #1a6198;
+    --additional-background-progress-button-brand: #5baa00;
+    --statement-border-success-pressed: #afe641;
+    --statement-text-and-icon-success-pressed: #afe641;
+    --statement-background-brand-pressed: #0d63e4;
+    --statement-background-success-pressed: #afe641;
+    --statement-background-light-success-pressed: #d9fbb0;
+    --information-dark-sense-dark: #6d2a3d;
+    --information-light-sense-light: #ffe1e8;
+    --information-dark-water-dark: #155f4b;
+    --information-light-storm-light: #fde8ff;
+    --information-dark-storm-dark: #682d66;
+    --information-light-earthlight: #e5fdc1;
+    --information-dark-crab-dark: #8b2f2c;
+    --information-light-air-light: #d9fcff;
+    --information-light-panda-light: #f5f5f6;
+    --information-medium-sense-medium: #c75871;
+    --information-light-crab-light: #ffdfde;
+    --information-medium-storm-medium: #b966be;
+    --information-medium-air-medium: #3890c3;
+    --information-dark-panda-dark: #323942;
+    --information-medium-water-medium: #33ac88;
+    --information-dark-wind-dark: #3a356e;
+    --information-medium-crab-medium: #d13d35;
+    --information-light-chick-light: #fff1c0;
+    --information-light-whale-light: #cfeafe;
+    --information-medium-whale-medium: #4087e1;
+    --information-medium-earth-medium: #A7E92F;
+    --information-dark-air-dark: #174d6b;
+    --information-dark-earth-dark: #41600d;
+    --information-light-firelight: #fff1e7;
+    --information-dark-whale-dark: #0c4669;
+    --information-light-wind-light: #f1f0fb;
+    --information-medium-fire-medium: #ce6538;
+    --information-medium-wind-medium: #7a74c9;
+    --information-light-water-light: #d2fcea;
+    --information-dark-fire-dark: #702f05;
+    --information-dark-chick-dark: #8f4900;
+    --information-medium-sand-medium: #d49e06;
+    --information-light-sand-light: #fff2c3;
+    --information-medium-panda-medium: #848e9c;
+    --information-dark-sand-dark: #76510a;
+    --information-medium-chick-medium: #ffc13c;
+    --information-light-brand-light: #e3fcc7;
+    --information-dark-brand-dark: #2a5e00;
+    --information-medium-brand-medium: #A7E92F;
+
+    /* Shadows */
+    --shadow-l: 0px 8px 32px rgb(50 57 66 / 16%);
+    --shadow-m: 0px 4px 20px rgb(50 57 66 / 14%);
+    --shadow-s: 0px 2px 12px rgb(50 57 66 / 8%);
+
+    /* Line Heights */
+    --line-height-xxs: 14px;
+    --line-height-xs: 16px;
+    --line-height-s: 19px;
+    --line-height-m: 22px;
+    --line-height-ml: 24px;
+    --line-height-l: 27px;
+    --line-height-xl: 32px;
+    --line-height-xxl: 44px;
+    --line-height-xxxl: 65px;
+
+    /* Font Sizes */
+    --font-size-xxs: 10px;
+    --font-size-xs: 12px;
+    --font-size-s: 14px;
+    --font-size-m: 16px;
+    --font-size-ml: 18px;
+    --font-size-l: 20px;
+    --font-size-xl: 24px;
+    --font-size-xxl: 32px;
+    --font-size-xxxl: 48px;
+
+    /* Font Weights */
+    --font-weight-normal: 400;
+    --font-weight-regular: 400;
+    --font-weight-medium: 500;
+    --font-weight-semi-bold: 600;
+    --font-weight-bold: 700;
+
+    /* Font Families */
+    --font-family-noto: 'Noto Sans', sans-serif;
+    --font-family-landing: stolzl, sans-serif;
+
+    /* Spacers */
+    --spacers-0: 0px;
+    --spacers-2xs: 4px;
+    --spacers-xs: 8px;
+    --spacers-s: 12px;
+    --spacers-m: 16px;
+    --spacers-l: 20px;
+    --spacers-xl: 24px;
+    --spacers-2xl: 28px;
+    --spacers-3xl: 32px;
+    --spacers-4xl: 36px;
+    --spacers-5xl: 40px;
+    --spacers-6xl: 48px;
+    --spacers-7xl: 56px;
+    --spacers-8xl: 64px;
+    --spacers-9xl: 96px;
+
+    /* Ease Bezier */
+    --ease-bezier: cubic-bezier(0.05, 0.7, 0.1, 1);
+
+    /* Widths */
+    --container-width-desktop: 1440px;
+    --container-width-mobile: 375px;
+    --sidebar-width-desktop: 248px;
+}
