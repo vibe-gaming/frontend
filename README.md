@@ -1,75 +1,122 @@
 # Frontend for HACK-the-ICE v7.0
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Это репозиторий для frontend-приложения проекта команды VibeGaming для хакатона Hack-the-ICE v7.0.
 
-Currently, two official plugins are available:
+## Разработка
+Перед началом разработки нужно установить node > 18.1, можно воспользоваться [nvm](https://github.com/nvm-sh/nvm), далее:
+```sh
+// Нужно включить corepack
+corepack enable
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+// Устанавливаем yarn 4 версии
+yarn set version 4.9.1
 
-## React Compiler
-
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
-
-Note: This will impact Vite dev & build performances.
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+// Установка всех пакетов
+yarn install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Команды для разработки
+```sh
+// Запуск среды разработки консоли:
+yarn dev
 ```
+
+Команды для сборки (prod)
+```sh
+// Сборка frontend-приложения
+yarn build
+
+```
+## Flow работы с ветками
+- `main` Прод ветка
+- `feat/*` Ветки новых фич
+- `bugfix/*` Ветки исправлений багов
+- `hotfix/*` Ветки исправлений срочных багов
+
+## Генерация контрактов
+Для взаимодействия с API и обеспечения согласованности между серверной и клиентской частями приложения используется кодогенерация контрактов на основе спецификации API OpenAPI.
+
+Подготовьте файл спецификации API: Убедитесь, что у вас есть файл спецификации API в формате json (обычно это файл swagger.json). Если его нет, сначала получите его от своего сервера API или сгенерируйте с помощью инструментов, таких как Swagger или OpenAPI Generator.
+
+Запустите команду генерации: Запустите подготовленную команду в директории `./src/shared/api`
+```
+yarn generate:api
+```
+
+Или авто-генерация происходит когда запускается dev среда, например:
+```
+yarn dev
+```
+
+После генерации контрактов вы можете использовать сгенерированный код для взаимодействия с вашим API из клиентской части вашего приложения импортировав методы или хуки следующим образом:
+
+```
+import * from '@/shared/api'
+```
+Это позволит вам обеспечить согласованность и уменьшить вероятность ошибок при обращении к API.
+
+### Важность исходного файла Swagger JSON и сгенерированного кода
+При генерации контрактов важно следовать определенным правилам и практикам, чтобы обеспечить согласованность и безопасность взаимодействия между клиентской и серверной частями вашего приложения.
+
+- **Не редактировать сгенерированный код** <br />
+Сгенерированный код представляет собой автоматически созданные классы, интерфейсы и методы, которые обеспечивают взаимодействие с вашим API. Внесение изменений в сгенерированный код может привести к нарушению согласованности и несоответствию контрактов, что в свою очередь может привести к ошибкам в работе вашего приложения.
+
+- **Не изменять Swagger JSON вручную** <br />
+Swagger JSON - это файл спецификации вашего API, который описывает доступные эндпоинты, методы и параметры. Изменение этого файла вручную может привести к несогласованности между клиентской и серверной частями вашего приложения, а также к ошибкам в ваших запросах и ответах.
+
+- **Просьба об изменениях в Swagger JSON у бэкенд-разработчика** <br />
+Вместо того чтобы редактировать Swagger JSON или сгенерированный код самостоятельно, рекомендуется обсудить любые изменения в API с вашим бэкенд-разработчиком. После согласования изменений бэкенд-разработчик может внести соответствующие изменения в файл спецификации API, а затем нужно будет перегенерировать код.
+
+- **Избежание проблем и получение преимуществ** <br />
+Соблюдение этих правил поможет избежать несоответствий и ошибок в работе вашего приложения, а также обеспечит согласованность между клиентской и серверной частями. Это упростит разработку, обслуживание и масштабирование вашего приложения, а также повысит его надежность и безопасность.
+
+## Конфигурации
+
+### Переменные окружения
+Все публичные env-переменные записываются в глобальный объект `__GLOBAL___` в runtime моменте.
+
+#### Основные переменные
+- **VITE_API_URL**=http://localhost:80/api/v1: URL-адрес API, с которым приложение будет взаимодействовать
+- **VITE_APP_TAG_VERSION**=local: Тег версии приложения для идентификации окружения. Для стендов версия берется из тега докер-сборки
+
+### Типы конфигурационных файлов
+
+#### .env файлы
+- `.env.development`: Переменные для разработки
+
+#### Конфигурационные файлы приложения
+- `vite.config.js`: Конфигурация Vite
+- `tsconfig.json`: Конфигурация TypeScript
+- `eslint.config.js`: Конфигурация ESLint
+- `stylelint.config.js`: Конфигурация Stylelint
+- `kubb.config.ts`: Конфигурация Kubb для генерации API контрактов
+
+### Как конфигурировать локальный сервер
+Для локальной разработки используется файл .env.development.
+*Примечание: Переменные описанные в .env файлах – доступны глобально для всех приложений и пакетов.*
+
+
+## SSL-сертификат для локальной разработки
+
+Установите mkcert
+```
+brew install mkcert && mkcert -install
+```
+
+Далее нужно сгенерировать ssl сертификат
+```
+yarn generate:cert
+```
+
+## Используемые инструменты и библиотеки
+
+-   [Vite](https://vitejs.dev/) Для сборки/разработки веб-проектов
+-   [TypeScript](https://www.typescriptlang.org/) Для статичной типизации кода
+-   [Tanstack Router](https://tanstack.com/router/) Для маршрутизации веб-проектов
+-   [Tanstack Query](https://tanstack.com/query/) Для стратегии инвалидации HTTP-кеша
+-   [Kubb](https://kubb.dev/) Для кодогенерации OpenAPI
+-   [Prettier](https://prettier.io) Для форматирования кода
+-   [Eslint](https://eslint.org) Для стайлгайда скриптов
+-   [Stylelint](https://stylelint.io/) Для стайлгайда стилей
+-   [Commitlint](https://www.conventionalcommits.org/ru/v1.0.0/) Соглашения о коммитах
+
