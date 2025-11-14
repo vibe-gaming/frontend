@@ -1,7 +1,48 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ]
+    "$schema": "https://json.schemastore.org/tsconfig",
+    "include": [
+        "**/*.ts",
+        "**/*.tsx",
+        "eslint.config.js",
+        "prettier.config.js",
+        "vite.config.js",
+        "src"
+    ],
+    "exclude": ["dist", "build", "node_modules"],
+    "compilerOptions": {
+        "target": "ESNext",
+        "jsx": "react-jsx",
+        "module": "ESNext",
+        "lib": ["DOM", "ESNext", "es2017"],
+        "allowJs": true,
+        "types": ["vite/client"],
+        "resolveJsonModule": true,
+        "composite": false,
+        "declaration": true,
+        "declarationMap": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "inlineSources": false,
+        "isolatedModules": true,
+        "preserveWatchOutput": true,
+
+        /* Bundler mode */
+        "moduleResolution": "bundler",
+        "allowImportingTsExtensions": true,
+        "verbatimModuleSyntax": true,
+        "noEmit": true,
+
+        /* Linting */
+        "skipLibCheck": true,
+        "strict": true,
+        "noUnusedLocals": false,
+        "noUnusedParameters": false,
+        "noFallthroughCasesInSwitch": true,
+        "noUncheckedSideEffectImports": true,
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["./src/*"],
+            "@/assets/*": ["./assets/*"]
+        }
+    }
 }

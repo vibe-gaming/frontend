@@ -1,0 +1,13 @@
+package-lock.json
+package.json
+pnpm-lock.yaml
+yarn.lock
+node_modules
+.husky
+coverage
+.prettierignore
+.stylelintignore
+index.html
+*.yaml
+README.md
+.gitlab-ci.yml
