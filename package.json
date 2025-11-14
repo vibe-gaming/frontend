@@ -4,8 +4,8 @@
     "version": "0.0.0",
     "type": "module",
     "scripts": {
-        "dev": "vite",
-        "build": "tsc -b && vite build",
+        "dev": "yarn generate:api && vite --port 3000 --host && dotenv -e .env.development.local",
+        "build": "yarn generate:api && vite build && tsc",
         "lint": "yarn lint:scripts & yarn lint:styles",
         "lint:scripts": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
         "lint:styles": "stylelint \"**/*.{css,scss}\"",
@@ -22,7 +22,11 @@
         "cspell": "cspell src/**/*.{ts,tsx,css,scss} --config .cspell.json --words-only --unique"
     },
     "dependencies": {
+        "@tanstack/react-query": "^5.90.9",
+        "@tanstack/react-router": "^1.136.1",
+        "@tanstack/react-router-devtools": "^1.136.1",
         "@types/lodash.isequal": "^4.5.8",
+        "@vitejs/plugin-basic-ssl": "^2.1.0",
         "autoprefixer": "^10.4.22",
         "axios": "^1.13.2",
         "browserslist": "^4.28.0",
@@ -58,6 +62,7 @@
         "@kubb/plugin-ts": "^4.5.9",
         "@kubb/plugin-zod": "^4.5.9",
         "@kubb/react": "^4.3.1",
+        "@tanstack/react-query-devtools": "^5.90.2",
         "@tanstack/router-plugin": "^1.136.1",
         "@types/node": "^24.10.0",
         "@types/react": "^19.2.2",
