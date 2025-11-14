@@ -20,8 +20,12 @@
         "clean:generated": "rm -rf ./src/shared/api/generated"
     },
     "dependencies": {
+        "browserslist": "^4.28.0",
+        "browserslist-to-esbuild": "^2.1.1",
+        "postcss": "^8.5.6",
         "react": "^19.2.0",
-        "react-dom": "^19.2.0"
+        "react-dom": "^19.2.0",
+        "sass": "^1.94.0"
     },
     "devDependencies": {
         "@commitlint/cli": "^20.1.0",
