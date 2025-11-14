@@ -9,6 +9,6 @@ export function getContext() {
     }
 }
 
-export function Provider({ children }: { children: React.ReactNode }) {
+export const WithTanstackQuery: React.FC<React.PropsWithChildren> = ({ children }) => {
     return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 }

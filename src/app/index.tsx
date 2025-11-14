@@ -1,31 +1,17 @@
-import { useState } from 'react'
+import dayjs from 'dayjs'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
+import duration from 'dayjs/plugin/duration'
+import relativeTime from 'dayjs/plugin/relativeTime'
+import utc from 'dayjs/plugin/utc'
 
-import './index.module.scss'
+import { WithProviders } from './providers'
 
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
+dayjs.extend(customParseFormat)
+dayjs.extend(duration)
+dayjs.extend(utc)
+dayjs.locale('ru')
+dayjs.extend(relativeTime)
 
 export const App = () => {
-    const [count, setCount] = useState(0)
-
-    return (
-        <>
-            <div>
-                <a href='https://vite.dev' rel='noreferrer' target='_blank'>
-                    <img alt='Vite logo' className='logo' src={viteLogo} />
-                </a>
-                <a href='https://react.dev' rel='noreferrer' target='_blank'>
-                    <img alt='React logo' className='logo react' src={reactLogo} />
-                </a>
-            </div>
-            <h1>Vite + React</h1>
-            <div className='card'>
-                <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
-                <p>
-                    Edit <code>src/App.tsx</code> and save to test HMR
-                </p>
-            </div>
-            <p className='read-the-docs'>Click on the Vite and React logos to learn more</p>
-        </>
-    )
+    return <WithProviders />
 }
