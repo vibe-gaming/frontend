@@ -1,12 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/_auth/login')({
+export const Route = createFileRoute('/login/')({
     onEnter: () => {
         document.title = 'Авторизация'
     },
-    component: LoginPage,
 })
-
-function LoginPage() {
-    return <div>LoginPage</div>
-}
