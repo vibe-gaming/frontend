@@ -1,0 +1,99 @@
+import { AxiosError } from 'axios'
+import { useAtom } from 'jotai'
+import { atomWithStorage, createJSONStorage } from 'jotai/utils'
+
+import { useGetUsersProfile } from '@/shared/api/generated'
+
+export interface Auth {
+    access_token: string
+}
+
+const persistentStorage = createJSONStorage<Auth | undefined>(() => localStorage)
+
+export const authAtom = atomWithStorage<Auth | undefined>(
+    '@my-benefits/auth',
+    undefined,
+    persistentStorage,
+    {
+        getOnInit: true,
+    }
+)
+
+export const useAuth = () => {
+    const [auth, setAuth] = useAtom(authAtom)
+
+    const { data: profile, isLoading } = useGetUsersProfile({
+        query: {
+            refetchOnMount: (query) => {
+                return Boolean(auth?.access_token) && !query.state.data?.external_id
+            },
+            refetchOnWindowFocus: 'always',
+            refetchOnReconnect: true,
+            enabled: Boolean(auth?.access_token),
+            staleTime: Number.POSITIVE_INFINITY,
+            retry(failureCount, error) {
+                if (error instanceof AxiosError && error.response?.status === 401) {
+                    return false
+                }
+
+                return failureCount < 3
+            },
+        },
+    })
+
+    const isAuthenticated = Boolean(auth?.access_token)
+
+    const isUserRegistered: boolean = Boolean(profile?.registered_at)
+
+    /**
+     * Handle logout
+     */
+    // const onLogout = useCallback(async () => {
+    //     const toastId = toast.loading('Выполняем выход...')
+
+    //     try {
+    //         /**
+    //          * Clear refresh_token cookie
+    //          */
+    //         await getUsersLogout()
+
+    //         /**
+    //          * Clear the global auth state
+    //          */
+    //         setAuth(undefined)
+
+    //         /**
+    //          * Clear the axios instance headers
+    //          */
+    //         AXIOS_INSTANCE.defaults.headers.Authorization = ''
+
+    //         /**
+    //          * Clear of registered user
+    //          */
+    //         setRegisterUser(undefined)
+
+    //         /**
+    //          * Clear the tanstack-query cache
+    //          */
+    //         setTimeout(() => {
+    //             queryClient.clear()
+    //         }, 400)
+
+    //         toast.success('Вы успешно вышли из аккаунта')
+    //     } catch (error) {
+    //         Sentry.captureException(error)
+    //         toast.error('Ошибка при выполнении выхода')
+    //     } finally {
+    //         toast.dismiss(toastId)
+    //     }
+    // }, [queryClient, setAuth, setRegisterUser])
+
+    return {
+        auth,
+        setAuth,
+        profile,
+        isAuthenticated,
+        isUserRegistered,
+        isLoading,
+    }
+}

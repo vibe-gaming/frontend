@@ -1,34 +1,26 @@
-import { Button, Box, Text, VStack } from '@chakra-ui/react'
+import { Box, Button, Center, Heading, Image } from '@chakra-ui/react'
+
+import { HeaderMobile } from '@/shared/ui/header-mobile'
 
 export const LoginPage = () => {
     return (
-        <Box p={8}>
-            <VStack gap={4} align="center">
-                <Text fontSize="2xl" fontWeight="bold">
-                    LoginPage
-                </Text>
-                <Button bg="brand.500" color="white" size="lg" _hover={{ bg: 'brand.600' }}>
-                    Брендовая (тёмно-зелёная)
+        <Box minH={'100dvh'} paddingTop='56px' w={'100dvw'}>
+            <HeaderMobile title={''} />
+            <Heading
+                as='h1'
+                color={'#27272A'}
+                fontSize='24px'
+                fontWeight={700}
+                lineHeight='32px'
+                textAlign='center'
+            >
+                Войти через Госуслуги
+            </Heading>
+            <Center paddingTop='16px'>
+                <Button size={'2xl'}>
+                    <Image alt='Госуслуги' src={'../../assets/gosuslugi-logo.png'} />
                 </Button>
-                <Button bg="accent.500" color="white" _hover={{ bg: 'accent.600' }}>
-                    Акцентная (синяя)
-                </Button>
-                <Button bg="success.500" color="white" _hover={{ bg: 'success.600' }}>
-                    Успех (зелёная)
-                </Button>
-                <Button bg="error.500" color="white" _hover={{ bg: 'error.600' }}>
-                    Ошибка (красная)
-                </Button>
-                <Button bg="warning.500" color="black" _hover={{ bg: 'warning.600' }}>
-                    Предупреждение (жёлтая)
-                </Button>
-                <Button bg="info.500" color="white" _hover={{ bg: 'info.600' }}>
-                    Информация (синяя)
-                </Button>
-                <Button bg="primary.500" color="white" _hover={{ bg: 'primary.600' }}>
-                    Primary (тёмно-зелёная)
-                </Button>
-            </VStack>
+            </Center>
         </Box>
     )
 }
