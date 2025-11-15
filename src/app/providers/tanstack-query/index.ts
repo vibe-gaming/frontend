@@ -1,1 +1,1 @@
-export { WithTanstackQuery } from './with-tanstack-query'
+export { WithTanstackQuery, getContext } from './with-tanstack-query'

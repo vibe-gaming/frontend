@@ -3,13 +3,13 @@ import { createRouter, RouterProvider } from '@tanstack/react-router'
 
 import { routeTree } from '@/app/route-tree.generated'
 
-import * as TanstackQuery from '../tanstack-query'
+import { getContext } from '../tanstack-query/index'
 
 // Create a new router instance
 const router = createRouter({
     routeTree,
     context: {
-        ...TanstackQuery.getContext(),
+        ...getContext(),
     },
     defaultPreload: 'intent',
     scrollRestoration: true,
