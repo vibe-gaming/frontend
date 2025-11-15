@@ -45,8 +45,28 @@ export interface ErrorStructWithValidationErrors extends ErrorStruct {
 
 export type ResponseErrorConfig<TError = ErrorStructWithValidationErrors> = TError
 
+// Получаем URL API из переменной окружения
+// В development используем прокси через Vite (/api), в production - полный URL
+const getApiBaseURL = () => {
+    // В Vite переменные окружения доступны через import.meta.env
+    const apiUrl = import.meta.env.VITE_API_URL
+    
+    if (apiUrl) {
+        // Убираем trailing slash если есть
+        return apiUrl.replace(/\/$/, '')
+    }
+    
+    // В development режиме используем прокси через Vite
+    if (import.meta.env.DEV) {
+        return '/api/v1'
+    }
+    
+    // В production используем полный URL
+    return 'https://backend-production-10ec.up.railway.app/api/v1'
+}
+
 export const AXIOS_INSTANCE = axios.create({
-    baseURL: '/',
+    baseURL: getApiBaseURL(),
     withCredentials: true,
     headers: {
         'Content-Type': 'application/json',
