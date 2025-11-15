@@ -1,0 +1,14 @@
+[build]
+  command = "yarn build"
+  publish = "dist"
+
+# Прокси для обхода CORS проблем
+# Все запросы к /api/* будут проксироваться на бэкенд через Netlify
+# Это позволяет обойти CORS, так как браузер видит запрос как same-origin
+[[redirects]]
+  from = "/api/*"
+  to = "https://backend-production-10ec.up.railway.app/api/:splat"
+  status = 200
+  force = true
+  headers = {X-From = "Netlify"}
+
