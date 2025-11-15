@@ -1,5 +1,12 @@
-import { Navigate } from '@tanstack/react-router'
+import { Outlet } from '@tanstack/react-router'
 
 export const AuthenticatedLayout = () => {
-    return <Navigate to='/login' />
+    // ВРЕМЕННО: отключена проверка авторизации для тестирования
+    // TODO: вернуть проверку авторизации после реализации
+    // const isAuthenticated = useAuthIsAuthenticated()
+    // if (!isAuthenticated) {
+    //     return <Navigate to='/login' />
+    // }
+
+    return <Outlet />
 }
