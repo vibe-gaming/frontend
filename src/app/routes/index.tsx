@@ -1,18 +1,7 @@
-import React from 'react'
-import { createFileRoute, Navigate } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 
-// import { useAuthIsAuthenticated } from '@/entities/auth'
+import { HomePage } from '@/pages/home-page'
 
 export const Route = createFileRoute('/')({
-    component: App,
+    component: HomePage,
 })
-
-function App() {
-    // const { isAuthenticated } = useAuthIsAuthenticated()
-
-    // if (isAuthenticated) {
-    //     return <Navigate search={{ page: 1 }} to='/requests' />
-    // }
-
-    return <Navigate to='/login' />
-}
