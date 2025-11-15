@@ -69,7 +69,15 @@ const plugins = [
     }),
 ]
 
-const server: Record<string, any> = {}
+const server: Record<string, any> = {
+    proxy: {
+        '/api': {
+            target: 'https://backend-production-10ec.up.railway.app',
+            changeOrigin: true,
+            secure: true,
+        },
+    },
+}
 
 const ALREADY_EXIST_SSL_CERT = fs.existsSync('./.cert/key.pem')
 
