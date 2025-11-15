@@ -1,14 +1,17 @@
 import '@/shared/styles/global.scss'
 
+import { WithChakraUI } from './chakra-ui'
 import { WithTanstackQuery } from './tanstack-query'
 import { WithTanstackRouter } from './tanstack-router'
 import { WithToast } from './toast'
 
 export const WithProviders = () => {
     return (
-        <WithTanstackQuery>
-            <WithTanstackRouter />
-            <WithToast />
-        </WithTanstackQuery>
+        <WithChakraUI>
+            <WithTanstackQuery>
+                <WithTanstackRouter />
+                <WithToast />
+            </WithTanstackQuery>
+        </WithChakraUI>
     )
 }
