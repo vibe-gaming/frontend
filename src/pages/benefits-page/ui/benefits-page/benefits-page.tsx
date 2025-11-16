@@ -12,7 +12,7 @@ import { FiltersDrawer } from '../filters-drawer'
 import { Pagination } from '../pagination'
 import { SortDrawer } from '../sort-drawer'
 import styles from './benefits-page.module.scss'
-import { HeaderMobile } from '@/shared/ui/header-mobile'
+import { AppHeader } from '@/shared/ui/app-header'
 
 export const BenefitsPage = () => {
     const [searchQuery, setSearchQuery] = useState('')
@@ -161,10 +161,10 @@ export const BenefitsPage = () => {
 
     return (
         <>
-            <HeaderMobile title='' />
+            <AppHeader />
 
-            <Box className={styles['benefits-page']} pt={`var(--header-mobile-height)`} w='100%'>
-                <VStack align='stretch' gap={4} px={{ base: 4, md: 8 }} py={{ base: 6, md: 10 }} w='100%'>
+            <Box className={styles['benefits-page']} w='100%'>
+                <VStack align='stretch' gap={4} px={{ base: 4, md: 8 }} pt={{ base: 3, md: 8 }} pb={{ base: 6, md: 10 }} w='100%'>
                     <Heading as='h1' fontWeight='bold' size='2xl'>Льготы</Heading>
                     <Input
                         variant="subtle"

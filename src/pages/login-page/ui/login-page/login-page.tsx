@@ -1,7 +1,6 @@
 import { useCallback } from 'react'
 import { Box, Button, Center, Heading, Image } from '@chakra-ui/react'
-
-import { HeaderMobile } from '@/shared/ui/header-mobile'
+import { AppHeader } from '@/shared/ui/app-header'
 
 export const LoginPage = () => {
     const handleLoginClick = useCallback(async () => {
@@ -11,9 +10,9 @@ export const LoginPage = () => {
     }, [])
 
     return (
-        <Box bg='gray.50' minH='100dvh' paddingTop='56px' w='100dvw'>
-            <HeaderMobile title='' />
-            <Center px='16px'>
+        <Box minH='100dvh' w='100dvw' gap={4}>
+            <AppHeader />
+            <Center px='16px' pt={4}>
                 <Box display='flex' flexDirection='column' gap='24px' w='100%'>
                     <Heading
                         as='h1'

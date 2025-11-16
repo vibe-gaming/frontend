@@ -1,21 +1,19 @@
 import { Box, Flex, IconButton, Button, HStack } from '@chakra-ui/react'
-import { Heart, User } from 'lucide-react'
+import { User } from 'lucide-react'
 
 import { useAuthState } from '@/entities/auth'
 
-export interface AppHeaderProps {
-    onLogoClick?: () => void
-    onHomeClick?: () => void
-    onProfileClick?: () => void
-    onLoginClick?: () => void
-}
+import logoIcon from '@/shared/assets/icons/logo.svg'
+import { useNavigate } from '@tanstack/react-router'
 
-export const AppHeader = ({
-    onLogoClick,
-    onHomeClick,
-    onProfileClick,
-    onLoginClick,
-}: AppHeaderProps) => {
+export const AppHeader = () => {
+    const navigate = useNavigate();
+
+    const onLogoClick = () => navigate({ to: '/' });
+    const onBenefitsClick = () => navigate({ to: '/benefits' });
+    const onLoginClick = () => navigate({ to: '/login' });
+    const onProfileClick = () => navigate({ to: '/profile' });
+
     const { isAuthenticated } = useAuthState()
 
     return (
@@ -40,19 +38,26 @@ export const AppHeader = ({
                     {/* Логотип слева */}
                     <IconButton
                         aria-label="Логотип"
-                        bg="blue.solid"
+                        bg="transparent"
                         borderRadius="16px"
                         color="white"
                         size="lg"
                         minW="48px"
                         h="48px"
-                        _hover={{ bg: 'blue.600' }}
+                        p={0}
+                        _hover={{ opacity: 0.8 }}
                         onClick={onLogoClick}
                     >
-                        <Heart size={24} fill="white" />
+                        <img
+                            src={logoIcon}
+                            alt="Логотип"
+                            width="44"
+                            height="44"
+                            style={{ display: 'block' }}
+                        />
                     </IconButton>
 
-                    {/* Кнопка "Главная" и иконка профиля справа */}
+                    {/* Кнопка "Льготы" и иконка профиля справа */}
                     <HStack gap="8px">
                         <Button
                             variant="outline"
@@ -65,9 +70,9 @@ export const AppHeader = ({
                             h="48px"
                             bg="white"
                             _hover={{ bg: 'blue.50' }}
-                            onClick={onHomeClick}
+                            onClick={onBenefitsClick}
                         >
-                            Главная
+                            Льготы
                         </Button>
 
                         <IconButton

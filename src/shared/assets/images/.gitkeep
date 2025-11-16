@@ -1,0 +1,3 @@
+# Изображения для использования в компонентах
+# Импортируйте так: import imageUrl from '@/shared/assets/images/image.png'
+
