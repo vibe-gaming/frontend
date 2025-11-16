@@ -50,13 +50,13 @@ export type ResponseErrorConfig<TError = ErrorStructWithValidationErrors> = TErr
 const getApiBaseURL = () => {
     // В Vite переменные окружения доступны через import.meta.env
     const apiUrl = import.meta.env.VITE_API_URL
-    
+
     // Если VITE_API_URL установлен, используем его (для кастомных конфигураций)
     if (apiUrl) {
         // Убираем trailing slash если есть
         return apiUrl.replace(/\/$/, '')
     }
-    
+
     // Используем прокси через Vite (dev) или Netlify (production)
     // - В development: Vite прокси настроен в vite.config.ts
     // - В production: Netlify прокси настроен в netlify.toml

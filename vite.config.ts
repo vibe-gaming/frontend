@@ -1,11 +1,11 @@
 import { tanstackRouter } from '@tanstack/router-plugin/vite'
 import basicSsl from '@vitejs/plugin-basic-ssl'
 import react from '@vitejs/plugin-react'
-import { VitePWA } from 'vite-plugin-pwa'
 import autoprefixer from 'autoprefixer'
 import browserslistToEsbuild from 'browserslist-to-esbuild'
 import fs from 'node:fs'
 import { defineConfig } from 'vite'
+import { VitePWA } from 'vite-plugin-pwa'
 import tsconfigPaths from 'vite-tsconfig-paths'
 
 const plugins = [

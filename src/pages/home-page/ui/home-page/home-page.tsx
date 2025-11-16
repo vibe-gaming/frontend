@@ -1,4 +1,5 @@
 import { Outlet } from '@tanstack/react-router'
+
 import { PopularBenefits } from '@/widgets/popular-benefits'
 
 import styles from './home-page.module.scss'

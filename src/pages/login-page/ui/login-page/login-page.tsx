@@ -1,34 +1,51 @@
-import { Button, Box, Text, VStack } from '@chakra-ui/react'
+import { useCallback } from 'react'
+import { Box, Button, Center, Heading, Image } from '@chakra-ui/react'
+
+import { HeaderMobile } from '@/shared/ui/header-mobile'
 
 export const LoginPage = () => {
+    const handleLoginClick = useCallback(async () => {
+        let keycloakEndpoint = new URL(`${import.meta.env.VITE_API_URL}/users/auth/login`)
+
+        window.open(keycloakEndpoint, '_self')
+    }, [])
+
     return (
-        <Box p={8}>
-            <VStack gap={4} align="center">
-                <Text fontSize="2xl" fontWeight="bold">
-                    LoginPage
-                </Text>
-                <Button bg="brand.500" color="white" size="lg" _hover={{ bg: 'brand.600' }}>
-                    Брендовая (тёмно-зелёная)
-                </Button>
-                <Button bg="accent.500" color="white" _hover={{ bg: 'accent.600' }}>
-                    Акцентная (синяя)
-                </Button>
-                <Button bg="success.500" color="white" _hover={{ bg: 'success.600' }}>
-                    Успех (зелёная)
-                </Button>
-                <Button bg="error.500" color="white" _hover={{ bg: 'error.600' }}>
-                    Ошибка (красная)
-                </Button>
-                <Button bg="warning.500" color="black" _hover={{ bg: 'warning.600' }}>
-                    Предупреждение (жёлтая)
-                </Button>
-                <Button bg="info.500" color="white" _hover={{ bg: 'info.600' }}>
-                    Информация (синяя)
-                </Button>
-                <Button bg="primary.500" color="white" _hover={{ bg: 'primary.600' }}>
-                    Primary (тёмно-зелёная)
-                </Button>
-            </VStack>
+        <Box bg='gray.50' minH='100dvh' paddingTop='56px' w='100dvw'>
+            <HeaderMobile title='' />
+            <Center px='16px'>
+                <Box display='flex' flexDirection='column' gap='24px' w='100%'>
+                    <Heading
+                        as='h1'
+                        color='#27272A'
+                        fontSize='24px'
+                        fontWeight={700}
+                        lineHeight='32px'
+                        textAlign='center'
+                    >
+                        Войти через Госуслуги
+                    </Heading>
+                    <Button
+                        // _active={{ bg: '#0043b0' }}
+                        // _hover={{ bg: '#0050d1' }}
+                        bg='#fff'
+                        border='2px solid #005FF9'
+                        borderRadius='18px'
+                        // disabled={isPending}
+                        h='56px'
+                        size='lg'
+                        w='100%'
+                        onClick={handleLoginClick}
+                    >
+                        <Image
+                            alt='Госуслуги'
+                            h='24px'
+                            objectFit='contain'
+                            src='/assets/gosuslugi.svg'
+                        />
+                    </Button>
+                </Box>
+            </Center>
         </Box>
     )
 }

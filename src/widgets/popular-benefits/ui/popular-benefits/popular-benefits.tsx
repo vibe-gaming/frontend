@@ -18,8 +18,8 @@ export const PopularBenefits = () => {
 
     if (isLoading) {
         return (
-            <Box p={8} textAlign="center">
-                <Spinner size="lg" />
+            <Box p={8} textAlign='center'>
+                <Spinner size='lg' />
             </Box>
         )
     }
@@ -27,9 +27,9 @@ export const PopularBenefits = () => {
     if (isError) {
         return (
             <Box p={8}>
-                <Text color="error.DEFAULT">Не удалось загрузить льготы</Text>
+                <Text color='error.DEFAULT'>Не удалось загрузить льготы</Text>
                 {error && 'error_message' in error && error.error_message && (
-                    <Text fontSize="sm" color="text.secondary" mt={2}>
+                    <Text color='text.secondary' fontSize='sm' mt={2}>
                         {error.error_message}
                     </Text>
                 )}
@@ -47,24 +47,24 @@ export const PopularBenefits = () => {
 
     return (
         <Box p={8}>
-            <VStack gap={6} align="stretch">
-                <Heading size="lg">Популярные льготы</Heading>
+            <VStack align='stretch' gap={6}>
+                <Heading size='lg'>Популярные льготы</Heading>
 
                 <Stack gap={4}>
                     {data.benefits.map((benefit) => (
                         <Box
                             key={benefit.id}
+                            bg='background.surface'
+                            borderColor='border.primary'
+                            borderRadius='md'
+                            borderWidth='1px'
                             p={4}
-                            borderRadius="md"
-                            bg="background.surface"
-                            borderWidth="1px"
-                            borderColor="border.primary"
                         >
-                            <VStack align="stretch" gap={2}>
-                                <Heading size="md">{benefit.title || 'Без названия'}</Heading>
+                            <VStack align='stretch' gap={2}>
+                                <Heading size='md'>{benefit.title || 'Без названия'}</Heading>
                                 {benefit.description && (
                                     <Text
-                                        color="text.secondary"
+                                        color='text.secondary'
                                         style={{
                                             display: '-webkit-box',
                                             WebkitLineClamp: 2,
@@ -76,7 +76,7 @@ export const PopularBenefits = () => {
                                     </Text>
                                 )}
                                 {benefit.type && (
-                                    <Text fontSize="sm" color="text.secondary">
+                                    <Text color='text.secondary' fontSize='sm'>
                                         Тип: {benefit.type}
                                     </Text>
                                 )}
@@ -86,11 +86,11 @@ export const PopularBenefits = () => {
                 </Stack>
 
                 <Button
-                    bg="brand.500"
-                    color="white"
-                    size="lg"
-                    onClick={handleShowMore}
                     _hover={{ bg: 'brand.600' }}
+                    bg='brand.500'
+                    color='white'
+                    size='lg'
+                    onClick={handleShowMore}
                 >
                     Посмотреть больше
                 </Button>
@@ -98,4 +98,3 @@ export const PopularBenefits = () => {
         </Box>
     )
 }
-

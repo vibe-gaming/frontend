@@ -13,7 +13,5 @@ dayjs.locale('ru')
 dayjs.extend(relativeTime)
 
 export const App = () => {
-    console.log('log')
-
     return <WithProviders />
 }

@@ -1,5 +1,6 @@
 import '@/shared/styles/global.scss'
 
+import { WithAxios } from './axios'
 import { WithChakraUI } from './chakra-ui'
 import { WithTanstackQuery } from './tanstack-query'
 import { WithTanstackRouter } from './tanstack-router'
@@ -11,6 +12,7 @@ export const WithProviders = () => {
             <WithTanstackQuery>
                 <WithTanstackRouter />
                 <WithToast />
+                <WithAxios />
             </WithTanstackQuery>
         </WithChakraUI>
     )

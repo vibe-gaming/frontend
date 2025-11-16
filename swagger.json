@@ -11,15 +11,9 @@
         "/benefits": {
             "get": {
                 "description": "Получить список всех льгот с пагинацией, фильтрацией и умным поиском\n\nПоиск использует Full-Text Search MySQL с автоматическим поиском по частичному совпадению:\n- Поиск \"транс\" найдет \"транспорт\", \"транспортный\" и т.д.\n- Поиск \"пенсион\" найдет \"пенсионер\", \"пенсионный\" и т.д.\n- Каждое слово ищется с начала (prefix matching)\n\nМожно использовать Boolean операторы для сложных запросов:\n+ обязательное слово: \"+пенсионер +транспорт\"\n- исключить слово: \"льгота -студент\"\n* явный wildcard: \"транс*\"\n\"\" точная фраза: \"общественный транспорт\"",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Benefits"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Benefits"],
                 "summary": "Get Benefits List",
                 "parameters": [
                     {
@@ -126,15 +120,9 @@
         "/benefits/{id}": {
             "get": {
                 "description": "Получить льготу по ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Benefits"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Benefits"],
                 "summary": "Get Benefit By ID",
                 "parameters": [
                     {
@@ -176,15 +164,9 @@
         "/cities": {
             "get": {
                 "description": "Get all cities",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Cities"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Cities"],
                 "summary": "Get Cities",
                 "responses": {
                     "200": {
@@ -214,15 +196,9 @@
         "/users/auth/callback": {
             "get": {
                 "description": "Callback endpoint для Auth - получает code от ESIA и редиректит на фронтенд",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Auth"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Auth"],
                 "summary": "OAuth Callback",
                 "parameters": [
                     {
@@ -256,15 +232,9 @@
         "/users/auth/login": {
             "get": {
                 "description": "Перенаправление на ESIA для авторизации",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Auth"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Auth"],
                 "summary": "OAuth Login",
                 "responses": {
                     "302": {
@@ -276,15 +246,9 @@
         "/users/auth/token": {
             "post": {
                 "description": "Обмен authorization code на access и refresh токены (как в Keycloak)",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Auth"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Auth"],
                 "summary": "Exchange Code for Tokens",
                 "parameters": [
                     {
@@ -321,15 +285,9 @@
                     }
                 ],
                 "description": "Pong",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Pong"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Pong"],
                 "summary": "Pong",
                 "responses": {
                     "200": {
@@ -355,15 +313,9 @@
                     }
                 ],
                 "description": "Get user profile",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Users"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Users"],
                 "summary": "Get Profile",
                 "responses": {
                     "200": {
@@ -395,15 +347,9 @@
                     }
                 ],
                 "description": "Register user",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Users"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Users"],
                 "summary": "User Update Info",
                 "parameters": [
                     {
@@ -521,12 +467,7 @@
         },
         "domain.VerificationStatus": {
             "type": "string",
-            "enum": [
-                "pending",
-                "verified",
-                "rejected",
-                "expired"
-            ],
+            "enum": ["pending", "verified", "rejected", "expired"],
             "x-enum-comments": {
                 "VerificationStatusExpired": "Истекла",
                 "VerificationStatusPending": "Ожидает подтверждения",
@@ -633,10 +574,7 @@
         },
         "v1.exchangeTokenRequest": {
             "type": "object",
-            "required": [
-                "code",
-                "state"
-            ],
+            "required": ["code", "state"],
             "properties": {
                 "code": {
                     "type": "string"
@@ -697,10 +635,7 @@
         },
         "v1.userUpdateInfoRequest": {
             "type": "object",
-            "required": [
-                "city_id",
-                "groups"
-            ],
+            "required": ["city_id", "groups"],
             "properties": {
                 "city_id": {
                     "type": "string"

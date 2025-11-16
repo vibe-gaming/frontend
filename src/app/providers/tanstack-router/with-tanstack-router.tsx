@@ -2,6 +2,7 @@ import React from 'react'
 import { createRouter, RouterProvider } from '@tanstack/react-router'
 
 import { routeTree } from '@/app/route-tree.generated'
+import { useAuth } from '@/entities/auth'
 
 import { getContext } from '../tanstack-query/index'
 
@@ -26,14 +27,15 @@ declare module '@tanstack/react-router' {
 }
 
 export const WithTanstackRouter = () => {
+    const { isAuthenticated, isUserRegistered } = useAuth()
+
     return (
         <RouterProvider
             router={router}
-            // context={{
-            //     auth: {
-            //         profile,
-            //     },
-            // }}
+            context={{
+                isAuthenticated,
+                isUserRegistered,
+            }}
         />
     )
 }

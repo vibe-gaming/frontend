@@ -1,19 +1,20 @@
-import { useState, useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import {
+    Badge,
     Box,
     Button,
     Heading,
+    HStack,
     Input,
+    SimpleGrid,
     Spinner,
     Stack,
     Text,
     VStack,
-    HStack,
-    SimpleGrid,
-    Badge,
 } from '@chakra-ui/react'
-import { useDebounce } from '@/shared/hooks/useDebounce'
+
 import { useGetBenefits } from '@/shared/api/generated/hooks/useGetBenefits'
+import { useDebounce } from '@/shared/hooks/use-debounce'
 
 import styles from './benefits-page.module.scss'
 
@@ -91,9 +92,9 @@ export const BenefitsPage = () => {
     if (isError) {
         return (
             <Box p={8}>
-                <Text color="error.DEFAULT">Не удалось загрузить льготы</Text>
+                <Text color='error.DEFAULT'>Не удалось загрузить льготы</Text>
                 {error && 'error_message' in error && error.error_message && (
-                    <Text fontSize="sm" color="text.secondary" mt={2}>
+                    <Text color='text.secondary' fontSize='sm' mt={2}>
                         {error.error_message}
                     </Text>
                 )}
@@ -102,29 +103,29 @@ export const BenefitsPage = () => {
     }
 
     return (
-        <Box p={8} className={styles['benefits-page']}>
-            <VStack gap={6} align="stretch">
-                <Heading size="lg">Льготы и субсидии</Heading>
+        <Box className={styles['benefits-page']} p={8}>
+            <VStack align='stretch' gap={6}>
+                <Heading size='lg'>Льготы и субсидии</Heading>
 
                 {/* Поиск и фильтры */}
                 <Box
+                    bg='background.surface'
+                    borderColor='border.primary'
+                    borderRadius='lg'
+                    borderWidth='1px'
                     p={6}
-                    borderRadius="lg"
-                    bg="background.surface"
-                    borderWidth="1px"
-                    borderColor="border.primary"
                 >
-                    <VStack gap={4} align="stretch">
+                    <VStack align='stretch' gap={4}>
                         {/* Поиск */}
                         <Box>
-                            <Text fontSize="sm" fontWeight="medium" mb={2}>
+                            <Text fontSize='sm' fontWeight='medium' mb={2}>
                                 Поиск
                             </Text>
                             <Input
-                                placeholder="Введите название или описание льготы..."
+                                placeholder='Введите название или описание льготы...'
                                 value={searchQuery}
-                                onChange={(e) => {
-                                    setSearchQuery(e.target.value)
+                                onChange={(event) => {
+                                    setSearchQuery(event.target.value)
                                     setCurrentPage(1)
                                 }}
                             />
@@ -132,10 +133,11 @@ export const BenefitsPage = () => {
 
                         {/* Тип льготы */}
                         <Box>
-                            <Text fontSize="sm" fontWeight="medium" mb={2}>
+                            <Text fontSize='sm' fontWeight='medium' mb={2}>
                                 Тип льготы
                             </Text>
                             <select
+                                value={benefitType}
                                 style={{
                                     width: '100%',
                                     padding: '8px',
@@ -144,13 +146,12 @@ export const BenefitsPage = () => {
                                     borderColor: 'var(--border-primary)',
                                     backgroundColor: 'var(--background-primary)',
                                 }}
-                                value={benefitType}
-                                onChange={(e) => {
-                                    setBenefitType(e.target.value)
+                                onChange={(event) => {
+                                    setBenefitType(event.target.value)
                                     setCurrentPage(1)
                                 }}
                             >
-                                <option value="">Все типы</option>
+                                <option value=''>Все типы</option>
                                 {BENEFIT_TYPES.map((type) => (
                                     <option key={type.value} value={type.value}>
                                         {type.label}
@@ -161,21 +162,25 @@ export const BenefitsPage = () => {
 
                         {/* Целевые группы */}
                         <Box>
-                            <Text fontSize="sm" fontWeight="medium" mb={2}>
+                            <Text fontSize='sm' fontWeight='medium' mb={2}>
                                 Целевые группы
                             </Text>
                             <SimpleGrid columns={{ base: 2, md: 4 }} gap={2}>
                                 {TARGET_GROUPS.map((group) => (
                                     <HStack key={group.value} gap={2}>
                                         <input
-                                            type="checkbox"
-                                            id={`target-group-${group.value}`}
                                             checked={targetGroups.includes(group.value)}
-                                            onChange={(e) => {
-                                                if (e.target.checked) {
+                                            id={`target-group-${group.value}`}
+                                            type='checkbox'
+                                            onChange={(event) => {
+                                                if (event.target.checked) {
                                                     setTargetGroups([...targetGroups, group.value])
                                                 } else {
-                                                    setTargetGroups(targetGroups.filter((g) => g !== group.value))
+                                                    setTargetGroups(
+                                                        targetGroups.filter(
+                                                            (g) => g !== group.value
+                                                        )
+                                                    )
                                                 }
                                                 setCurrentPage(1)
                                             }}
@@ -197,27 +202,27 @@ export const BenefitsPage = () => {
                         {/* Даты */}
                         <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
                             <Box>
-                                <Text fontSize="sm" fontWeight="medium" mb={2}>
+                                <Text fontSize='sm' fontWeight='medium' mb={2}>
                                     Дата начала
                                 </Text>
                                 <Input
-                                    type="date"
+                                    type='date'
                                     value={dateFrom}
-                                    onChange={(e) => {
-                                        setDateFrom(e.target.value)
+                                    onChange={(event) => {
+                                        setDateFrom(event.target.value)
                                         setCurrentPage(1)
                                     }}
                                 />
                             </Box>
                             <Box>
-                                <Text fontSize="sm" fontWeight="medium" mb={2}>
+                                <Text fontSize='sm' fontWeight='medium' mb={2}>
                                     Дата окончания
                                 </Text>
                                 <Input
-                                    type="date"
+                                    type='date'
                                     value={dateTo}
-                                    onChange={(e) => {
-                                        setDateTo(e.target.value)
+                                    onChange={(event) => {
+                                        setDateTo(event.target.value)
                                         setCurrentPage(1)
                                     }}
                                 />
@@ -226,10 +231,10 @@ export const BenefitsPage = () => {
 
                         {/* Кнопка сброса */}
                         <Button
-                            variant="outline"
+                            alignSelf='flex-start'
+                            size='sm'
+                            variant='outline'
                             onClick={handleResetFilters}
-                            size="sm"
-                            alignSelf="flex-start"
                         >
                             Сбросить фильтры
                         </Button>
@@ -238,117 +243,135 @@ export const BenefitsPage = () => {
 
                 {/* Результаты */}
                 {isLoading ? (
-                    <Box textAlign="center" py={12}>
-                        <Spinner size="lg" />
+                    <Box py={12} textAlign='center'>
+                        <Spinner size='lg' />
                     </Box>
                 ) : !data?.benefits || data.benefits.length === 0 ? (
-                    <Box textAlign="center" py={12}>
-                        <Text fontSize="lg" color="text.secondary">
+                    <Box py={12} textAlign='center'>
+                        <Text color='text.secondary' fontSize='lg'>
                             Льготы не найдены
                         </Text>
-                        <Text fontSize="sm" color="text.secondary" mt={2}>
+                        <Text color='text.secondary' fontSize='sm' mt={2}>
                             Попробуйте изменить параметры поиска или фильтры
                         </Text>
                     </Box>
                 ) : (
                     <>
-                        <Text fontSize="sm" color="text.secondary">
-                            Найдено льгот: {data.total || data.benefits.length}
+                        <Text color='text.secondary' fontSize='sm'>
+                            Найдено льгот:{' '}
+                            {data.total || data.benefits.length > 0 ? data.benefits.length : 0}
                         </Text>
 
                         <Stack gap={4}>
-                            {data.benefits.map((benefit) => (
-                                <Box
-                                    key={benefit.id}
-                                    p={6}
-                                    borderRadius="md"
-                                    bg="background.surface"
-                                    borderWidth="1px"
-                                    borderColor="border.primary"
-                                    _hover={{
-                                        borderColor: 'border.accent',
-                                        boxShadow: 'md',
-                                    }}
-                                    transition="all 0.2s"
-                                >
-                                    <VStack align="stretch" gap={3}>
-                                        <HStack justify="space-between" align="start">
-                                            <Heading size="md" flex={1}>
-                                                {benefit.title || 'Без названия'}
-                                            </Heading>
-                                            {benefit.type && (
-                                                <Badge
-                                                    bg={
-                                                        benefit.type === 'federal'
-                                                            ? 'brand.500'
-                                                            : benefit.type === 'regional'
-                                                              ? 'accent.500'
-                                                              : 'info.500'
-                                                    }
-                                                    color="white"
-                                                >
-                                                    {BENEFIT_TYPES.find((t) => t.value === benefit.type)?.label ||
-                                                        benefit.type}
-                                                </Badge>
-                                            )}
-                                        </HStack>
-
-                                        {benefit.description && (
-                                            <Text
-                                                color="text.secondary"
-                                                style={{
-                                                    display: '-webkit-box',
-                                                    WebkitLineClamp: 3,
-                                                    WebkitBoxOrient: 'vertical',
-                                                    overflow: 'hidden',
-                                                }}
-                                            >
-                                                {benefit.description}
-                                            </Text>
-                                        )}
-
-                                        {benefit.target_groups && benefit.target_groups.length > 0 && (
-                                            <HStack gap={2} flexWrap="wrap">
-                                                <Text fontSize="sm" fontWeight="medium" color="text.secondary">
-                                                    Для:
-                                                </Text>
-                                                {benefit.target_groups.map((group) => (
-                                                    <Badge key={group} variant="outline" fontSize="xs">
-                                                        {TARGET_GROUPS.find((g) => g.value === group)?.label || group}
+                            {data.benefits.length > 0 &&
+                                data.benefits.map((benefit) => (
+                                    <Box
+                                        key={benefit.id}
+                                        bg='background.surface'
+                                        borderColor='border.primary'
+                                        borderRadius='md'
+                                        borderWidth='1px'
+                                        p={6}
+                                        transition='all 0.2s'
+                                        _hover={{
+                                            borderColor: 'border.accent',
+                                            boxShadow: 'md',
+                                        }}
+                                    >
+                                        <VStack align='stretch' gap={3}>
+                                            <HStack align='start' justify='space-between'>
+                                                <Heading flex={1} size='md'>
+                                                    {benefit.title || 'Без названия'}
+                                                </Heading>
+                                                {benefit.type && (
+                                                    <Badge
+                                                        color='white'
+                                                        bg={
+                                                            benefit.type === 'federal'
+                                                                ? 'brand.500'
+                                                                : benefit.type === 'regional'
+                                                                  ? 'accent.500'
+                                                                  : 'info.500'
+                                                        }
+                                                    >
+                                                        {BENEFIT_TYPES.find(
+                                                            (t) => t.value === benefit.type
+                                                        )?.label || benefit.type}
                                                     </Badge>
-                                                ))}
+                                                )}
                                             </HStack>
-                                        )}
 
-                                        {(benefit.valid_from || benefit.valid_to) && (
-                                            <Text fontSize="sm" color="text.secondary">
-                                                {benefit.valid_from && `С ${new Date(benefit.valid_from).toLocaleDateString('ru-RU')}`}
-                                                {benefit.valid_from && benefit.valid_to && ' '}
-                                                {benefit.valid_to && `до ${new Date(benefit.valid_to).toLocaleDateString('ru-RU')}`}
-                                            </Text>
-                                        )}
-                                    </VStack>
-                                </Box>
-                            ))}
+                                            {benefit.description && (
+                                                <Text
+                                                    color='text.secondary'
+                                                    style={{
+                                                        display: '-webkit-box',
+                                                        WebkitLineClamp: 3,
+                                                        WebkitBoxOrient: 'vertical',
+                                                        overflow: 'hidden',
+                                                    }}
+                                                >
+                                                    {benefit.description}
+                                                </Text>
+                                            )}
+
+                                            {benefit.target_groups &&
+                                                benefit.target_groups.length > 0 && (
+                                                    <HStack flexWrap='wrap' gap={2}>
+                                                        <Text
+                                                            color='text.secondary'
+                                                            fontSize='sm'
+                                                            fontWeight='medium'
+                                                        >
+                                                            Для:
+                                                        </Text>
+                                                        {benefit.target_groups.map((group) => (
+                                                            <Badge
+                                                                key={group}
+                                                                fontSize='xs'
+                                                                variant='outline'
+                                                            >
+                                                                {TARGET_GROUPS.find(
+                                                                    (g) => g.value === group
+                                                                )?.label || group}
+                                                            </Badge>
+                                                        ))}
+                                                    </HStack>
+                                                )}
+
+                                            {(benefit.valid_from || benefit.valid_to) && (
+                                                <Text color='text.secondary' fontSize='sm'>
+                                                    {benefit.valid_from &&
+                                                        `С ${new Date(benefit.valid_from).toLocaleDateString('ru-RU')}`}
+                                                    {benefit.valid_from && benefit.valid_to && ' '}
+                                                    {benefit.valid_to &&
+                                                        `до ${new Date(benefit.valid_to).toLocaleDateString('ru-RU')}`}
+                                                </Text>
+                                            )}
+                                        </VStack>
+                                    </Box>
+                                ))}
                         </Stack>
 
                         {/* Пагинация */}
                         {totalPages > 1 && (
-                            <HStack justify="center" gap={2} mt={4}>
+                            <HStack gap={2} justify='center' mt={4}>
                                 <Button
-                                    size="sm"
-                                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                                     disabled={currentPage === 1}
+                                    size='sm'
+                                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                                 >
                                     Назад
                                 </Button>
-                                <Text fontSize="sm" color="text.secondary">
+                                <Text color='text.secondary' fontSize='sm'>
                                     Страница {currentPage} из {totalPages}
                                 </Text>
                                 <Button
-                                    size="sm"
-                                    onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                                     disabled={currentPage >= totalPages}
+                                    size='sm'
+                                    onClick={() =>
+                                        setCurrentPage((p) => Math.min(totalPages, p + 1))
+                                    }
                                 >
                                     Вперёд
                                 </Button>
