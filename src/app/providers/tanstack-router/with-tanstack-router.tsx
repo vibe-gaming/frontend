@@ -2,7 +2,7 @@ import React from 'react'
 import { createRouter, RouterProvider } from '@tanstack/react-router'
 
 import { routeTree } from '@/app/route-tree.generated'
-import { useAuth } from '@/entities/auth'
+import { useAuthState } from '@/entities/auth'
 
 import { getContext } from '../tanstack-query/index'
 
@@ -11,6 +11,8 @@ const router = createRouter({
     routeTree,
     context: {
         ...getContext(),
+        isAuthenticated: false,
+        isUserRegistered: false,
     },
     defaultPreload: 'intent',
     scrollRestoration: true,
@@ -27,15 +29,17 @@ declare module '@tanstack/react-router' {
 }
 
 export const WithTanstackRouter = () => {
-    const { isAuthenticated, isUserRegistered } = useAuth()
+    const { isAuthenticated } = useAuthState()
 
-    return (
-        <RouterProvider
-            router={router}
-            context={{
-                isAuthenticated,
-                isUserRegistered,
-            }}
-        />
+    // Мемоизируем контекст, чтобы избежать лишних перерендеров
+    const context = React.useMemo(
+        () => ({
+            isAuthenticated,
+            // isUserRegistered не нужен для роутера, так как проверка идет уже на страницах
+            isUserRegistered: false,
+        }),
+        [isAuthenticated]
     )
+
+    return <RouterProvider router={router} context={context} />
 }

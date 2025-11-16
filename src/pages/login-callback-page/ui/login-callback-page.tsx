@@ -1,9 +1,8 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { Center, Spinner, Text } from '@chakra-ui/react'
 import { useNavigate, useSearch } from '@tanstack/react-router'
 
 import { useAuth } from '@/entities/auth'
-import { AXIOS_INSTANCE } from '@/shared/api'
 import { postUsersAuthToken } from '@/shared/api/generated'
 
 const fetchTokens = async (code: string, state: string) => {
@@ -12,32 +11,43 @@ const fetchTokens = async (code: string, state: string) => {
         state,
     })
 
-    AXIOS_INSTANCE.defaults.headers.common['Authorization'] = `Bearer ${access_token}`
-
     return { access_token }
 }
 
 export const LoginCallbackPage = () => {
     const { code, state } = useSearch({ from: '/_auth/login/callback' })
-    const { setAuth, isAuthenticated, isUserRegistered } = useAuth()
+    const { setAuth, isAuthenticated, isUserRegistered, isLoading } = useAuth()
     const navigate = useNavigate()
+    const tokenFetchedRef = useRef(false)
 
     useEffect(() => {
-        if (isAuthenticated) {
+        // Если токен уже получен или пользователь уже авторизован, пропускаем
+        if (isAuthenticated || tokenFetchedRef.current) {
             return
         }
+
+        tokenFetchedRef.current = true
 
         fetchTokens(code, state)
             .then(({ access_token }) => {
                 setAuth({ access_token: access_token ?? '' })
-                if (isUserRegistered) {
-                    navigate({ to: '/benefits' })
-                } else {
-                    navigate({ to: '/register/check-info' })
-                }
             })
-            .catch(console.error)
-    }, [code, state, isAuthenticated, setAuth, navigate, isUserRegistered])
+            .catch((error) => {
+                console.error('Ошибка при получении токена:', error)
+                tokenFetchedRef.current = false // Сброс флага в случае ошибки
+            })
+    }, [code, state, isAuthenticated, setAuth])
+
+    // Отдельный эффект для навигации после того, как профиль загружен
+    useEffect(() => {
+        if (isAuthenticated && !isLoading) {
+            if (isUserRegistered) {
+                navigate({ to: '/benefits' })
+            } else {
+                navigate({ to: '/register/check-info' })
+            }
+        }
+    }, [isAuthenticated, isUserRegistered, isLoading, navigate])
 
     return (
         <Center
