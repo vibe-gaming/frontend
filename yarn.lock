@@ -2613,6 +2613,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fontsource/inter@npm:^5.2.8":
+  version: 5.2.8
+  resolution: "@fontsource/inter@npm:5.2.8"
+  checksum: 10c0/f737dd50005e4809887ba55ae0c9b7174216d6d14875d17a4fbb9a0ad75dec4265928b805a43fe16a23f14a878f1974a398bbfc84ad65c79fc4d4b9c3ea154e1
+  languageName: node
+  linkType: hard
+
 "@humanfs/core@npm:^0.19.1":
   version: 0.19.1
   resolution: "@humanfs/core@npm:0.19.1"
@@ -8055,6 +8062,7 @@ __metadata:
     "@emotion/styled": "npm:^11.14.1"
     "@eslint/compat": "npm:^1.4.1"
     "@eslint/js": "npm:^9.39.1"
+    "@fontsource/inter": "npm:^5.2.8"
     "@kubb/cli": "npm:^4.5.9"
     "@kubb/core": "npm:^4.5.9"
     "@kubb/plugin-client": "npm:^4.5.9"
@@ -8104,11 +8112,13 @@ __metadata:
     jotai: "npm:^2.15.1"
     lint-staged: "npm:^16.2.6"
     lodash.isequal: "npm:^4.5.0"
+    lucide: "npm:^0.553.0"
     pinst: "npm:^3.0.0"
     postcss: "npm:^8.5.6"
     react: "npm:^19.2.0"
     react-dom: "npm:^19.2.0"
     react-hook-form: "npm:^7.66.0"
+    react-icons: "npm:^5.5.0"
     sass: "npm:^1.94.0"
     sharp: "npm:^0.34.5"
     sonner: "npm:^2.0.7"
@@ -9854,6 +9864,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lucide@npm:^0.553.0":
+  version: 0.553.0
+  resolution: "lucide@npm:0.553.0"
+  checksum: 10c0/9afee22c69e50b3af0b7cdc7346e86c15bd937b26a6ed7f3d8e435dd4d46ce304edae2450d24196e0520684dad597257b707ecd68349bdbc7ee4e116164b5ce1
+  languageName: node
+  linkType: hard
+
 "magic-string@npm:^0.25.0, magic-string@npm:^0.25.7":
   version: 0.25.9
   resolution: "magic-string@npm:0.25.9"
@@ -11077,6 +11094,15 @@ __metadata:
   peerDependencies:
     react: ^16.8.0 || ^17 || ^18 || ^19
   checksum: 10c0/9faeafdaedfabfcbf5f8bb1aeefb81863b8e158eef4b089e2a32180fe474aec47d05fe3ed7d4faea085ca9f689118fb1135b94cdeed2022bd7d3fa3a56530c63
+  languageName: node
+  linkType: hard
+
+"react-icons@npm:^5.5.0":
+  version: 5.5.0
+  resolution: "react-icons@npm:5.5.0"
+  peerDependencies:
+    react: "*"
+  checksum: 10c0/a24309bfc993c19cbcbfc928157e53a137851822779977b9588f6dd41ffc4d11ebc98b447f4039b0d309a858f0a42980f6bfb4477fb19f9f2d1bc2e190fcf79c
   languageName: node
   linkType: hard
 
