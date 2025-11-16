@@ -1,5 +1,6 @@
 import { AxiosError } from 'axios'
-import { useAtom } from 'jotai'
+import { atom } from 'jotai'
+import { useAtom, useAtomValue } from 'jotai'
 import { atomWithStorage, createJSONStorage } from 'jotai/utils'
 
 import { useGetUsersProfile } from '@/shared/api/generated'
@@ -10,6 +11,7 @@ export interface Auth {
 
 const persistentStorage = createJSONStorage<Auth | undefined>(() => localStorage)
 
+// Атом для хранения токена аутентификации в localStorage
 export const authAtom = atomWithStorage<Auth | undefined>(
     '@my-benefits/auth',
     undefined,
@@ -19,18 +21,38 @@ export const authAtom = atomWithStorage<Auth | undefined>(
     }
 )
 
+// Производный атом для проверки аутентификации (стабильное значение)
+const isAuthenticatedAtom = atom((get) => {
+    const auth = get(authAtom)
+    return Boolean(auth?.access_token)
+})
+
+/**
+ * Хук для работы с аутентификацией (полная версия с запросом профиля)
+ * Используйте только там, где действительно нужны данные профиля
+ */
 export const useAuth = () => {
     const [auth, setAuth] = useAtom(authAtom)
 
-    const { data: profile, isLoading } = useGetUsersProfile({
+    const {
+        data: profile,
+        isLoading,
+        isFetching,
+        status,
+    } = useGetUsersProfile({
         query: {
-            refetchOnMount: (query) => {
-                return Boolean(auth?.access_token) && !query.state.data?.external_id
-            },
-            refetchOnWindowFocus: 'always',
-            refetchOnReconnect: true,
+            // Запрашиваем профиль только если есть токен
             enabled: Boolean(auth?.access_token),
-            staleTime: Number.POSITIVE_INFINITY,
+            // Не перезапрашивать при фокусе окна
+            refetchOnWindowFocus: false,
+            // Не перезапрашивать при переподключении
+            refetchOnReconnect: false,
+            // Не перезапрашивать при монтировании, если данные уже есть
+            refetchOnMount: false,
+            // Данные считаются актуальными 5 минут
+            staleTime: 5 * 60 * 1000, // 5 минут
+            // Храним данные в кеше 10 минут после последнего использования
+            gcTime: 10 * 60 * 1000, // 10 минут
             retry(failureCount, error) {
                 if (error instanceof AxiosError && error.response?.status === 401) {
                     return false
@@ -95,5 +117,19 @@ export const useAuth = () => {
         isAuthenticated,
         isUserRegistered,
         isLoading,
+    }
+}
+
+/**
+ * Облегчённый хук для проверки аутентификации без запроса профиля
+ * Используйте для оптимизации производительности, когда данные профиля не нужны
+ */
+export const useAuthState = () => {
+    const auth = useAtomValue(authAtom)
+    const isAuthenticated = useAtomValue(isAuthenticatedAtom)
+
+    return {
+        auth,
+        isAuthenticated,
     }
 }

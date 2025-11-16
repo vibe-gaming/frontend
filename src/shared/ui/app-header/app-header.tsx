@@ -1,54 +1,93 @@
-import { Box, Button, Flex } from '@chakra-ui/react'
+import { Box, Flex, IconButton, Button, HStack } from '@chakra-ui/react'
+import { Heart, User } from 'lucide-react'
+
+import { useAuthState } from '@/entities/auth'
 
 export interface AppHeaderProps {
     onLogoClick?: () => void
+    onHomeClick?: () => void
+    onProfileClick?: () => void
     onLoginClick?: () => void
-    showLogin?: boolean
 }
 
-export const AppHeader = ({ onLogoClick, onLoginClick, showLogin = true }: AppHeaderProps) => {
+export const AppHeader = ({
+    onLogoClick,
+    onHomeClick,
+    onProfileClick,
+    onLoginClick,
+}: AppHeaderProps) => {
+    const { isAuthenticated } = useAuthState()
+
     return (
         <Box
-            bg="white"
-            borderBottom="1px"
-            borderColor="gray.200"
             position="sticky"
             top={0}
             zIndex={10}
-            px="16px"
-            py="12px"
+            px="12px"
+            py="8px"
+            bg="white"
         >
-            <Flex align="center" justify="space-between" maxW="container.lg" mx="auto">
-                <Button
-                    bg="blue.solid"
-                    borderRadius="16px"
-                    color="white"
-                    fontWeight="bold"
-                    size="md"
-                    minW="48px"
-                    h="48px"
-                    _hover={{ bg: 'blue.solid' }}
-                    onClick={onLogoClick}
-                >
-                    О
-                </Button>
-                {showLogin && (
-                    <Button
+            {/* Серая карточка с хедером */}
+            <Box
+                bg="rgba(250, 250, 250, 1)"
+                borderRadius="16px"
+                px="12px"
+                py="8px"
+                maxW="container.lg"
+                mx="auto"
+            >
+                <Flex align="center" justify="space-between">
+                    {/* Логотип слева */}
+                    <IconButton
+                        aria-label="Логотип"
                         bg="blue.solid"
                         borderRadius="16px"
                         color="white"
-                        fontWeight="medium"
-                        size="md"
-                        px="32px"
+                        size="lg"
+                        minW="48px"
                         h="48px"
-                        _hover={{ bg: 'blue.solid' }}
-                        onClick={onLoginClick}
+                        _hover={{ bg: 'blue.600' }}
+                        onClick={onLogoClick}
                     >
-                        Войти
-                    </Button>
-                )}
-            </Flex>
+                        <Heart size={24} fill="white" />
+                    </IconButton>
+
+                    {/* Кнопка "Главная" и иконка профиля справа */}
+                    <HStack gap="8px">
+                        <Button
+                            variant="outline"
+                            borderRadius="16px"
+                            borderColor="blue.solid"
+                            color="blue.solid"
+                            fontWeight="medium"
+                            size="md"
+                            px="32px"
+                            h="48px"
+                            bg="white"
+                            _hover={{ bg: 'blue.50' }}
+                            onClick={onHomeClick}
+                        >
+                            Главная
+                        </Button>
+
+                        <IconButton
+                            aria-label={isAuthenticated ? 'Профиль' : 'Войти'}
+                            variant="outline"
+                            borderRadius="16px"
+                            borderColor="blue.solid"
+                            color="blue.solid"
+                            size="lg"
+                            minW="48px"
+                            h="48px"
+                            bg="white"
+                            _hover={{ bg: 'blue.50' }}
+                            onClick={isAuthenticated ? onProfileClick : onLoginClick}
+                        >
+                            <User size={24} />
+                        </IconButton>
+                    </HStack>
+                </Flex>
+            </Box>
         </Box>
     )
 }
-

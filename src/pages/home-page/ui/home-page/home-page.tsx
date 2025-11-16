@@ -39,7 +39,12 @@ export const HomePage = () => {
     return (
         <Box bg="gray.50" minH="100vh">
             {/* Header */}
-            <AppHeader onLoginClick={() => navigate({ to: '/login' })} />
+            <AppHeader
+                onLogoClick={() => navigate({ to: '/' })}
+                onHomeClick={() => navigate({ to: '/' })}
+                onLoginClick={() => navigate({ to: '/login' })}
+                onProfileClick={() => navigate({ to: '/profile' })}
+            />
 
             <Container maxW="container.lg" pb="16px" pt="16px" px="16px">
                 <VStack align="stretch" gap="10px">
