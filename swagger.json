@@ -11,9 +11,15 @@
         "/benefits": {
             "get": {
                 "description": "Получить список всех льгот с пагинацией, фильтрацией и умным поиском\n\nПоиск использует Full-Text Search MySQL с автоматическим поиском по частичному совпадению:\n- Поиск \"транс\" найдет \"транспорт\", \"транспортный\" и т.д.\n- Поиск \"пенсион\" найдет \"пенсионер\", \"пенсионный\" и т.д.\n- Каждое слово ищется с начала (prefix matching)\n\nМожно использовать Boolean операторы для сложных запросов:\n+ обязательное слово: \"+пенсионер +транспорт\"\n- исключить слово: \"льгота -студент\"\n* явный wildcard: \"транс*\"\n\"\" точная фраза: \"общественный транспорт\"",
-                "consumes": ["application/json"],
-                "produces": ["application/json"],
-                "tags": ["Benefits"],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Benefits"
+                ],
                 "summary": "Get Benefits List",
                 "parameters": [
                     {
@@ -93,6 +99,12 @@
                         "description": "Направление сортировки (asc, desc) - по умолчанию desc",
                         "name": "order",
                         "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Показать только избранные льготы (работает только при авторизации, иначе игнорируется)",
+                        "name": "favorites",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -117,12 +129,103 @@
                 }
             }
         },
+        "/benefits/stats": {
+            "get": {
+                "description": "Получить статистику по фильтрам - количество льгот по категориям и уровням\n\nПоддерживает те же параметры фильтрации что и GET /benefits (кроме category и type, так как мы их считаем)\nЭто позволяет показывать актуальные счетчики в форме фильтров при изменении других параметров",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Benefits"
+                ],
+                "summary": "Get Benefits Filter Statistics",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID региона для фильтрации",
+                        "name": "region",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "UUID города для фильтрации",
+                        "name": "city_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Целевые группы через запятую",
+                        "name": "target_groups",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Теги через запятую",
+                        "name": "tags",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Дата начала периода (YYYY-MM-DD)",
+                        "name": "date_from",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Дата окончания периода (YYYY-MM-DD)",
+                        "name": "date_to",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Поисковый запрос",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Учитывать только избранные льготы (работает только при авторизации)",
+                        "name": "favorites",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "object",
+                                "additionalProperties": {
+                                    "type": "integer"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorStruct"
+                        }
+                    }
+                }
+            }
+        },
         "/benefits/{id}": {
             "get": {
                 "description": "Получить льготу по ID",
-                "consumes": ["application/json"],
-                "produces": ["application/json"],
-                "tags": ["Benefits"],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Benefits"
+                ],
                 "summary": "Get Benefit By ID",
                 "parameters": [
                     {
@@ -161,12 +264,70 @@
                 }
             }
         },
+        "/benefits/{id}/favorite": {
+            "post": {
+                "security": [
+                    {
+                        "UserAuth": []
+                    }
+                ],
+                "description": "Переключить статус избранной льготы (toggle). Если льгота в избранном - удалит из избранного, если нет - добавит в избранное",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Benefits"
+                ],
+                "summary": "Toggle Benefit Favorite Status",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Benefit ID (UUID)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorStruct"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorStruct"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorStruct"
+                        }
+                    }
+                }
+            }
+        },
         "/cities": {
             "get": {
                 "description": "Get all cities",
-                "consumes": ["application/json"],
-                "produces": ["application/json"],
-                "tags": ["Cities"],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cities"
+                ],
                 "summary": "Get Cities",
                 "responses": {
                     "200": {
@@ -193,12 +354,73 @@
                 }
             }
         },
+        "/speech/recognize": {
+            "post": {
+                "security": [
+                    {
+                        "UserAuth": []
+                    }
+                ],
+                "description": "Распознает речь из аудиофайла и возвращает текст",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Speech"
+                ],
+                "summary": "Распознавание речи",
+                "responses": {
+                    "200": {
+                        "description": "Распознанный текст",
+                        "schema": {
+                            "$ref": "#/definitions/v1.speechResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибка валидации",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Не авторизован",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/users/auth/callback": {
             "get": {
                 "description": "Callback endpoint для Auth - получает code от ESIA и редиректит на фронтенд",
-                "consumes": ["application/json"],
-                "produces": ["application/json"],
-                "tags": ["Auth"],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
                 "summary": "OAuth Callback",
                 "parameters": [
                     {
@@ -232,9 +454,15 @@
         "/users/auth/login": {
             "get": {
                 "description": "Перенаправление на ESIA для авторизации",
-                "consumes": ["application/json"],
-                "produces": ["application/json"],
-                "tags": ["Auth"],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
                 "summary": "OAuth Login",
                 "responses": {
                     "302": {
@@ -246,9 +474,15 @@
         "/users/auth/token": {
             "post": {
                 "description": "Обмен authorization code на access и refresh токены (как в Keycloak)",
-                "consumes": ["application/json"],
-                "produces": ["application/json"],
-                "tags": ["Auth"],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
                 "summary": "Exchange Code for Tokens",
                 "parameters": [
                     {
@@ -285,9 +519,15 @@
                     }
                 ],
                 "description": "Pong",
-                "consumes": ["application/json"],
-                "produces": ["application/json"],
-                "tags": ["Pong"],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Pong"
+                ],
                 "summary": "Pong",
                 "responses": {
                     "200": {
@@ -313,9 +553,15 @@
                     }
                 ],
                 "description": "Get user profile",
-                "consumes": ["application/json"],
-                "produces": ["application/json"],
-                "tags": ["Users"],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
                 "summary": "Get Profile",
                 "responses": {
                     "200": {
@@ -347,9 +593,15 @@
                     }
                 ],
                 "description": "Register user",
-                "consumes": ["application/json"],
-                "produces": ["application/json"],
-                "tags": ["Users"],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
                 "summary": "User Update Info",
                 "parameters": [
                     {
@@ -467,7 +719,12 @@
         },
         "domain.VerificationStatus": {
             "type": "string",
-            "enum": ["pending", "verified", "rejected", "expired"],
+            "enum": [
+                "pending",
+                "verified",
+                "rejected",
+                "expired"
+            ],
             "x-enum-comments": {
                 "VerificationStatusExpired": "Истекла",
                 "VerificationStatusPending": "Ожидает подтверждения",
@@ -494,6 +751,9 @@
                     "type": "string"
                 },
                 "description": {
+                    "type": "string"
+                },
+                "gis_deeplink": {
                     "type": "string"
                 },
                 "how_to_use": {
@@ -574,7 +834,10 @@
         },
         "v1.exchangeTokenRequest": {
             "type": "object",
-            "required": ["code", "state"],
+            "required": [
+                "code",
+                "state"
+            ],
             "properties": {
                 "code": {
                     "type": "string"
@@ -633,9 +896,20 @@
                 }
             }
         },
+        "v1.speechResponse": {
+            "type": "object",
+            "properties": {
+                "text": {
+                    "type": "string"
+                }
+            }
+        },
         "v1.userUpdateInfoRequest": {
             "type": "object",
-            "required": ["city_id", "groups"],
+            "required": [
+                "city_id",
+                "groups"
+            ],
             "properties": {
                 "city_id": {
                     "type": "string"
