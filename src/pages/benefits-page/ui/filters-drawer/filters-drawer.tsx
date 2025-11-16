@@ -26,9 +26,6 @@ interface FiltersDrawerProps {
     // Обработчики действий
     onReset: () => void
     onApply: () => void
-    // Обработчики свайпа
-    onTouchStart: (e: React.TouchEvent) => void
-    onTouchMove: (e: React.TouchEvent) => void
 }
 
 export const FiltersDrawer = ({
@@ -46,8 +43,6 @@ export const FiltersDrawer = ({
     onCityIdChange,
     onReset,
     onApply,
-    onTouchStart,
-    onTouchMove,
 }: FiltersDrawerProps) => {
     const filtersDrawerRef = useRef<HTMLDivElement>(null)
 
@@ -101,8 +96,6 @@ export const FiltersDrawer = ({
             isOpen={isOpen}
             onOpenChange={onOpenChange}
             title="Фильтр"
-            onTouchStart={onTouchStart}
-            onTouchMove={onTouchMove}
             footer={footer}
         >
             <VStack align='stretch' gap={6} pb={4}>

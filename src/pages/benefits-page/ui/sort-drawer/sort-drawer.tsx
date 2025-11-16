@@ -17,9 +17,6 @@ interface SortDrawerProps {
     // Обработчики действий
     onReset: () => void
     onApply: () => void
-    // Обработчики свайпа
-    onTouchStart: (e: React.TouchEvent) => void
-    onTouchMove: (e: React.TouchEvent) => void
 }
 
 export const SortDrawer = ({
@@ -31,8 +28,6 @@ export const SortDrawer = ({
     onSortOrderChange,
     onReset,
     onApply,
-    onTouchStart,
-    onTouchMove,
 }: SortDrawerProps) => {
     const sortDrawerRef = useRef<HTMLDivElement>(null)
 
@@ -68,8 +63,6 @@ export const SortDrawer = ({
             isOpen={isOpen}
             onOpenChange={onOpenChange}
             title="Сортировка"
-            onTouchStart={onTouchStart}
-            onTouchMove={onTouchMove}
             footer={footer}
         >
             <VStack align='stretch' gap={6} pb={4}>

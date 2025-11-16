@@ -37,9 +37,6 @@ export const BenefitsPage = () => {
     const [isFiltersOpen, setIsFiltersOpen] = useState(false)
     const [isSortOpen, setIsSortOpen] = useState(false)
 
-    const touchStartY = useRef<number>(0)
-    const touchCurrentY = useRef<number>(0)
-
     const debouncedSearch = useDebounce(searchQuery, 500)
 
     const queryParams = useMemo(() => {
@@ -146,43 +143,6 @@ export const BenefitsPage = () => {
         }
     }
 
-    const handleTouchStart = (e: React.TouchEvent) => {
-        touchStartY.current = e.touches[0].clientY
-    }
-
-    const handleTouchMoveFilters = (e: React.TouchEvent) => {
-        const target = e.currentTarget as HTMLElement
-        const touchY = e.touches[0].clientY
-        const rect = target.getBoundingClientRect()
-
-        // Проверяем, что свайп начинается в верхней части drawer (первые 100px)
-        if (touchY - rect.top < 100) {
-            touchCurrentY.current = touchY
-            const deltaY = touchCurrentY.current - touchStartY.current
-
-            // Если свайп вниз больше 50px, закрываем drawer
-            if (deltaY > 50) {
-                setIsFiltersOpen(false)
-            }
-        }
-    }
-
-    const handleTouchMoveSort = (e: React.TouchEvent) => {
-        const target = e.currentTarget as HTMLElement
-        const touchY = e.touches[0].clientY
-        const rect = target.getBoundingClientRect()
-
-        // Проверяем, что свайп начинается в верхней части drawer (первые 100px)
-        if (touchY - rect.top < 100) {
-            touchCurrentY.current = touchY
-            const deltaY = touchCurrentY.current - touchStartY.current
-
-            // Если свайп вниз больше 50px, закрываем drawer
-            if (deltaY > 50) {
-                setIsSortOpen(false)
-            }
-        }
-    }
 
     const totalPages = data?.total ? Math.ceil(data.total / ITEMS_PER_PAGE) : 1
 
@@ -293,8 +253,6 @@ export const BenefitsPage = () => {
                 onCityIdChange={setTempCityId}
                 onReset={handleResetFilters}
                 onApply={handleApplyFilters}
-                onTouchStart={handleTouchStart}
-                onTouchMove={handleTouchMoveFilters}
             />
 
             <SortDrawer
@@ -306,8 +264,6 @@ export const BenefitsPage = () => {
                 onSortOrderChange={setTempSortOrder}
                 onReset={handleResetSort}
                 onApply={handleApplySort}
-                onTouchStart={handleTouchStart}
-                onTouchMove={handleTouchMoveSort}
             />
         </>
     )
