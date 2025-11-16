@@ -4541,6 +4541,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@use-gesture/core@npm:10.3.1":
+  version: 10.3.1
+  resolution: "@use-gesture/core@npm:10.3.1"
+  checksum: 10c0/2e3b5c0f7fe26cdb47be3a9c2a58a6a9edafc5b2895b07d2898eda9ab5a2b29fb0098b15597baa0856907b593075cd44cc69bba4785c9cfb7b6fabaa3b52cd3e
+  languageName: node
+  linkType: hard
+
+"@use-gesture/react@npm:^10.3.1":
+  version: 10.3.1
+  resolution: "@use-gesture/react@npm:10.3.1"
+  dependencies:
+    "@use-gesture/core": "npm:10.3.1"
+  peerDependencies:
+    react: ">= 16.8.0"
+  checksum: 10c0/978da66e4e7c424866ad52eba8fdf0ce93a4c8fc44f8837c7043e68c6a6107cd67e817fffb27f7db2ae871ef2f6addb0c8ddf1586f24c67b7e6aef1646c668cf
+  languageName: node
+  linkType: hard
+
 "@vitejs/plugin-basic-ssl@npm:^2.1.0":
   version: 2.1.0
   resolution: "@vitejs/plugin-basic-ssl@npm:2.1.0"
@@ -8082,6 +8100,7 @@ __metadata:
     "@types/react-dom": "npm:^19.2.2"
     "@typescript-eslint/eslint-plugin": "npm:^8.46.4"
     "@typescript-eslint/parser": "npm:^8.46.4"
+    "@use-gesture/react": "npm:^10.3.1"
     "@vitejs/plugin-basic-ssl": "npm:^2.1.0"
     "@vitejs/plugin-react": "npm:^5.1.0"
     autoprefixer: "npm:^10.4.22"

@@ -31,6 +31,7 @@
         "@tanstack/react-router": "^1.136.1",
         "@tanstack/react-router-devtools": "^1.136.1",
         "@types/lodash.isequal": "^4.5.8",
+        "@use-gesture/react": "^10.3.1",
         "@vitejs/plugin-basic-ssl": "^2.1.0",
         "autoprefixer": "^10.4.22",
         "axios": "^1.13.2",

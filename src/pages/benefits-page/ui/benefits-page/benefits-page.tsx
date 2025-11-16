@@ -12,7 +12,7 @@ import { FiltersDrawer } from '../filters-drawer'
 import { Pagination } from '../pagination'
 import { SortDrawer } from '../sort-drawer'
 import styles from './benefits-page.module.scss'
-import { HeaderMobile } from '@/shared/ui/header-mobile'
+import { AppHeader } from '@/shared/ui/app-header'
 
 export const BenefitsPage = () => {
     const [searchQuery, setSearchQuery] = useState('')
@@ -36,9 +36,6 @@ export const BenefitsPage = () => {
     const [currentPage, setCurrentPage] = useState(1)
     const [isFiltersOpen, setIsFiltersOpen] = useState(false)
     const [isSortOpen, setIsSortOpen] = useState(false)
-
-    const touchStartY = useRef<number>(0)
-    const touchCurrentY = useRef<number>(0)
 
     const debouncedSearch = useDebounce(searchQuery, 500)
 
@@ -146,43 +143,6 @@ export const BenefitsPage = () => {
         }
     }
 
-    const handleTouchStart = (e: React.TouchEvent) => {
-        touchStartY.current = e.touches[0].clientY
-    }
-
-    const handleTouchMoveFilters = (e: React.TouchEvent) => {
-        const target = e.currentTarget as HTMLElement
-        const touchY = e.touches[0].clientY
-        const rect = target.getBoundingClientRect()
-
-        // Проверяем, что свайп начинается в верхней части drawer (первые 100px)
-        if (touchY - rect.top < 100) {
-            touchCurrentY.current = touchY
-            const deltaY = touchCurrentY.current - touchStartY.current
-
-            // Если свайп вниз больше 50px, закрываем drawer
-            if (deltaY > 50) {
-                setIsFiltersOpen(false)
-            }
-        }
-    }
-
-    const handleTouchMoveSort = (e: React.TouchEvent) => {
-        const target = e.currentTarget as HTMLElement
-        const touchY = e.touches[0].clientY
-        const rect = target.getBoundingClientRect()
-
-        // Проверяем, что свайп начинается в верхней части drawer (первые 100px)
-        if (touchY - rect.top < 100) {
-            touchCurrentY.current = touchY
-            const deltaY = touchCurrentY.current - touchStartY.current
-
-            // Если свайп вниз больше 50px, закрываем drawer
-            if (deltaY > 50) {
-                setIsSortOpen(false)
-            }
-        }
-    }
 
     const totalPages = data?.total ? Math.ceil(data.total / ITEMS_PER_PAGE) : 1
 
@@ -201,10 +161,10 @@ export const BenefitsPage = () => {
 
     return (
         <>
-            <HeaderMobile title='' />
+            <AppHeader />
 
-            <Box className={styles['benefits-page']} pt={`var(--header-mobile-height)`} w='100%'>
-                <VStack align='stretch' gap={4} px={{ base: 4, md: 8 }} py={{ base: 6, md: 10 }} w='100%'>
+            <Box className={styles['benefits-page']} w='100%'>
+                <VStack align='stretch' gap={4} px={{ base: 4, md: 8 }} pt={{ base: 3, md: 8 }} pb={{ base: 6, md: 10 }} w='100%'>
                     <Heading as='h1' fontWeight='bold' size='2xl'>Льготы</Heading>
                     <Input
                         variant="subtle"
@@ -293,8 +253,6 @@ export const BenefitsPage = () => {
                 onCityIdChange={setTempCityId}
                 onReset={handleResetFilters}
                 onApply={handleApplyFilters}
-                onTouchStart={handleTouchStart}
-                onTouchMove={handleTouchMoveFilters}
             />
 
             <SortDrawer
@@ -306,8 +264,6 @@ export const BenefitsPage = () => {
                 onSortOrderChange={setTempSortOrder}
                 onReset={handleResetSort}
                 onApply={handleApplySort}
-                onTouchStart={handleTouchStart}
-                onTouchMove={handleTouchMoveSort}
             />
         </>
     )
