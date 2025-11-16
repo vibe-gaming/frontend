@@ -45,9 +45,30 @@ export interface ErrorStructWithValidationErrors extends ErrorStruct {
 
 export type ResponseErrorConfig<TError = ErrorStructWithValidationErrors> = TError
 
+// Получаем URL API из переменной окружения
+// В development и production используем прокси (/api) для обхода CORS
+const getApiBaseURL = () => {
+    // В Vite переменные окружения доступны через import.meta.env
+    const apiUrl = import.meta.env.VITE_API_URL
+
+    // Если VITE_API_URL установлен, используем его (для кастомных конфигураций)
+    if (apiUrl) {
+        // Убираем trailing slash если есть
+        return apiUrl.replace(/\/$/, '')
+    }
+
+    // Используем прокси через Vite (dev) или Netlify (production)
+    // - В development: Vite прокси настроен в vite.config.ts
+    // - В production: Netlify прокси настроен в netlify.toml
+    // Это обходит CORS проблемы, так как запросы идут через тот же домен
+    return '/api/v1'
+}
+
 export const AXIOS_INSTANCE = axios.create({
-    baseURL: '/',
-    withCredentials: true,
+    baseURL: getApiBaseURL(),
+    // withCredentials: false - используется JWT аутентификация (токены в заголовках, не cookies)
+    // Если в будущем понадобятся cookies, установить true и настроить CORS на бэкенде
+    withCredentials: false,
     headers: {
         'Content-Type': 'application/json',
     },

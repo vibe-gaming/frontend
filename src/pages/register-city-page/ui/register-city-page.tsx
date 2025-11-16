@@ -29,7 +29,7 @@ export const RegisterCityPage = () => {
             await mutateAsync({
                 data: {
                     city_id: selectedCityId,
-                    group_type: search.group_type,
+                    groups: search.group_type,
                 },
             })
 

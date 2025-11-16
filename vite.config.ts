@@ -1,11 +1,11 @@
 import { tanstackRouter } from '@tanstack/router-plugin/vite'
 import basicSsl from '@vitejs/plugin-basic-ssl'
 import react from '@vitejs/plugin-react'
-import { VitePWA } from 'vite-plugin-pwa'
 import autoprefixer from 'autoprefixer'
 import browserslistToEsbuild from 'browserslist-to-esbuild'
 import fs from 'node:fs'
 import { defineConfig } from 'vite'
+import { VitePWA } from 'vite-plugin-pwa'
 import tsconfigPaths from 'vite-tsconfig-paths'
 
 const plugins = [
@@ -69,7 +69,15 @@ const plugins = [
     }),
 ]
 
-const server: Record<string, any> = {}
+const server: Record<string, any> = {
+    proxy: {
+        '/api': {
+            target: 'https://backend-production-10ec.up.railway.app',
+            changeOrigin: true,
+            secure: true,
+        },
+    },
+}
 
 const ALREADY_EXIST_SSL_CERT = fs.existsSync('./.cert/key.pem')
 
