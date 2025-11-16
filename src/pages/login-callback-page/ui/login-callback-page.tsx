@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { Center, Spinner, Text } from '@chakra-ui/react'
 import { useNavigate, useSearch } from '@tanstack/react-router'
 
 import { useAuth } from '@/entities/auth'
@@ -29,16 +30,28 @@ export const LoginCallbackPage = () => {
         fetchTokens(code, state)
             .then(({ access_token }) => {
                 setAuth({ access_token: access_token ?? '' })
-            })
-            .then(() => {
                 if (isUserRegistered) {
                     navigate({ to: '/benefits' })
                 } else {
-                    navigate({ to: '/register' })
+                    navigate({ to: '/register/check-info' })
                 }
             })
             .catch(console.error)
     }, [code, state, isAuthenticated, setAuth, navigate, isUserRegistered])
 
-    return null
+    return (
+        <Center
+            alignItems='center'
+            bg='gray.50'
+            flexDirection='column'
+            gap='16px'
+            minH='100dvh'
+            px='16px'
+        >
+            <Spinner color='blue.500' size='xl' />
+            <Text color='gray.600' fontSize='md' textAlign='center'>
+                Выполняем вход через Госуслуги...
+            </Text>
+        </Center>
+    )
 }
