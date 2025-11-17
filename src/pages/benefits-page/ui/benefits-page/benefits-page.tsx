@@ -8,6 +8,7 @@ import { useDebounce } from '@/shared/hooks/use-debounce'
 
 import { ITEMS_PER_PAGE } from './constants'
 import { BenefitCard } from '../benefit-card'
+import { BenefitDrawer } from '../benefit-drawer'
 import { FiltersDrawer } from '../filters-drawer'
 import { Pagination } from '../pagination'
 import { SortDrawer } from '../sort-drawer'
@@ -36,6 +37,7 @@ export const BenefitsPage = () => {
     const [currentPage, setCurrentPage] = useState(1)
     const [isFiltersOpen, setIsFiltersOpen] = useState(false)
     const [isSortOpen, setIsSortOpen] = useState(false)
+    const [selectedBenefitId, setSelectedBenefitId] = useState<string | null>(null)
 
     const debouncedSearch = useDebounce(searchQuery, 500)
 
@@ -143,6 +145,14 @@ export const BenefitsPage = () => {
         }
     }
 
+    const openBenefitDrawer = (benefitId: string) => {
+        setSelectedBenefitId(benefitId)
+    }
+
+    const closeBenefitDrawer = () => {
+        setSelectedBenefitId(null)
+    }
+
 
     const totalPages = data?.total ? Math.ceil(data.total / ITEMS_PER_PAGE) : 1
 
@@ -228,7 +238,11 @@ export const BenefitsPage = () => {
 
                             <VStack align='stretch' gap={4}>
                                 {data.benefits.map((benefit) => (
-                                    <BenefitCard key={benefit.id} benefit={benefit} />
+                                    <BenefitCard
+                                        key={benefit.id}
+                                        benefit={benefit}
+                                        onClick={openBenefitDrawer}
+                                    />
                                 ))}
                             </VStack>
 
@@ -268,6 +282,12 @@ export const BenefitsPage = () => {
                 onSortOrderChange={setTempSortOrder}
                 onReset={handleResetSort}
                 onApply={handleApplySort}
+            />
+
+            <BenefitDrawer
+                isOpen={Boolean(selectedBenefitId)}
+                onClose={closeBenefitDrawer}
+                benefitId={selectedBenefitId}
             />
         </>
     )

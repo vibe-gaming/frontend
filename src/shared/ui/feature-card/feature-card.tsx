@@ -11,27 +11,30 @@ export const FeatureCard = ({ icon, title, description }: FeatureCardProps) => {
     return (
         <Box
             bg="white"
-            borderRadius="16px"
-            boxShadow="sm"
-            p="20px"
-            transition="all 0.2s"
-            _hover={{ boxShadow: 'md', transform: 'translateY(-2px)' }}
+            p={4}
+            borderWidth="1px"
+            borderColor="blue.200"
+            borderStyle="solid"
+            borderRadius={"2xl"}
         >
-            <VStack align="start" gap="8px">
-                <HStack align="center" gap="12px">
+            <VStack align="start" gap={2}>
+                <HStack align="center" gap={2}>
                     <Flex
                         align="center"
                         color="blue.solid"
-                        fontSize="28px"
+                        fontSize="32px"
                         justify="center"
+                        width="32px"
+                        height="32px"
+
                     >
                         {icon}
                     </Flex>
-                    <Text fontWeight="semibold" fontSize="md" lineHeight="short">
+                    <Text fontWeight="bold" fontSize="xl" lineHeight={"30px"} textWrap="nowrap">
                         {title}
                     </Text>
                 </HStack>
-                <Text color="gray.600" fontSize="sm" lineHeight="normal">
+                <Text color="gray.600" fontSize="lg" lineHeight="28px">
                     {description}
                 </Text>
             </VStack>

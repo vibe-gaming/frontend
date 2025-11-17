@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { Badge, Box, Button, Heading, HStack, IconButton, Text, VStack } from '@chakra-ui/react'
-import { useNavigate } from '@tanstack/react-router'
 import { LuHeart } from 'react-icons/lu'
 
 import { usePostBenefitsIdFavorite } from '@/shared/api/generated/hooks/usePostBenefitsIdFavorite'
@@ -12,10 +11,10 @@ interface BenefitCardProps {
     benefit: V1BenefitResponse
     isFavorite?: boolean
     onFavoriteChange?: (isFavorite: boolean) => void
+    onClick?: (benefitId: string) => void
 }
 
-export const BenefitCard = ({ benefit, isFavorite = false, onFavoriteChange }: BenefitCardProps) => {
-    const navigate = useNavigate()
+export const BenefitCard = ({ benefit, isFavorite = false, onFavoriteChange, onClick }: BenefitCardProps) => {
     const [localIsFavorite, setLocalIsFavorite] = useState(isFavorite)
 
     const favoriteMutation = usePostBenefitsIdFavorite({
@@ -36,8 +35,8 @@ export const BenefitCard = ({ benefit, isFavorite = false, onFavoriteChange }: B
     }
 
     const handleDetailsClick = () => {
-        if (benefit.id) {
-            navigate({ to: '/benefits/$id', params: { id: benefit.id } })
+        if (benefit.id && onClick) {
+            onClick(benefit.id)
         }
     }
 
