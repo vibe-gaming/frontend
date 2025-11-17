@@ -140,7 +140,7 @@ export const HomePage = () => {
                     </VStack>
 
                     {/* Popular Benefits Section - только для неавторизованных */}
-                    {!isAuthenticated || 2 == 2 && (
+                    {!isAuthenticated && (
                         <VStack align="stretch" gap={5} py={5}>
                             <Heading
                                 as="h2"
