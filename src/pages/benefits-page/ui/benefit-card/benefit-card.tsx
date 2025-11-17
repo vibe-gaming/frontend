@@ -96,6 +96,7 @@ export const BenefitCard = ({ benefit, isFavorite = false, onFavoriteChange, onC
                 borderColor: 'border.accent',
                 boxShadow: 'md',
             }}
+            onClick={handleDetailsClick}
         >
             <VStack align='stretch' gap={5}>
                 {/* Теги сверху */}
