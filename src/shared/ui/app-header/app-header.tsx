@@ -27,7 +27,6 @@ export const AppHeader = () => {
         >
             {/* Серая карточка с хедером */}
             <Box
-                bg="rgba(250, 250, 250, 1)"
                 borderRadius="16px"
                 px="12px"
                 py="8px"
