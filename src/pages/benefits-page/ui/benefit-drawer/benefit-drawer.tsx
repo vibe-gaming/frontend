@@ -1,7 +1,7 @@
-import { Badge, Box, Button, Drawer, Heading, HStack, Spinner, Text, VStack } from '@chakra-ui/react'
-import { LuX } from 'react-icons/lu'
+import { Badge, Box, Button, Heading, HStack, Spinner, Text, VStack } from '@chakra-ui/react'
 
 import { useGetBenefitsId } from '@/shared/api/generated/hooks/useGetBenefitsId'
+import { FullScreenDrawer } from '@/shared/ui/full-screen-drawer'
 import { BENEFIT_TYPES, CATEGORIES, TAGS, TARGET_GROUPS } from '../benefits-page/constants'
 
 interface BenefitDrawerProps {
@@ -62,59 +62,8 @@ export const BenefitDrawer = ({ isOpen, onClose, benefitId }: BenefitDrawerProps
     }
 
     return (
-        <Drawer.Root
-            open={isOpen}
-            onOpenChange={(e) => {
-                if (!e.open) {
-                    onClose()
-                }
-            }}
-            placement="bottom"
-            closeOnInteractOutside={false}
-        >
-            <Drawer.Backdrop />
-            <Drawer.Positioner>
-                <Drawer.Content
-                    h="100vh"
-                    mt={0}
-                    borderTopRadius="0"
-                    style={{
-                        borderTopLeftRadius: '0',
-                        borderTopRightRadius: '0',
-                    }}
-                >
-                    <Drawer.Header
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="flex-end"
-                        pb={4}
-                        pt={4}
-                        px={6}
-                    >
-                        <Button
-                            variant="ghost"
-                            size="2xl"
-                            onClick={onClose}
-                            p={4}
-                            border={'none'}
-                            minW="auto"
-                            h="auto"
-                            aria-label="Закрыть"
-                        >
-                            <LuX size={20} />
-                        </Button>
-                    </Drawer.Header>
-
-                    <Drawer.Body
-                        px={6}
-                        py={0}
-                        style={{
-                            overflowY: 'auto',
-                            overflowX: 'hidden',
-                            WebkitOverflowScrolling: 'touch',
-                        }}
-                    >
-                        {isLoading ? (
+        <FullScreenDrawer isOpen={isOpen} onClose={onClose}>
+            {isLoading ? (
                             <Box py={12} textAlign="center" aria-live="polite">
                                 <Spinner size="lg" />
                                 <Text color="text.secondary" fontSize="md" mt={4}>
@@ -137,7 +86,7 @@ export const BenefitDrawer = ({ isOpen, onClose, benefitId }: BenefitDrawerProps
                             <Box as="article">
                                 {/* Теги/фильтры */}
                                 {tagsToDisplay.length > 0 && (
-                                    <Box as="nav" aria-label="Категории льготы" mb={6}>
+                                    <Box as="nav" aria-label="Категории льготы" mb={5}>
                                         <HStack flexWrap="wrap" gap={2}>
                                             {tagsToDisplay.map((tag, index) => (
                                                 <Badge
@@ -159,7 +108,7 @@ export const BenefitDrawer = ({ isOpen, onClose, benefitId }: BenefitDrawerProps
                                 )}
 
                                 {/* Заголовок */}
-                                <Heading as="h1" fontSize="3xl" fontWeight="bold" mb={4} id="benefit-title">
+                                <Heading as="h1" fontSize="2xl" fontWeight="bold" mb={4} id="benefit-title">
                                     {benefit.title || 'Без названия'}
                                 </Heading>
 
@@ -331,10 +280,7 @@ export const BenefitDrawer = ({ isOpen, onClose, benefitId }: BenefitDrawerProps
                                 </Box>
                             </Box>
                         )}
-                    </Drawer.Body>
-                </Drawer.Content>
-            </Drawer.Positioner>
-        </Drawer.Root>
+        </FullScreenDrawer>
     )
 }
 
