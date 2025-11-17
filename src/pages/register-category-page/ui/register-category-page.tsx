@@ -2,27 +2,40 @@ import * as React from 'react'
 import { Box, Button, Center, Flex, SimpleGrid, Text } from '@chakra-ui/react'
 import { useNavigate } from '@tanstack/react-router'
 
-import { DomainGroupTypeEnum } from '@/shared/api/generated'
 import { HeaderMobile } from '@/shared/ui/header-mobile'
 
-const GROUP_TYPE_LABELS: Record<DomainGroupTypeEnum, string> = {
-    [DomainGroupTypeEnum.UserGroupPensioners]: 'Пенсионеры',
-    [DomainGroupTypeEnum.UserGroupDisabled]: 'Инвалиды',
-    [DomainGroupTypeEnum.UserGroupYoungFamilies]: 'Молодые семьи',
-    [DomainGroupTypeEnum.UserGroupLowIncome]: 'Малоимущие',
-    [DomainGroupTypeEnum.UserGroupStudents]: 'Студенты',
-    [DomainGroupTypeEnum.UserGroupLargeFamilies]: 'Многодетные семьи',
-    [DomainGroupTypeEnum.UserGroupChildren]: 'Дети',
-    [DomainGroupTypeEnum.UserGroupVeterans]: 'Ветераны',
+// Константы для типов групп
+const GROUP_TYPES = {
+    PENSIONERS: 'pensioners',
+    DISABLED: 'disabled',
+    YOUNG_FAMILIES: 'young_families',
+    LOW_INCOME: 'low_income',
+    STUDENTS: 'students',
+    LARGE_FAMILIES: 'large_families',
+    CHILDREN: 'children',
+    VETERANS: 'veterans',
+} as const
+
+type GroupType = (typeof GROUP_TYPES)[keyof typeof GROUP_TYPES]
+
+const GROUP_TYPE_LABELS: Record<GroupType, string> = {
+    [GROUP_TYPES.PENSIONERS]: 'Пенсионеры',
+    [GROUP_TYPES.DISABLED]: 'Инвалиды',
+    [GROUP_TYPES.YOUNG_FAMILIES]: 'Молодые семьи',
+    [GROUP_TYPES.LOW_INCOME]: 'Малоимущие',
+    [GROUP_TYPES.STUDENTS]: 'Студенты',
+    [GROUP_TYPES.LARGE_FAMILIES]: 'Многодетные семьи',
+    [GROUP_TYPES.CHILDREN]: 'Дети',
+    [GROUP_TYPES.VETERANS]: 'Ветераны',
 }
 
-const groupTypes = Object.values(DomainGroupTypeEnum)
+const groupTypes = Object.values(GROUP_TYPES)
 
 export const RegisterCategoryPage = () => {
     const navigate = useNavigate()
-    const [selected, setSelected] = React.useState<DomainGroupTypeEnum[]>([])
+    const [selected, setSelected] = React.useState<GroupType[]>([])
 
-    const toggleType = (type: DomainGroupTypeEnum) => {
+    const toggleType = (type: GroupType) => {
         setSelected((previous) =>
             previous.includes(type) ? previous.filter((t) => t !== type) : [...previous, type]
         )

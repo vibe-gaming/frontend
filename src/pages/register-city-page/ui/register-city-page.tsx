@@ -2,14 +2,14 @@ import * as React from 'react'
 import { Box, Button, Center, Input, List, Text } from '@chakra-ui/react'
 import { useNavigate, useRouter } from '@tanstack/react-router'
 
-import { type DomainGroupType, useGetCities, usePostUsersUpdateInfo } from '@/shared/api/generated'
+import { useGetCities, usePostUsersUpdateInfo } from '@/shared/api/generated'
 import { HeaderMobile } from '@/shared/ui/header-mobile'
 
 export const RegisterCityPage = () => {
     const navigate = useNavigate()
     const router = useRouter()
     const search = router.state.location.search as {
-        group_type?: DomainGroupType[]
+        group_type?: string[]
     }
 
     const [filter, setFilter] = React.useState('')
