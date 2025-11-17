@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Badge, Box, Button, Container, Flex, Heading, Icon, Spinner, Text, VStack } from '@chakra-ui/react'
 import { useNavigate } from '@tanstack/react-router'
 import { Eye } from 'lucide-react'
@@ -6,6 +7,8 @@ import { useAuth } from '@/entities/auth'
 import { type DomainUserDocument } from '@/shared/api/generated'
 import { useGetBenefitsUserStats } from '@/shared/api/generated/hooks/useGetBenefitsUserStats'
 import { AppHeader } from '@/shared/ui/app-header'
+import { CertificateDrawer } from '../certificate-drawer'
+import { AXIOS_INSTANCE } from '@/shared/api/axios-client'
 
 // Константы для типов групп
 const GROUP_TYPES = {
@@ -115,6 +118,8 @@ export const ProfilePage = () => {
     const { profile, isLoading } = useAuth()
     const navigate = useNavigate()
     const { data: statsData } = useGetBenefitsUserStats()
+    const [isCertificateDrawerOpen, setIsCertificateDrawerOpen] = useState(false)
+    const [isDownloadingPDF, setIsDownloadingPDF] = useState(false)
 
     const fullName = [profile?.last_name, profile?.first_name, profile?.middle_name]
         .filter(Boolean)
@@ -123,6 +128,30 @@ export const ProfilePage = () => {
     // Получаем документы
     const passportDoc = getDocumentByType(profile?.documents, 'passport')
     const snilsDoc = getDocumentByType(profile?.documents, 'snils')
+
+    // Функция скачивания PDF
+    const handleDownloadPDF = async () => {
+        try {
+            setIsDownloadingPDF(true)
+            const response = await AXIOS_INSTANCE.get('/users/pdfdownload', {
+                responseType: 'blob',
+            })
+
+            // Создаем ссылку для скачивания
+            const url = window.URL.createObjectURL(new Blob([response.data]))
+            const link = document.createElement('a')
+            link.href = url
+            link.setAttribute('download', `Удостоверение_${fullName || 'пенсионера'}.pdf`)
+            document.body.appendChild(link)
+            link.click()
+            link.remove()
+            window.URL.revokeObjectURL(url)
+        } catch (error) {
+            console.error('Ошибка при скачивании PDF:', error)
+        } finally {
+            setIsDownloadingPDF(false)
+        }
+    }
 
     if (isLoading) {
         return (
@@ -160,6 +189,13 @@ export const ProfilePage = () => {
                                                 p="20px"
                                                 role="article"
                                                 aria-label={`Категория: ${getGroupTypeLabel(group.type)}`}
+                                                cursor="pointer"
+                                                onClick={() => setIsCertificateDrawerOpen(true)}
+                                                _hover={{ 
+                                                    borderColor: 'blue.300',
+                                                    boxShadow: 'sm',
+                                                }}
+                                                transition="all 0.2s"
                                             >
                                                 <VStack align="stretch" gap="12px">
                                                     {/* Название категории и статус */}
@@ -535,6 +571,15 @@ export const ProfilePage = () => {
                     </Button>
                 </VStack>
             </Container>
+
+            {/* Certificate Drawer */}
+            <CertificateDrawer
+                isOpen={isCertificateDrawerOpen}
+                onOpenChange={setIsCertificateDrawerOpen}
+                profile={profile}
+                onDownloadPDF={handleDownloadPDF}
+                isDownloading={isDownloadingPDF}
+            />
         </Box>
     )
 }
