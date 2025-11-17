@@ -4,6 +4,7 @@ import { Eye } from 'lucide-react'
 
 import { useAuth } from '@/entities/auth'
 import { type DomainUserDocument } from '@/shared/api/generated'
+import { useGetBenefitsUserStats } from '@/shared/api/generated/hooks/useGetBenefitsUserStats'
 import { AppHeader } from '@/shared/ui/app-header'
 
 // Константы для типов групп
@@ -113,6 +114,7 @@ const formatSnils = (snils?: string): string => {
 export const ProfilePage = () => {
     const { profile, isLoading } = useAuth()
     const navigate = useNavigate()
+    const { data: statsData } = useGetBenefitsUserStats()
 
     const fullName = [profile?.last_name, profile?.first_name, profile?.middle_name]
         .filter(Boolean)
@@ -366,7 +368,7 @@ export const ProfilePage = () => {
                                             fontWeight="bold"
                                             color="#3B82F6"
                                         >
-                                            100
+                                            {statsData?.total_benefits ?? 0}
                                         </Heading>
                                     </VStack>
                                     <Icon
@@ -409,7 +411,7 @@ export const ProfilePage = () => {
                                             fontWeight="bold"
                                             color="#3B82F6"
                                         >
-                                            40
+                                            {statsData?.total_favorites ?? 0}
                                         </Heading>
                                     </VStack>
                                     <Icon
