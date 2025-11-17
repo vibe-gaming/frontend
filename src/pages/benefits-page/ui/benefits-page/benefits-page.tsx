@@ -147,12 +147,16 @@ export const BenefitsPage = () => {
     const totalPages = data?.total ? Math.ceil(data.total / ITEMS_PER_PAGE) : 1
 
     if (isError) {
+        const errorMessage = error && typeof error === 'object' && 'error_message' in error 
+            ? String(error.error_message) 
+            : null;
+        
         return (
             <Box p={8}>
                 <Text color='error.DEFAULT'>Не удалось загрузить льготы</Text>
-                {error && 'error_message' in error && error.error_message && (
+                {errorMessage && (
                     <Text color='text.secondary' fontSize='sm' mt={2}>
-                        {error.error_message}
+                        {errorMessage}
                     </Text>
                 )}
             </Box>
