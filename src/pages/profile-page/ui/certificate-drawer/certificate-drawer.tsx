@@ -70,18 +70,20 @@ export const CertificateDrawer = ({
             footer={
                 <Button
                     w="full"
-                    size="xl"
-                    bg="#DBEAFE"
-                    color="#173DA6"
+                    size="2xl"
+                    bg="blue.subtle"
+                    color="blue.fg"
                     border="1px solid"
-                    borderColor="#BFDBFE"
-                    borderRadius="16px"
+                    borderColor="blue.muted"
+                    borderRadius="2xl"
                     onClick={onDownloadPDF}
                     loading={isDownloading}
-                    _hover={{ bg: '#BFDBFE' }}
+                    _hover={{ bg: 'blue.subtleHover' }}
+                    fontSize="xl"
+                    lineHeight="30px"
                     fontWeight="normal"
                 >
-                    <Download size={20} style={{ marginRight: '8px' }} />
+                    <Download size={24} style={{ marginRight: '12px' }} />
                     Скачать PDF
                 </Button>
             }
