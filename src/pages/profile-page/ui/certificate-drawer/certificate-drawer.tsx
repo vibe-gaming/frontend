@@ -1,4 +1,4 @@
-import { Badge, Box, Button, Flex, Heading, HStack, Spinner, Text, VStack } from '@chakra-ui/react'
+import { Box, Button, Heading, Text, VStack } from '@chakra-ui/react'
 import { Download } from 'lucide-react'
 
 import { BaseDrawer } from '@/shared/ui/base-drawer'
@@ -12,16 +12,6 @@ export interface CertificateDrawerProps {
     isDownloading?: boolean
 }
 
-const formatDate = (dateString?: string): string => {
-    if (!dateString) return ''
-    const date = new Date(dateString)
-    return date.toLocaleDateString('ru-RU', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-    })
-}
-
 const formatSnils = (snils?: string): string => {
     if (!snils) return ''
     const cleaned = snils.replace(/\D/g, '')
@@ -31,6 +21,35 @@ const formatSnils = (snils?: string): string => {
     return snils
 }
 
+// Компонент для отображения поля
+const CertificateField = ({ label, value, isRed }: { label: string; value: string; isRed?: boolean }) => (
+    <Box
+        borderBottom="1px solid"
+        borderColor="#E4E4E7"
+        pb="16px"
+        pt="16px"
+    >
+        <Text
+            fontSize="14px"
+            lineHeight="20px"
+            fontWeight="normal"
+            color="#52525B"
+            mb="4px"
+        >
+            {label}
+        </Text>
+        <Text
+            fontSize="18px"
+            lineHeight="24px"
+            fontWeight="bold"
+            color={isRed ? "#DC2626" : "#27272A"}
+            textTransform="uppercase"
+        >
+            {value}
+        </Text>
+    </Box>
+)
+
 export const CertificateDrawer = ({
     isOpen,
     onOpenChange,
@@ -38,214 +57,101 @@ export const CertificateDrawer = ({
     onDownloadPDF,
     isDownloading,
 }: CertificateDrawerProps) => {
-    const fullName = [profile?.last_name, profile?.first_name, profile?.middle_name]
-        .filter(Boolean)
-        .join(' ')
-
-    const passportDoc = profile?.documents?.find((doc: DomainUserDocument) => doc.document_type === 'passport')
     const snilsDoc = profile?.documents?.find((doc: DomainUserDocument) => doc.document_type === 'snils')
+    
+    // Генерируем номер удостоверения (для примера берем первые 9 цифр ID)
+    const certificateNumber = profile?.id?.replace(/\D/g, '').slice(0, 9).padStart(9, '0') || '000000000'
 
     return (
         <BaseDrawer
             isOpen={isOpen}
             onOpenChange={onOpenChange}
-            title="Удостоверение пенсионера"
+            title="Свидетельство пенсионера"
             footer={
                 <Button
                     w="full"
                     size="xl"
-                    colorScheme="blue"
+                    bg="#DBEAFE"
+                    color="#173DA6"
+                    border="1px solid"
+                    borderColor="#BFDBFE"
                     borderRadius="16px"
                     onClick={onDownloadPDF}
                     loading={isDownloading}
+                    _hover={{ bg: '#BFDBFE' }}
+                    fontWeight="normal"
                 >
                     <Download size={20} style={{ marginRight: '8px' }} />
                     Скачать PDF
                 </Button>
             }
         >
-            <VStack align="stretch" gap="24px" pb="24px">
-                {/* Информация о статусе */}
-                <Box
-                    bg="#DBEAFE"
-                    border="1px solid"
-                    borderColor="#BFDBFE"
-                    borderRadius="16px"
-                    p="16px"
-                >
-                    <VStack align="stretch" gap="12px">
-                        <Flex justify="space-between" align="center">
-                            <Text
-                                fontSize="18px"
-                                lineHeight="24px"
-                                fontWeight="bold"
-                                color="#27272A"
-                            >
-                                Статус
-                            </Text>
-                            <Badge
-                                colorScheme="green"
-                                fontSize="14px"
-                                px="12px"
-                                py="4px"
-                                borderRadius="8px"
-                            >
-                                Подтверждено
-                            </Badge>
-                        </Flex>
-                        <Text
-                            fontSize="16px"
-                            lineHeight="24px"
-                            fontWeight="normal"
-                            color="#52525B"
-                        >
-                            Вы являетесь пенсионером
-                        </Text>
-                    </VStack>
-                </Box>
-
-                {/* Личные данные */}
-                <Box>
+            <VStack align="stretch" gap="0" pb="8px">
+                {/* Заголовок */}
+                <Box pt="8px" pb="16px">
                     <Heading
-                        as="h3"
-                        fontSize="20px"
-                        lineHeight="28px"
+                        as="h2"
+                        fontSize="24px"
+                        lineHeight="32px"
                         fontWeight="bold"
                         color="#27272A"
-                        mb="16px"
+                        textTransform="uppercase"
+                        letterSpacing="-0.2px"
                     >
-                        Личные данные
+                        Свидетельство<br />пенсионера
                     </Heading>
-                    <VStack align="stretch" gap="16px">
-                        <Box>
-                            <Text
-                                fontSize="14px"
-                                lineHeight="20px"
-                                fontWeight="normal"
-                                color="#71717A"
-                                mb="4px"
-                            >
-                                ФИО
-                            </Text>
-                            <Text
-                                fontSize="18px"
-                                lineHeight="24px"
-                                fontWeight="normal"
-                                color="#27272A"
-                            >
-                                {fullName || 'Не указано'}
-                            </Text>
-                        </Box>
-
-                        {snilsDoc?.document_number && (
-                            <Box>
-                                <Text
-                                    fontSize="14px"
-                                    lineHeight="20px"
-                                    fontWeight="normal"
-                                    color="#71717A"
-                                    mb="4px"
-                                >
-                                    СНИЛС
-                                </Text>
-                                <Text
-                                    fontSize="18px"
-                                    lineHeight="24px"
-                                    fontWeight="normal"
-                                    color="#27272A"
-                                >
-                                    {formatSnils(snilsDoc.document_number)}
-                                </Text>
-                            </Box>
-                        )}
-
-                        {passportDoc?.document_number && (
-                            <Box>
-                                <Text
-                                    fontSize="14px"
-                                    lineHeight="20px"
-                                    fontWeight="normal"
-                                    color="#71717A"
-                                    mb="4px"
-                                >
-                                    Паспорт
-                                </Text>
-                                <Text
-                                    fontSize="18px"
-                                    lineHeight="24px"
-                                    fontWeight="normal"
-                                    color="#27272A"
-                                >
-                                    {passportDoc.document_number}
-                                </Text>
-                            </Box>
-                        )}
-                    </VStack>
                 </Box>
 
-                {/* Информация о категории */}
-                <Box>
-                    <Heading
-                        as="h3"
-                        fontSize="20px"
-                        lineHeight="28px"
-                        fontWeight="bold"
-                        color="#27272A"
-                        mb="16px"
-                    >
-                        Категория
-                    </Heading>
-                    <Box
-                        bg="white"
-                        border="1px solid"
-                        borderColor="#E4E4E7"
-                        borderRadius="12px"
-                        p="16px"
-                    >
-                        <VStack align="stretch" gap="8px">
-                            <Text
-                                fontSize="18px"
-                                lineHeight="24px"
-                                fontWeight="bold"
-                                color="#27272A"
-                            >
-                                Пенсионеры
-                            </Text>
-                            <Text
-                                fontSize="16px"
-                                lineHeight="24px"
-                                fontWeight="normal"
-                                color="#52525B"
-                            >
-                                Граждане, достигшие пенсионного возраста или получающие пенсию по
-                                инвалидности
-                            </Text>
-                        </VStack>
-                    </Box>
-                </Box>
+                {/* Номер */}
+                <CertificateField 
+                    label="Номер" 
+                    value={certificateNumber}
+                    isRed={true}
+                />
 
-                {/* Дата выдачи */}
-                {profile?.groups?.[0]?.verified_at && (
-                    <Box>
-                        <Text
-                            fontSize="14px"
-                            lineHeight="20px"
-                            fontWeight="normal"
-                            color="#71717A"
-                            mb="4px"
-                        >
-                            Дата выдачи
-                        </Text>
-                        <Text
-                            fontSize="18px"
-                            lineHeight="24px"
-                            fontWeight="normal"
-                            color="#27272A"
-                        >
-                            {formatDate(profile.groups[0].verified_at)}
-                        </Text>
-                    </Box>
+                {/* Фамилия */}
+                {profile?.last_name && (
+                    <CertificateField 
+                        label="Фамилия" 
+                        value={profile.last_name} 
+                    />
                 )}
+
+                {/* Имя */}
+                {profile?.first_name && (
+                    <CertificateField 
+                        label="Имя" 
+                        value={profile.first_name} 
+                    />
+                )}
+
+                {/* Отчество */}
+                {profile?.middle_name && (
+                    <CertificateField 
+                        label="Отчество" 
+                        value={profile.middle_name} 
+                    />
+                )}
+
+                {/* СНИЛС */}
+                {snilsDoc?.document_number && (
+                    <CertificateField 
+                        label="СНИЛС" 
+                        value={formatSnils(snilsDoc.document_number)} 
+                    />
+                )}
+
+                {/* Вид пенсии */}
+                <CertificateField 
+                    label="Вид пенсии" 
+                    value="По старости" 
+                />
+
+                {/* Срок действия */}
+                <CertificateField 
+                    label="Срок на который установлена пенсия" 
+                    value="Бессрочно" 
+                />
             </VStack>
         </BaseDrawer>
     )
