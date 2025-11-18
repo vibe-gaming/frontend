@@ -5,6 +5,7 @@ import { LuSearchCheck } from 'react-icons/lu'
 
 import { useAuthState } from '@/entities/auth'
 import { AppHeader } from '@/shared/ui/app-header'
+import { Footer } from '@/shared/ui/footer'
 import { FeatureCard } from '@/shared/ui/feature-card'
 
 import mainBannerImage from '@/shared/assets/images/main-banner.png'
@@ -12,7 +13,6 @@ import popular1Image from '@/shared/assets/images/popular-1.png'
 import popular2Image from '@/shared/assets/images/popular-2.png'
 import popular3Image from '@/shared/assets/images/popular-3.png'
 import popular4Image from '@/shared/assets/images/popular-4.png'
-import { Footer } from './footer'
 
 export const HomePage = () => {
     const navigate = useNavigate()
