@@ -11,7 +11,7 @@ export const AuthHeaderMobile: React.FC<AuthHeaderMobileProps> = ({ title, postf
     return (
         <header className={styles['auth-header-mobile']}>
             {title && <h1 className={styles['auth-header-mobile__title']}>{title}</h1>}
-            <div style={{ width: 32, gridArea: 'postfix' }}>{postfixElement}</div>
+            <div className={styles['auth-header-mobile__postfix']}>{postfixElement}</div>
         </header>
     )
 }

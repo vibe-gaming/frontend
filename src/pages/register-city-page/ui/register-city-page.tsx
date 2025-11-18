@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Combobox, Portal, Spinner, Text, useFilter, useListCollection } from '@chakra-ui/react'
 import { useNavigate, useRouter } from '@tanstack/react-router'
-import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react'
+import { ArrowLeftIcon, ArrowRightIcon, XIcon } from 'lucide-react'
 import { toast } from 'sonner'
 
 import {
@@ -107,8 +107,10 @@ export const RegisterCityPage = () => {
                                 px='5'
                                 py='10px'
                             />
-                            <Combobox.IndicatorGroup pr='4'>
-                                <Combobox.ClearTrigger />
+                            <Combobox.IndicatorGroup pr='6'>
+                                <Combobox.ClearTrigger>
+                                    <XIcon size={24} />
+                                </Combobox.ClearTrigger>
                                 {isLoading && (
                                     <Spinner borderWidth='1.5px' color='fg.muted' size='xs' />
                                 )}

@@ -1,24 +1,33 @@
 .auth-header-mobile {
-    position: fixed;
+    position: absolute;
     z-index: 1011;
     top: 0;
+    left: 0;
     display: grid;
     width: 100%;
-    height: 60px;
+    height: 56px;
     box-sizing: border-box;
     align-items: center;
     justify-content: space-between;
-    padding: 0 16px;
     background-color: #fff;
     grid-area: header;
     grid-template:
-        'title postfix' 60px / 1fr 32px;
+        'title postfix' 56px / 1fr 56px;
 
     &__title {
         font-size: 18px;
         font-weight: 700;
         grid-area: title;
         line-height: 24px;
+    }
+
+    &__postfix {
+        display: flex;
+        width: 56px;
+        height: 56px;
+        align-items: center;
+        justify-content: center;
+        grid-area: postfix;
     }
 
     >* {
