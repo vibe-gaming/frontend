@@ -2,6 +2,7 @@ import { Box, Flex, IconButton, Button, HStack, Show, Heading, Text, useMediaQue
 import { User } from 'lucide-react'
 
 import { useAuthState } from '@/entities/auth'
+import { useOnlineStatus } from '@/shared/hooks/use-online-status'
 
 import logoIcon from '@/shared/assets/icons/logo.svg'
 import { useNavigate } from '@tanstack/react-router'
@@ -9,6 +10,7 @@ import { useNavigate } from '@tanstack/react-router'
 export const AppHeader = () => {
     const navigate = useNavigate();
     const [isDesktop] = useMediaQuery(["(min-width: 768px)"]); // 768px is the breakpoint for desktop
+    const isOnline = useOnlineStatus()
 
     const onLogoClick = () => navigate({ to: '/' });
     const onBenefitsClick = () => navigate({ to: '/benefits' });
@@ -78,21 +80,24 @@ export const AppHeader = () => {
                             Льготы
                         </Button>
 
-                        <IconButton
-                            aria-label={isAuthenticated ? 'Профиль' : 'Войти'}
-                            variant="outline"
-                            borderRadius="16px"
-                            borderColor="blue.solid"
-                            color="blue.solid"
-                            size="lg"
-                            minW="48px"
-                            h="48px"
-                            bg="white"
-                            _hover={{ bg: 'blue.50' }}
-                            onClick={isAuthenticated ? onProfileClick : onLoginClick}
-                        >
-                            <User size={24} />
-                        </IconButton>
+                        {/* Кнопка профиля - скрыта в офлайне */}
+                        {isOnline && (
+                            <IconButton
+                                aria-label={isAuthenticated ? 'Профиль' : 'Войти'}
+                                variant="outline"
+                                borderRadius="16px"
+                                borderColor="blue.solid"
+                                color="blue.solid"
+                                size="lg"
+                                minW="48px"
+                                h="48px"
+                                bg="white"
+                                _hover={{ bg: 'blue.50' }}
+                                onClick={isAuthenticated ? onProfileClick : onLoginClick}
+                            >
+                                <User size={24} />
+                            </IconButton>
+                        )}
                     </HStack>
                 </Flex>
             </Box>
