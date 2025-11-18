@@ -91,8 +91,8 @@ export const HomePage = () => {
                             align="start" 
                             gap={{ base: '10px', lg: '20px' }}
                             maxW={{ base: '100%', lg: '580px' }}
-                            h="full"
-                            justify="space-between"
+                            h={{ base: 'auto', lg: 'full' }}
+                            justify={{ base: 'flex-start', lg: 'space-between' }}
                         >
                             <VStack align="start" gap={{ base: '10px', lg: '16px' }}>
                                 <Heading
@@ -113,16 +113,17 @@ export const HomePage = () => {
                                 </Text>
                             </VStack>
 
-                            {/* CTA Button - теперь внутри баннера */}
+                            {/* CTA Button - внутри баннера только на desktop */}
                             <Button
+                                display={{ base: 'none', lg: 'flex' }}
                                 bg="blue.solid"
-                                borderRadius={{ base: '16px', lg: '20px' }}
+                                borderRadius="20px"
                                 fontWeight="semibold"
-                                fontSize={{ base: 'xl', lg: '24px' }}
-                                lineHeight={{ base: '30px', lg: '36px' }}
+                                fontSize="24px"
+                                lineHeight="36px"
                                 size="2xl"
-                                h={{ base: 'auto', lg: '64px' }}
-                                w={{ base: 'full', lg: '280px' }}
+                                h="64px"
+                                w="280px"
                                 _hover={{ bg: 'blue.600' }}
                                 onClick={() => navigate({ to: '/benefits' })}
                             >
@@ -130,6 +131,22 @@ export const HomePage = () => {
                             </Button>
                         </VStack>
                     </Box>
+
+                    {/* CTA Button - вне баннера только на mobile */}
+                    <Button
+                        display={{ base: 'flex', lg: 'none' }}
+                        bg="blue.solid"
+                        borderRadius="16px"
+                        fontWeight="semibold"
+                        fontSize="xl"
+                        lineHeight="30px"
+                        size="2xl"
+                        w="full"
+                        _hover={{ bg: 'blue.600' }}
+                        onClick={() => navigate({ to: '/benefits' })}
+                    >
+                        Смотреть льготы
+                    </Button>
 
                     {/* Features Section */}
                     <VStack align="stretch" gap={{ base: 5, lg: 8 }} mt={{ base: 0, lg: 4 }}>
