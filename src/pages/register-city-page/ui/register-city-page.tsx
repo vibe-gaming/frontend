@@ -28,10 +28,14 @@ export const RegisterCityPage = () => {
 
     const { data: cities } = useGetCities()
 
-    const initialItems = cities?.map((city) => ({
-        label: city.name,
-        value: city.id,
-    }))
+    const initialItems = React.useMemo(
+        () =>
+            cities?.map((city) => ({
+                label: city.name,
+                value: city.id,
+            })),
+        [cities]
+    )
 
     const { mutateAsync, isPending } = usePostUsersUpdateInfo({})
 
