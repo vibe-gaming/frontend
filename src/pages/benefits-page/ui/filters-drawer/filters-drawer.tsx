@@ -55,11 +55,11 @@ export const FiltersDrawer = ({
 
     const citiesCollection = useMemo(() => {
         const items = [
-            { value: '', label: 'Все города' },
             ...(citiesData?.map((city) => ({
                 value: city.id || '',
                 label: city.name || '',
             })) || []),
+            { value: '', label: 'Все города' },
         ]
         return createListCollection({ items })
     }, [citiesData])
@@ -107,7 +107,7 @@ export const FiltersDrawer = ({
                 />
 
                 <MultiSelectFilter
-                    title="Тип целевой группы"
+                    title="Тип"
                     options={TARGET_GROUPS}
                     selectedValues={tempTargetGroups}
                     onChange={onTargetGroupsChange}
