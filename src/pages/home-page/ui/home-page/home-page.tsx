@@ -9,6 +9,7 @@ import { Footer } from '@/shared/ui/footer'
 import { FeatureCard } from '@/shared/ui/feature-card'
 
 import mainBannerImage from '@/shared/assets/images/main-banner.png'
+import bannerDesktopImage from '@/shared/assets/images/banner_desktop.png'
 import popular1Image from '@/shared/assets/images/popular-1.png'
 import popular2Image from '@/shared/assets/images/popular-2.png'
 import popular3Image from '@/shared/assets/images/popular-3.png'
@@ -72,7 +73,10 @@ export const HomePage = () => {
                 <VStack align="stretch" gap={{ base: 6, lg: 8 }} maxW="1440px" mx="auto">
                     {/* Hero Section */}
                     <Box
-                        bgImage={`url(${mainBannerImage})`}
+                        bgImage={{
+                            base: `url(${mainBannerImage})`,
+                            lg: `url(${bannerDesktopImage})`
+                        }}
                         bgSize="cover"
                         borderRadius={{ base: '20px', lg: '32px' }}
                         h={{ base: '500px', lg: '480px' }}
