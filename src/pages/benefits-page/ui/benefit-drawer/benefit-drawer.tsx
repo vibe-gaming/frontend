@@ -16,13 +16,46 @@ interface BenefitDrawerProps {
     benefitId: string | null
 }
 
+// Типы для зданий и организаций
+interface Building {
+    id?: string
+    name?: string
+    address?: string
+    phone_number?: string
+    gis_deeplink?: string
+    start_time?: string
+    end_time?: string
+    is_open?: boolean
+    tags?: string[]
+    latitude?: number
+    longitude?: number
+}
+
+interface Organization {
+    id?: string
+    name?: string
+    buildings?: Building[]
+}
+
+// Расширенный тип ответа с organization
+interface BenefitResponseWithOrganization {
+    organization?: Organization
+    [key: string]: any
+}
+
 export const BenefitDrawer = ({ isOpen, onClose, benefitId }: BenefitDrawerProps) => {
-    const { data: benefit, isLoading, isError, error } = useGetBenefitsId(benefitId || '', {
+    const { data: benefitData, isLoading, isError, error } = useGetBenefitsId(benefitId || '', {
         query: {
             enabled: Boolean(benefitId),
         },
     })
     const [isDownloading, setIsDownloading] = useState(false)
+    
+    // Типизируем benefit с поддержкой organization
+    const benefit = benefitData as BenefitResponseWithOrganization | undefined
+    
+    // Получаем список зданий
+    const buildings = benefit?.organization?.buildings || []
 
     // Функция скачивания PDF
     const handleDownloadPDF = async () => {
@@ -49,6 +82,55 @@ export const BenefitDrawer = ({ isOpen, onClose, benefitId }: BenefitDrawerProps
             setIsDownloading(false)
         }
     }
+    
+    // Функция построения маршрута
+    const handleBuildRoute = (building: Building) => {
+        // Используем gis_deeplink если есть, иначе координаты
+        if (building.gis_deeplink) {
+            window.open(building.gis_deeplink, '_blank')
+            return
+        }
+        
+        if (!building.latitude || !building.longitude) {
+            console.warn('Нет данных для построения маршрута:', building.name)
+            return
+        }
+        
+        // Fallback на Яндекс.Карты с маршрутом
+        const url = `https://yandex.ru/maps/?rtext=~${building.latitude},${building.longitude}`
+        window.open(url, '_blank')
+    }
+    
+    // Функция форматирования времени из ISO в HH:MM
+    const formatTime = (isoTime?: string): string => {
+        if (!isoTime) return ''
+        try {
+            const date = new Date(isoTime)
+            return date.toLocaleTimeString('ru-RU', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                timeZone: 'Asia/Yakutsk' // Якутское время
+            })
+        } catch (e) {
+            return ''
+        }
+    }
+    
+    // Функция получения дня недели из ISO даты
+    const getDayOfWeek = (isoTime?: string): string => {
+        if (!isoTime) return ''
+        try {
+            const date = new Date(isoTime)
+            const day = date.getDay()
+            // 0 - воскресенье, 6 - суббота, 1-5 - пн-пт
+            if (day === 0 || day === 6) {
+                return 'сб-вс'
+            }
+            return 'пн-пт'
+        } catch (e) {
+            return ''
+        }
+    }
 
     // Собираем теги в правильном порядке
     const tagsToDisplay: Array<{ label: string; isNew?: boolean }> = []
@@ -56,7 +138,7 @@ export const BenefitDrawer = ({ isOpen, onClose, benefitId }: BenefitDrawerProps
     if (benefit) {
         // 1. TAGS (если new - зеленая)
         if (benefit.tags && benefit.tags.length > 0) {
-            benefit.tags.forEach((tag) => {
+            benefit.tags.forEach((tag: string) => {
                 const tagOption = TAGS.find((t) => t.value === tag)
                 if (tagOption) {
                     tagsToDisplay.push({
@@ -77,7 +159,7 @@ export const BenefitDrawer = ({ isOpen, onClose, benefitId }: BenefitDrawerProps
 
         // 3. TARGET_GROUPS
         if (benefit.target_groups && benefit.target_groups.length > 0) {
-            benefit.target_groups.forEach((group) => {
+            benefit.target_groups.forEach((group: string) => {
                 const groupOption = TARGET_GROUPS.find((g) => g.value === group)
                 if (groupOption) {
                     tagsToDisplay.push({ label: groupOption.label })
@@ -167,7 +249,7 @@ export const BenefitDrawer = ({ isOpen, onClose, benefitId }: BenefitDrawerProps
                                 Кому положено
                             </Heading>
                             <Box as="ul" pl={5} style={{ listStyleType: 'disc' }}>
-                                {benefit.target_groups.map((group) => {
+                                {benefit.target_groups.map((group: string) => {
                                     const groupOption = TARGET_GROUPS.find((g) => g.value === group)
                                     return groupOption ? (
                                         <Text as="li" key={group} fontSize="lg" color="gray.600" mb={2} lineHeight="28px">
@@ -204,121 +286,112 @@ export const BenefitDrawer = ({ isOpen, onClose, benefitId }: BenefitDrawerProps
                     )}
 
                     {/* Секция "Где получить" */}
-                    <VStack as="section" aria-labelledby="where-heading" bg={'gray.100'} borderRadius="20px" p={4} mb={5} gap={4} align="stretch">
-                        <Heading as="h2" id="where-heading" fontSize="xl" fontWeight="bold" lineHeight="30px">
-                            Где получить
-                        </Heading>
-
-                        {/* Аптека 1 */}
-                        <Box p={4} bg="white" borderRadius="xl">
-                            {/* Теги доступности */}
-                            <HStack gap={2} mb={2}>
-                                <Badge
-                                    bg="gray.subtle"
-                                    color="gray.fg"
-                                    fontSize="sm"
-                                    variant="subtle"
-                                    size="lg"
-                                    rounded="md"
-                                    px={2.5}
-                                    py={1}
-                                >
-                                    С пандусом
-                                </Badge>
-                                <Badge
-                                    bg="gray.subtle"
-                                    color="gray.fg"
-                                    fontSize="sm"
-                                    variant="subtle"
-                                    size="lg"
-                                    rounded="md"
-                                    px={2.5}
-                                    py={1}
-                                >
-                                    С подъемником
-                                </Badge>
-                            </HStack>
-                            <Heading as="h3" fontSize="xl" fontWeight="bold" mb={2} lineHeight="30px">
-                                Аптека 1
+                    {buildings.length > 0 && (
+                        <VStack as="section" aria-labelledby="where-heading" bg={'gray.100'} borderRadius="20px" p={4} mb={5} gap={4} align="stretch">
+                            <Heading as="h2" id="where-heading" fontSize="xl" fontWeight="bold" lineHeight="30px">
+                                Где получить
                             </Heading>
-                            <Text fontSize="lg" color="gray.600" lineHeight="28px">
-                                пн-пт 09:00-22:00
-                            </Text>
-                            <Text fontSize="lg" color="gray.600" lineHeight="28px">
-                                сб-вс 10:00-20:00
-                            </Text>
-                            <Button
-                                variant="outline"
-                                colorPalette="blue"
-                                size="2xl"
-                                rounded="xl"
-                                aria-label="Построить маршрут до Аптеки 1"
-                                mt={4}
-                                w="full"
-                                fontSize="xl"
-                                lineHeight="30px"
-                                color="blue.fg"
-                                borderColor="blue.muted"
-                            >
-                                <LuRoute /> Построить маршрут
-                            </Button>
-                        </Box>
 
-                        {/* Аптека 1 */}
-                        <Box p={4} bg="white" borderRadius="xl">
-                            {/* Теги доступности */}
-                            <HStack gap={2} mb={2}>
-                                <Badge
-                                    bg="gray.subtle"
-                                    color="gray.fg"
-                                    fontSize="sm"
-                                    variant="subtle"
-                                    size="lg"
-                                    rounded="md"
-                                    px={2.5}
-                                    py={1}
-                                >
-                                    С пандусом
-                                </Badge>
-                                <Badge
-                                    bg="gray.subtle"
-                                    color="gray.fg"
-                                    fontSize="sm"
-                                    variant="subtle"
-                                    size="lg"
-                                    rounded="md"
-                                    px={2.5}
-                                    py={1}
-                                >
-                                    С подъемником
-                                </Badge>
-                            </HStack>
-                            <Heading as="h3" fontSize="xl" fontWeight="bold" mb={2} lineHeight="30px">
-                                Аптека 1
-                            </Heading>
-                            <Text fontSize="lg" color="gray.600" lineHeight="28px">
-                                пн-пт 09:00-22:00
-                            </Text>
-                            <Text fontSize="lg" color="gray.600" lineHeight="28px">
-                                сб-вс 10:00-20:00
-                            </Text>
-                            <Button
-                                variant="outline"
-                                colorPalette="blue"
-                                size="2xl"
-                                rounded="xl"
-                                aria-label="Построить маршрут до Аптеки 1"
-                                mt={4}
-                                w="full"
-                                fontSize="xl"
-                                lineHeight="30px"
-                                color="blue.fg"
-                                borderColor="blue.muted"
-                            >
-                                <LuRoute /> Построить маршрут
-                            </Button>
-                        </Box>
-                    </VStack>
+                            {buildings.map((building, index) => {
+                                const hasPandus = building.tags?.includes('pandus')
+                                const hasLift = building.tags?.includes('lift')
+                                const showAccessibilityBadges = hasPandus || hasLift
+                                
+                                return (
+                                    <Box key={building.id || index} p={4} bg="white" borderRadius="xl">
+                                        {/* Теги доступности */}
+                                        {showAccessibilityBadges && (
+                                            <HStack gap={2} mb={2}>
+                                                {hasPandus && (
+                                                    <Badge
+                                                        bg="gray.subtle"
+                                                        color="gray.fg"
+                                                        fontSize="sm"
+                                                        variant="subtle"
+                                                        size="lg"
+                                                        rounded="md"
+                                                        px={2.5}
+                                                        py={1}
+                                                    >
+                                                        С пандусом
+                                                    </Badge>
+                                                )}
+                                                {hasLift && (
+                                                    <Badge
+                                                        bg="gray.subtle"
+                                                        color="gray.fg"
+                                                        fontSize="sm"
+                                                        variant="subtle"
+                                                        size="lg"
+                                                        rounded="md"
+                                                        px={2.5}
+                                                        py={1}
+                                                    >
+                                                        С подъемником
+                                                    </Badge>
+                                                )}
+                                            </HStack>
+                                        )}
+                                        
+                                        <Heading as="h3" fontSize="xl" fontWeight="bold" mb={2} lineHeight="30px">
+                                            {building.name || `Аптека ${index + 1}`}
+                                        </Heading>
+                                        
+                                        {building.address && (
+                                            <Text fontSize="lg" color="gray.600" lineHeight="28px" mb={1}>
+                                                {building.address}
+                                            </Text>
+                                        )}
+                                        
+                                        {building.phone_number && (
+                                            <Text fontSize="lg" color="gray.600" lineHeight="28px" mb={1}>
+                                                {building.phone_number}
+                                            </Text>
+                                        )}
+                                        
+                                        {building.start_time && building.end_time && (
+                                            <Text fontSize="lg" color="gray.600" lineHeight="28px">
+                                                {getDayOfWeek(building.start_time)} {formatTime(building.start_time)}-{formatTime(building.end_time)}
+                                            </Text>
+                                        )}
+                                        
+                                        {building.is_open !== undefined && (
+                                            <Badge
+                                                bg={building.is_open ? 'green.subtle' : 'red.subtle'}
+                                                color={building.is_open ? 'green.fg' : 'red.fg'}
+                                                fontSize="sm"
+                                                variant="subtle"
+                                                size="lg"
+                                                rounded="md"
+                                                px={2.5}
+                                                py={1}
+                                                mt={2}
+                                            >
+                                                {building.is_open ? 'Открыто' : 'Закрыто'}
+                                            </Badge>
+                                        )}
+                                        
+                                        <Button
+                                            variant="outline"
+                                            colorPalette="blue"
+                                            size="2xl"
+                                            rounded="xl"
+                                            aria-label={`Построить маршрут до ${building.name || `Аптеки ${index + 1}`}`}
+                                            mt={4}
+                                            w="full"
+                                            fontSize="xl"
+                                            lineHeight="30px"
+                                            color="blue.fg"
+                                            borderColor="blue.muted"
+                                            onClick={() => handleBuildRoute(building)}
+                                        >
+                                            <LuRoute /> Построить маршрут
+                                        </Button>
+                                    </Box>
+                                )
+                            })}
+                        </VStack>
+                    )}
 
                     <Button
                         w="full"
