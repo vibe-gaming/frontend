@@ -1,4 +1,4 @@
-import { Box, Button, Container, Grid, Heading, Image, Stack, Text, VStack } from '@chakra-ui/react'
+import { Box, Button, Grid, Heading, Image, Stack, Text, VStack } from '@chakra-ui/react'
 import { useNavigate } from '@tanstack/react-router'
 import { CircleCheckBig, FileCheck, HandHeart } from 'lucide-react'
 import { LuSearchCheck } from 'react-icons/lu'
@@ -64,13 +64,12 @@ export const HomePage = () => {
         <Box minH="100vh">
             <AppHeader />
 
-            <Container 
-                maxW={{ base: 'container.lg', lg: '1200px' }} 
+            <Box 
                 pb="54px" 
                 pt="16px" 
-                px={{ base: '16px', lg: '40px' }}
+                px={{ base: '16px', lg: '80px' }}
             >
-                <VStack align="stretch" gap={{ base: 6, lg: 8 }}>
+                <VStack align="stretch" gap={{ base: 6, lg: 8 }} maxW="1440px" mx="auto">
                     {/* Hero Section */}
                     <Box
                         bgImage={`url(${mainBannerImage})`}
@@ -214,7 +213,7 @@ export const HomePage = () => {
 
                     <Footer />
                 </VStack>
-            </Container>
+            </Box>
         </Box>
     )
 }
