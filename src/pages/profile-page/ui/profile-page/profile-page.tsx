@@ -169,18 +169,12 @@ export const ProfilePage = () => {
             <Container maxW="640px" pb="16px" pt="16px" px="16px" mx="auto">
                 <VStack align="stretch" gap="16px">
                     {/* Social Status Section */}
-                    {profile?.groups && profile.groups.length > 0 && (
-                        <Box>
-                            <VStack align="stretch" gap="16px">
-                                <Heading 
-                                    as="h2" 
-                                    fontSize={{ base: "xl", md: "32px" }}
-                                    lineHeight={{ base: "28px", md: "40px" }}
-                                    fontWeight="bold" 
-                                    color="gray.900"
-                                >
-                                    Социальный статус
-                                </Heading>
+            {profile?.groups && profile.groups.length > 0 && (
+                <Box>
+                        <VStack align="stretch" gap="16px">
+                                <Heading as="h2" fontSize="xl" fontWeight="bold" color="gray.900">
+                                Социальный статус
+                            </Heading>
 
                                 <VStack align="stretch" gap="12px">
                                     {profile.groups.map((group, index) => {
@@ -192,8 +186,8 @@ export const ProfilePage = () => {
                                                 bg="white"
                                                 border="1px solid"
                                                 borderColor="gray.200"
-                                                borderRadius={{ base: "16px", md: "20px" }}
-                                                p={{ base: "20px", md: "32px" }}
+                                                borderRadius="16px"
+                                                p="20px"
                                                 role="article"
                                                 aria-label={`Категория: ${getGroupTypeLabel(group.type)}`}
                                                 cursor="pointer"
@@ -204,7 +198,7 @@ export const ProfilePage = () => {
                                                 }}
                                                 transition="all 0.2s"
                                             >
-                                                <VStack align="stretch" gap={{ base: "12px", md: "20px" }}>
+                                                <VStack align="stretch" gap="12px">
                                                     {/* Название категории и статус */}
                                                     <Flex
                                                         align="flex-start"
@@ -214,20 +208,15 @@ export const ProfilePage = () => {
                                                         <Box flex="1" minW="0">
                                                             <Heading
                                                                 as="h3"
-                                                                fontSize={{ base: "xl", md: "32px" }}
-                                                                lineHeight={{ base: "28px", md: "40px" }}
+                                                                fontSize="xl"
                                                                 fontWeight="bold"
                                                                 color="gray.900"
-                                                                mb={{ base: "4px", md: "8px" }}
+                                                                mb="4px"
                                                             >
                                                                 {getGroupTypeLabel(group.type)}
                                                             </Heading>
                                                             {displayDate && (
-                                                                <Text 
-                                                                    color="gray.600" 
-                                                                    fontSize={{ base: "sm", md: "lg" }}
-                                                                    lineHeight={{ base: "20px", md: "28px" }}
-                                                                >
+                                                                <Text color="gray.600" fontSize="sm">
                                                                     с {formatDate(displayDate)}
                                                                 </Text>
                                                             )}
@@ -235,11 +224,10 @@ export const ProfilePage = () => {
                                                         <Badge
                                                             bg={statusConfig.bg}
                                                             color={statusConfig.color}
-                                                            borderRadius={{ base: "12px", md: "16px" }}
-                                                            px={{ base: "12px", md: "20px" }}
-                                                            py={{ base: "6px", md: "10px" }}
-                                                            fontSize={{ base: "sm", md: "lg" }}
-                                                            lineHeight={{ base: "20px", md: "28px" }}
+                                                            borderRadius="12px"
+                                                            px="12px"
+                                                            py="6px"
+                                                            fontSize="sm"
                                                             fontWeight="medium"
                                                             textTransform="none"
                                                             aria-label={`Статус: ${statusConfig.label}`}
@@ -254,16 +242,15 @@ export const ProfilePage = () => {
                                                         <Button
                                                             variant="outline"
                                                             colorScheme="blue"
-                                                            borderRadius={{ base: "12px", md: "16px" }}
-                                                            h={{ base: "48px", md: "56px" }}
+                                                            borderRadius="12px"
+                                                            h="48px"
                                                             fontWeight="medium"
-                                                            fontSize={{ base: "md", md: "lg" }}
-                                                            lineHeight={{ base: "24px", md: "28px" }}
+                                                            fontSize="md"
                                                             w="full"
                                                             aria-label="Просмотреть удостоверение"
                                                         >
                                                             <Flex align="center" gap="8px">
-                                                                <Icon as={Eye} boxSize={{ base: "20px", md: "24px" }} />
+                                                                <Icon as={Eye} boxSize="20px" />
                                                                 <Text>Удостоверение</Text>
                                                             </Flex>
                                                         </Button>
@@ -282,9 +269,9 @@ export const ProfilePage = () => {
                                         )
                                     })}
                                 </VStack>
-                            </VStack>
-                        </Box>
-                    )}
+                        </VStack>
+                </Box>
+            )}
 
                     {/* Benefits Section */}
                     <Box>
