@@ -89,44 +89,47 @@ export const HomePage = () => {
                     >
                         <VStack 
                             align="start" 
-                            gap={{ base: '10px', lg: '16px' }}
+                            gap={{ base: '10px', lg: '20px' }}
                             maxW={{ base: '100%', lg: '580px' }}
+                            h="full"
+                            justify="space-between"
                         >
-                            <Heading
-                                as="h1"
-                                fontSize={{ base: '3xl', lg: '56px' }}
-                                fontWeight="bold"
-                                lineHeight={{ base: '38px', lg: '64px' }}
+                            <VStack align="start" gap={{ base: '10px', lg: '16px' }}>
+                                <Heading
+                                    as="h1"
+                                    fontSize={{ base: '3xl', lg: '56px' }}
+                                    fontWeight="bold"
+                                    lineHeight={{ base: '38px', lg: '64px' }}
+                                >
+                                    Все льготы —<br />в одном месте
+                                </Heading>
+                                <Text 
+                                    color="gray.800" 
+                                    fontSize={{ base: 'lg', lg: '24px' }} 
+                                    lineHeight={{ base: '28px', lg: '36px' }}
+                                >
+                                    Найдите все положенные льготы и экономьте на аптечных покупках,
+                                    транспорте, ЖКУ и других услугах
+                                </Text>
+                            </VStack>
+
+                            {/* CTA Button - теперь внутри баннера */}
+                            <Button
+                                bg="blue.solid"
+                                borderRadius={{ base: '16px', lg: '20px' }}
+                                fontWeight="semibold"
+                                fontSize={{ base: 'xl', lg: '24px' }}
+                                lineHeight={{ base: '30px', lg: '36px' }}
+                                size="2xl"
+                                h={{ base: 'auto', lg: '64px' }}
+                                w={{ base: 'full', lg: '280px' }}
+                                _hover={{ bg: 'blue.600' }}
+                                onClick={() => navigate({ to: '/benefits' })}
                             >
-                                Все льготы —<br />в одном месте
-                            </Heading>
-                            <Text 
-                                color="gray.800" 
-                                fontSize={{ base: 'lg', lg: '24px' }} 
-                                lineHeight={{ base: '28px', lg: '36px' }}
-                            >
-                                Найдите все положенные льготы и экономьте на аптечных покупках,
-                                транспорте, ЖКУ и других услугах
-                            </Text>
+                                Смотреть льготы
+                            </Button>
                         </VStack>
                     </Box>
-
-                    {/* CTA Button */}
-                    <Button
-                        bg="blue.solid"
-                        borderRadius={{ base: '16px', lg: '20px' }}
-                        fontWeight="semibold"
-                        fontSize={{ base: 'xl', lg: '24px' }}
-                        lineHeight={{ base: '30px', lg: '36px' }}
-                        size="2xl"
-                        h={{ base: 'auto', lg: '64px' }}
-                        w={{ base: 'full', lg: '280px' }}
-                        alignSelf={{ base: 'stretch', lg: 'flex-start' }}
-                        _hover={{ bg: 'blue.600' }}
-                        onClick={() => navigate({ to: '/benefits' })}
-                    >
-                        Смотреть льготы
-                    </Button>
 
                     {/* Features Section */}
                     <VStack align="stretch" gap={{ base: 5, lg: 8 }} mt={{ base: 0, lg: 4 }}>
