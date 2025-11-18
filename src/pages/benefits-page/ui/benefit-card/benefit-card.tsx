@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Badge, Box, Button, Heading, HStack, IconButton, Text, useMediaQuery, VStack } from '@chakra-ui/react'
-import { LuHeart } from 'react-icons/lu'
+import { LuHeart } from 'react-icons/lu';
+import { FaHeart } from "react-icons/fa";
 
 import { usePostBenefitsIdFavorite } from '@/shared/api/generated/hooks/usePostBenefitsIdFavorite'
 import { BENEFIT_TYPES, CATEGORIES, TAGS, TARGET_GROUPS } from '../benefits-page/constants'
@@ -93,6 +94,7 @@ export const BenefitCard = ({ benefit, isFavorite = false, onFavoriteChange, onC
             p={5}
             w='100%'
             minW={0}
+            maxH="428px"
             h={isDesktop ? '428px' : 'auto'}
             display='flex'
             flexDirection='column'
@@ -129,18 +131,19 @@ export const BenefitCard = ({ benefit, isFavorite = false, onFavoriteChange, onC
 
                 <VStack align='stretch' gap={2} flex={1} minH={0} minW={0}>
                     {/* Заголовок */}
-                    <Heading 
-                        fontSize='2xl' 
-                        fontWeight='bold' 
+                    <Heading
+                        fontSize='2xl'
+                        fontWeight='bold'
                         lineHeight='32px'
                         style={{
                             display: '-webkit-box',
-                            WebkitLineClamp: 2,
+                            WebkitLineClamp: 3,
                             WebkitBoxOrient: 'vertical',
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
                             wordBreak: 'break-word',
                             overflowWrap: 'break-word',
+                            lineClamp: 3,
                         }}
                     >
                         {benefit.title || 'Без названия'}
@@ -148,22 +151,21 @@ export const BenefitCard = ({ benefit, isFavorite = false, onFavoriteChange, onC
 
                     {/* Описание */}
                     {benefit.description && (
-                        <Text 
-                            color='gray.600' 
-                            fontSize='lg' 
+                        <Text
+                            color='gray.600'
+                            fontSize='lg'
                             lineHeight='28px'
                             flex={1}
                             minW={0}
                             style={{
-                                ...(isDesktop ? {
-                                    display: '-webkit-box',
-                                    WebkitLineClamp: 4,
-                                    WebkitBoxOrient: 'vertical',
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                } : {}),
+                                display: '-webkit-box',
+                                WebkitLineClamp: 3,
+                                WebkitBoxOrient: 'vertical',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
                                 wordBreak: 'break-word',
                                 overflowWrap: 'break-word',
+                                lineClamp: 3,
                             }}
                         >
                             {benefit.description}
@@ -182,7 +184,7 @@ export const BenefitCard = ({ benefit, isFavorite = false, onFavoriteChange, onC
                         color='white'
                         rounded='2xl'
                         fontSize='xl'
-                        fontWeight='bold'
+                        fontWeight='medium'
                         lineHeight='30px'
                         onClick={handleDetailsClick}
                         _hover={{ bg: 'blue.solidHover' }}
@@ -191,7 +193,7 @@ export const BenefitCard = ({ benefit, isFavorite = false, onFavoriteChange, onC
                     </Button>
                     <IconButton
                         aria-label='Добавить в избранное'
-                        variant='subtle'
+                        variant='solid'
                         size='2xl'
                         rounded='2xl'
                         bg={localIsFavorite ? 'red.50' : 'blue.50'}
@@ -202,9 +204,7 @@ export const BenefitCard = ({ benefit, isFavorite = false, onFavoriteChange, onC
                             bg: localIsFavorite ? 'red.100' : 'blue.100',
                         }}
                     >
-                        <LuHeart
-                            size={24}
-                        />
+                        <FaHeart size={24} />
                     </IconButton>
                 </HStack>
             </VStack>

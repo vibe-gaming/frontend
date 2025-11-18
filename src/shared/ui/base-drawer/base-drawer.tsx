@@ -29,6 +29,7 @@ export const BaseDrawer = forwardRef<HTMLDivElement, BaseDrawerProps>(
             damping: 30,
             stiffness: 300,
         })
+        const backdropOpacityString = useTransform(backdropOpacity, (value) => String(value))
         
         // Синхронизируем backdrop opacity с позицией drawer
         useEffect(() => {
@@ -130,11 +131,34 @@ export const BaseDrawer = forwardRef<HTMLDivElement, BaseDrawerProps>(
                         style={{
                             opacity: backdropOpacity,
                             cursor: 'pointer',
+                            width: '100%',
+                            height: '100%',
+                            position: 'fixed',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            zIndex: 1000,
+                            pointerEvents: 'auto',
                         }}
-                        onClick={handleClose}
+                        onClick={(e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            handleClose()
+                        }}
+                        onPointerDown={(e) => {
+                            // Для touch устройств используем onPointerDown
+                            if (e.target === e.currentTarget) {
+                                handleClose()
+                            }
+                        }}
                     />
                 </Drawer.Backdrop>
-                <Drawer.Positioner>
+                <Drawer.Positioner
+                    style={{
+                        zIndex: 1001,
+                    }}
+                >
                     <Drawer.Content
                         ref={ref}
                         mt={4}
@@ -144,6 +168,7 @@ export const BaseDrawer = forwardRef<HTMLDivElement, BaseDrawerProps>(
                             borderTopLeftRadius: '24px',
                             borderTopRightRadius: '24px',
                             overflow: 'hidden',
+                            position: 'relative',
                         }}
                     >
                         <motion.div

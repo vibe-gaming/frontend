@@ -33,7 +33,7 @@ export const BenefitsPage = () => {
     // Временные состояния для Drawer (применяются только при нажатии "Применить")
     const [tempBenefitTypes, setTempBenefitTypes] = useState<string[]>([])
     const [tempTargetGroups, setTempTargetGroups] = useState<string[]>([])
-    const [tempTags, setTempTags] = useState<string[]>([])
+    const [tempTags, setTempTags] = useState<string[]>(['recommended'])
     const [tempCategories, setTempCategories] = useState<string[]>([])
     const [tempCityId, setTempCityId] = useState<string>('')
     const [tempSortBy, setTempSortBy] = useState<string>('created_at')
@@ -42,10 +42,7 @@ export const BenefitsPage = () => {
     const [isFiltersOpen, setIsFiltersOpen] = useState(false)
     const [isSortOpen, setIsSortOpen] = useState(false)
     const [selectedBenefitId, setSelectedBenefitId] = useState<string | null>(null)
-    // Примененный поисковый запрос (для десктопа - только после клика на кнопку)
     const [appliedSearchQuery, setAppliedSearchQuery] = useState('')
-
-    const debouncedSearch = useDebounce(searchQuery, 500)
 
     const queryParams = useMemo(() => {
         const params: Parameters<typeof useGetBenefits>[0] = {
@@ -54,7 +51,7 @@ export const BenefitsPage = () => {
         }
 
         // На десктопе используем примененный поиск (после клика на кнопку), на мобильных - debounced
-        const searchValue = isDesktop ? appliedSearchQuery : debouncedSearch
+        const searchValue = appliedSearchQuery;
         if (searchValue) {
             params.search = searchValue
         }
@@ -92,7 +89,7 @@ export const BenefitsPage = () => {
         params.order = sortOrder
 
         return params
-    }, [isDesktop, appliedSearchQuery, debouncedSearch, benefitTypes, targetGroups, tags, categories, cityId, dateFrom, dateTo, sortBy, sortOrder, currentPage])
+    }, [isDesktop, appliedSearchQuery, benefitTypes, targetGroups, tags, categories, cityId, dateFrom, dateTo, sortBy, sortOrder, currentPage])
 
     const { data, isLoading, isError, error } = useGetBenefits(queryParams)
 
@@ -103,6 +100,53 @@ export const BenefitsPage = () => {
         setTempTags([])
         setTempCategories([])
         setTempCityId('')
+    }
+
+    // Сброс фильтров для sidebar (сразу применяется)
+    const handleResetFiltersSidebar = () => {
+        setBenefitTypes([])
+        setTargetGroups([])
+        setTags([])
+        setCategories([])
+        setCityId('')
+        setCurrentPage(1)
+        // Также сбрасываем временные для синхронизации
+        setTempBenefitTypes([])
+        setTempTargetGroups([])
+        setTempTags([])
+        setTempCategories([])
+        setTempCityId('')
+    }
+
+    // Обработчики для sidebar - сразу применяют изменения
+    const handleSidebarBenefitTypesChange = (values: string[]) => {
+        setBenefitTypes(values)
+        setTempBenefitTypes(values)
+        setCurrentPage(1)
+    }
+
+    const handleSidebarTargetGroupsChange = (values: string[]) => {
+        setTargetGroups(values)
+        setTempTargetGroups(values)
+        setCurrentPage(1)
+    }
+
+    const handleSidebarTagsChange = (values: string[]) => {
+        setTags(values)
+        setTempTags(values)
+        setCurrentPage(1)
+    }
+
+    const handleSidebarCategoriesChange = (values: string[]) => {
+        setCategories(values)
+        setTempCategories(values)
+        setCurrentPage(1)
+    }
+
+    const handleSidebarCityIdChange = (value: string) => {
+        setCityId(value)
+        setTempCityId(value)
+        setCurrentPage(1)
     }
 
     const handleApplyFilters = () => {
@@ -217,6 +261,25 @@ export const BenefitsPage = () => {
         setCurrentPage(1)
     }
 
+    // Обработчик быстрой фильтрации по тегам
+    const handleQuickFilterClick = (tagValue: string) => {
+        // Проверяем, выбран ли уже этот тег
+        const isSelected = targetGroups.includes(tagValue)
+
+        if (isSelected) {
+            // Если выбран, убираем его
+            const newTargetGroups = targetGroups.filter((v) => v !== tagValue)
+            setTargetGroups(newTargetGroups)
+            setTempTargetGroups(newTargetGroups)
+        } else {
+            // Если не выбран, добавляем его
+            const newTargetGroups = [...targetGroups, tagValue]
+            setTargetGroups(newTargetGroups)
+            setTempTargetGroups(newTargetGroups)
+        }
+        setCurrentPage(1)
+    }
+
     return (
         <>
             <AppHeader />
@@ -243,32 +306,38 @@ export const BenefitsPage = () => {
                             }}
                             onKeyDown={handleSearchKeyDown}
                         />
-                        <Show when={isDesktop}>
-                            <IconButton aria-label="Search" size="2xl" variant="solid" rounded="xl" colorPalette="blue" onClick={handleApplySearch}>
-                                <LuSearch size={24} />
-                            </IconButton>
-                        </Show>
+                        <IconButton aria-label="Search" size="2xl" variant="solid" rounded="xl" colorPalette="blue" onClick={handleApplySearch}>
+                            <LuSearch size={24} />
+                        </IconButton>
 
                     </HStack>
 
                     <Show when={isDesktop}>
                         {/* Теги под поиском */}
                         <HStack gap={2} wrap="wrap" mb={6}>
-                            {quickFilterTags.map((tag) => (
-                                <Button
-                                    key={tag.value}
-                                    size="xl"
-                                    variant="subtle"
-                                    rounded="4xl"
-                                    colorPalette="gray"
-                                    fontSize="lg"
-                                    fontWeight="normal"
-                                    lineHeight="28px"
-                                    color={"gray.fg"}
-                                >
-                                    {tag.label}
-                                </Button>
-                            ))}
+                            {quickFilterTags.map((tag) => {
+                                const isSelected = targetGroups.includes(tag.value)
+                                return (
+                                    <Button
+                                        key={tag.value}
+                                        size="xl"
+                                        variant={isSelected ? 'solid' : 'subtle'}
+                                        rounded="4xl"
+                                        colorPalette={isSelected ? 'blue' : 'gray'}
+                                        fontSize="lg"
+                                        fontWeight="normal"
+                                        lineHeight="28px"
+                                        color={isSelected ? 'white' : 'gray.fg'}
+                                        bg={isSelected ? 'blue.solid' : undefined}
+                                        onClick={() => handleQuickFilterClick(tag.value)}
+                                        _hover={{
+                                            bg: isSelected ? 'blue.600' : 'gray.100',
+                                        }}
+                                    >
+                                        {tag.label}
+                                    </Button>
+                                )
+                            })}
                         </HStack>
                     </Show>
 
@@ -289,71 +358,119 @@ export const BenefitsPage = () => {
                                 rounded="xl"
                                 onClick={() => setIsSortOpen(true)}
                             >
-                                Сортировка <LuChevronDown />
+                                Сортировка по <LuChevronDown />
                             </Button>
                         </HStack>
                     </Show>
 
-                    {/* Результаты */}
-                    {isLoading ? (
-                        <Box py={12} textAlign='center'>
-                            <Spinner size='lg' />
-                        </Box>
-                    ) : !data?.benefits || data.benefits.length === 0 ? (
-                        <Box py={12} textAlign='center'>
-                            <Text color='text.secondary' fontSize='lg'>
-                                Льготы не найдены
-                            </Text>
-                            <Text color='text.secondary' fontSize='sm' mt={2}>
-                                Попробуйте изменить параметры поиска или фильтры
-                            </Text>
-                        </Box>
-                    ) : (
-                        <>
-                            {/* Layout для десктопа: sidebar слева, карточки справа */}
-                            <Show when={isDesktop}>
-                                <Grid templateColumns="300px 1fr" gap={6} alignItems="start">
-                                    {/* Sidebar с фильтрами */}
-                                    <Box position="sticky" top={20}>
-                                        <FiltersSidebar
-                                            tempBenefitTypes={tempBenefitTypes}
-                                            tempTargetGroups={tempTargetGroups}
-                                            tempTags={tempTags}
-                                            tempCategories={tempCategories}
-                                            tempCityId={tempCityId}
-                                            onBenefitTypesChange={setTempBenefitTypes}
-                                            onTargetGroupsChange={setTempTargetGroups}
-                                            onTagsChange={setTempTags}
-                                            onCategoriesChange={setTempCategories}
-                                            onCityIdChange={setTempCityId}
-                                            onReset={handleResetFilters}
-                                            onApply={handleApplyFilters}
-                                        />
-                                    </Box>
+                    <Show when={!isDesktop}>
+                        {/* Результаты */}
+                        {isLoading ? (
+                            <Box py={12} textAlign='center'>
+                                <Spinner size='lg' />
+                            </Box>
+                        ) : !data?.benefits || data.benefits.length === 0 ? (
+                            <Box py={12} textAlign='center'>
+                                <Text color='text.secondary' fontSize='lg'>
+                                    Льготы не найдены
+                                </Text>
+                                <Text color='text.secondary' fontSize='sm' mt={2}>
+                                    Попробуйте изменить параметры поиска или фильтры
+                                </Text>
+                            </Box>
+                        ) : (
+                            <>
+                                {/* Layout для мобильных: карточки в один столбец */}
+                                <Show when={!isDesktop}>
+                                    <Text color='text.secondary' fontSize='md' mt={2}>
+                                        Найдено:{' '}
+                                        {data.total ?? data.benefits?.length ?? 0}
+                                    </Text>
 
+                                    <VStack align='stretch' gap={4}>
+                                        {data.benefits.map((benefit) => (
+                                            <BenefitCard
+                                                key={benefit.id}
+                                                benefit={benefit}
+                                                onClick={openBenefitDrawer}
+                                            />
+                                        ))}
+                                    </VStack>
+
+                                    <Pagination
+                                        currentPage={currentPage}
+                                        totalPages={totalPages}
+                                        onPageChange={setCurrentPage}
+                                    />
+                                </Show>
+                            </>
+                        )}
+                    </Show>
+
+
+                    {/* Layout для десктопа: sidebar слева, карточки справа */}
+                    <Show when={isDesktop}>
+                        <Grid templateColumns="300px 1fr" gap={6} alignItems="start">
+                            {/* Sidebar с фильтрами */}
+                            <Box
+                                position="sticky"
+                                top={20}
+                            >
+                                <FiltersSidebar
+                                    tempBenefitTypes={benefitTypes}
+                                    tempTargetGroups={targetGroups}
+                                    tempTags={tags}
+                                    tempCategories={categories}
+                                    tempCityId={cityId}
+                                    onBenefitTypesChange={handleSidebarBenefitTypesChange}
+                                    onTargetGroupsChange={handleSidebarTargetGroupsChange}
+                                    onTagsChange={handleSidebarTagsChange}
+                                    onCategoriesChange={handleSidebarCategoriesChange}
+                                    onCityIdChange={handleSidebarCityIdChange}
+                                    onReset={handleResetFiltersSidebar}
+                                    onApply={handleApplyFilters}
+                                />
+                            </Box>
+
+                            {isLoading ? (
+                                <Box py={12} textAlign='center'>
+                                    <Spinner size='lg' />
+                                </Box>
+                            ) : !data?.benefits || data.benefits.length === 0 ? (
+                                <Box py={12} textAlign='center'>
+                                    <Text color='text.secondary' fontSize='lg'>
+                                        Льготы не найдены
+                                    </Text>
+                                    <Text color='text.secondary' fontSize='sm' mt={2}>
+                                        Попробуйте изменить параметры поиска или фильтры
+                                    </Text>
+                                </Box>
+                            ) : (
+                                <>
                                     {/* Контент с карточками */}
                                     <VStack align='stretch' gap={5}>
                                         <Select.Root
-                                                collection={sortCollection}
-                                                value={sortBy ? [sortBy] : []}
-                                                position={'relative'}
-                                                onValueChange={(details) => handleSortChange(details.value[0] || 'created_at')}
-                                                size="md"
-                                            >
-                                                <Select.Trigger rounded={'xl'} borderRadius={'xl'} w="200px">
-                                                    <Select.ValueText fontSize={'md'} placeholder="Сортировка" />
-                                                </Select.Trigger>
-                                                <Select.IndicatorGroup mr={4}>
-                                                    <Select.Indicator />
-                                                </Select.IndicatorGroup>
-                                                <Select.Content p={4} gap={4} rounded={'xl'}>
-                                                    {sortCollection.items.map((item) => (
-                                                        <Select.Item key={item.value} item={item} fontSize={'md'}>
-                                                            {item.label}
-                                                        </Select.Item>
-                                                    ))}
-                                                </Select.Content>
-                                            </Select.Root>
+                                            collection={sortCollection}
+                                            value={[]}
+                                            position={'relative'}
+                                            onValueChange={(details) => handleSortChange(details.value[0] || 'created_at')}
+                                            size="md"
+                                            width={"200px"}
+                                        >
+                                            <Select.Trigger rounded={'lg'} borderRadius={'md'} w="200px">
+                                                <Select.ValueText fontSize={'md'} placeholder="Сортировка по" color={"fg.muted"} />
+                                            </Select.Trigger>
+                                            <Select.IndicatorGroup mr={4}>
+                                                <Select.Indicator />
+                                            </Select.IndicatorGroup>
+                                            <Select.Content p={4} gap={4} rounded={'lg'}>
+                                                {sortCollection.items.map((item) => (
+                                                    <Select.Item key={item.value} item={item} fontSize={'md'} color={"fg.muted"}>
+                                                        {item.label}
+                                                    </Select.Item>
+                                                ))}
+                                            </Select.Content>
+                                        </Select.Root>
 
                                         {/* Карточки в 2 колонки на десктопе */}
                                         <Grid templateColumns="repeat(2, 1fr)" gap={4}>
@@ -372,34 +489,10 @@ export const BenefitsPage = () => {
                                             onPageChange={setCurrentPage}
                                         />
                                     </VStack>
-                                </Grid>
-                            </Show>
-
-                            {/* Layout для мобильных: карточки в один столбец */}
-                            <Show when={!isDesktop}>
-                                <Text color='text.secondary' fontSize='md' mt={2}>
-                                    Найдено льгот:{' '}
-                                    {data.total ?? data.benefits?.length ?? 0}
-                                </Text>
-
-                                <VStack align='stretch' gap={4}>
-                                    {data.benefits.map((benefit) => (
-                                        <BenefitCard
-                                            key={benefit.id}
-                                            benefit={benefit}
-                                            onClick={openBenefitDrawer}
-                                        />
-                                    ))}
-                                </VStack>
-
-                                <Pagination
-                                    currentPage={currentPage}
-                                    totalPages={totalPages}
-                                    onPageChange={setCurrentPage}
-                                />
-                            </Show>
-                        </>
-                    )}
+                                </>
+                            )}
+                        </Grid>
+                    </Show>
                 </VStack>
             </Box>
 
