@@ -166,10 +166,27 @@ export const ProfilePage = () => {
             {/* Header */}
             <AppHeader />
 
+            <Container 
+                maxW={{ base: 'container.lg', lg: '1280px' }} 
+                px={{ base: '16px', lg: '40px' }} 
+                pt="16px"
+            >
+                {/* Desktop: Two column layout */}
+                <Flex 
+                    gap="20px" 
+                    direction={{ base: 'column', lg: 'row' }}
+                    align={{ base: 'stretch', lg: 'flex-start' }}
+                >
+                    {/* Left Column */}
+                    <VStack 
+                        align="stretch" 
+                        gap="16px"
+                        flex={{ base: '1', lg: '0 0 600px' }}
+                        w={{ base: '100%', lg: '600px' }}
+                    >
             {/* Categories Card */}
             {profile?.groups && profile.groups.length > 0 && (
                 <Box>
-                    <Container maxW="container.lg" px="16px" pt="16px">
                         <VStack align="stretch" gap="16px">
                             <Heading as="h2" fontSize="xl" fontWeight="bold">
                                 Социальный статус
@@ -189,13 +206,13 @@ export const ProfilePage = () => {
                                                 p="20px"
                                                 role="article"
                                                 aria-label={`Категория: ${getGroupTypeLabel(group.type)}`}
-                                                cursor="pointer"
-                                                onClick={() => setIsCertificateDrawerOpen(true)}
-                                                _hover={{ 
-                                                    borderColor: 'blue.300',
-                                                    boxShadow: 'sm',
-                                                }}
-                                                transition="all 0.2s"
+                                                    cursor="pointer"
+                                                    onClick={() => setIsCertificateDrawerOpen(true)}
+                                                    _hover={{ 
+                                                        borderColor: 'blue.300',
+                                                        boxShadow: 'sm',
+                                                    }}
+                                                    transition="all 0.2s"
                                             >
                                                 <VStack align="stretch" gap="12px">
                                                     {/* Название категории и статус */}
@@ -269,226 +286,148 @@ export const ProfilePage = () => {
                                     })}
                                 </VStack>
                         </VStack>
-                    </Container>
                 </Box>
             )}
 
-            <Container maxW="container.lg" pb="16px" pt="16px" px="16px">
-                <VStack align="stretch" gap="16px">
-
-                    {/* Personal Information Card */}
-                    <Box
-                        bg="white"
-                        border="1px solid"
-                        borderColor="#BFDBFE"
-                        borderRadius="20px"
-                        p="16px"
-                    >
-                        <VStack align="stretch" gap="16px">
-                            <Heading
-                                as="h2"
-                                fontSize="24px"
-                                lineHeight="32px"
-                                fontWeight="bold"
-                                color="#27272A"
-                                letterSpacing="-0.2px"
-                            >
-                                Личная информация
-                            </Heading>
-
+                        {/* Benefits Card */}
+                        <Box
+                            bg="white"
+                            border="1px solid"
+                            borderColor="#BFDBFE"
+                            borderRadius="20px"
+                            p="16px"
+                        >
                             <VStack align="stretch" gap="16px">
-                                <VStack align="stretch" gap="4px">
-                                    <Text
-                                        fontSize="18px"
-                                        lineHeight="24px"
-                                        fontWeight="bold"
-                                        color="#27272A"
-                                    >
-                                        ФИО
-                                    </Text>
-                                    <Text
-                                        fontSize="18px"
-                                        lineHeight="24px"
-                                        fontWeight="normal"
-                                        color="#52525B"
-                                    >
-                                        {fullName || '—'}
-                                    </Text>
-                                </VStack>
+                                <Heading
+                                    as="h2"
+                                    fontSize="24px"
+                                    lineHeight="32px"
+                                    fontWeight="bold"
+                                    color="#27272A"
+                                    letterSpacing="-0.2px"
+                                >
+                                    Мои льготы
+                                </Heading>
 
-                                <VStack align="stretch" gap="4px">
-                                    <Text
-                                        fontSize="18px"
-                                        lineHeight="24px"
-                                        fontWeight="bold"
-                                        color="#27272A"
+                                <Flex gap="12px">
+                                    <Button
+                                        flex="1"
+                                        variant="ghost"
+                                        borderRadius="12px"
+                                        h="auto"
+                                        p="12px"
+                                        justifyContent="flex-start"
+                                        onClick={() => navigate({ to: '/benefits' })}
+                                        _hover={{ bg: 'gray.50' }}
                                     >
-                                        Телефон
-                                    </Text>
-                                    <Text
-                                        fontSize="18px"
-                                        lineHeight="24px"
-                                        fontWeight="normal"
-                                        color="#52525B"
-                                    >
-                                        {formatPhoneNumber(profile?.phone_number)}
-                                    </Text>
-                                </VStack>
+                                        <VStack align="flex-start" gap="4px" w="full">
+                                            <Text
+                                                fontSize="18px"
+                                                lineHeight="24px"
+                                                fontWeight="normal"
+                                                color="#52525B"
+                                            >
+                                                Для вас
+                                            </Text>
+                                            <Heading
+                                                as="h3"
+                                                fontSize="32px"
+                                                lineHeight="40px"
+                                                fontWeight="bold"
+                                                color="#3B82F6"
+                                            >
+                                                {statsData?.total_benefits ?? 0}
+                                            </Heading>
+                                        </VStack>
+                                        <Icon
+                                            viewBox="0 0 24 24"
+                                            boxSize="20px"
+                                            color="#A1A1AA"
+                                            ml="auto"
+                                            flexShrink={0}
+                                        >
+                                            <path
+                                                fill="currentColor"
+                                                d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"
+                                            />
+                                        </Icon>
+                                    </Button>
 
-                                <VStack align="stretch" gap="4px">
-                                    <Text
-                                        fontSize="18px"
-                                        lineHeight="24px"
-                                        fontWeight="bold"
-                                        color="#27272A"
+                                    <Button
+                                        flex="1"
+                                        variant="ghost"
+                                        borderRadius="12px"
+                                        h="auto"
+                                        p="12px"
+                                        justifyContent="flex-start"
+                                        onClick={() => navigate({ to: '/benefits' })}
+                                        _hover={{ bg: 'gray.50' }}
                                     >
-                                        Почта
-                                    </Text>
-                                    <Text
-                                        fontSize="18px"
-                                        lineHeight="24px"
-                                        fontWeight="normal"
-                                        color="#52525B"
-                                    >
-                                        {profile?.email || '—'}
-                                    </Text>
-                                </VStack>
+                                        <VStack align="flex-start" gap="4px" w="full">
+                                            <Text
+                                                fontSize="18px"
+                                                lineHeight="24px"
+                                                fontWeight="normal"
+                                                color="#52525B"
+                                            >
+                                                Сохранено
+                                            </Text>
+                                            <Heading
+                                                as="h3"
+                                                fontSize="32px"
+                                                lineHeight="40px"
+                                                fontWeight="bold"
+                                                color="#3B82F6"
+                                            >
+                                                {statsData?.total_favorites ?? 0}
+                                            </Heading>
+                                        </VStack>
+                                        <Icon
+                                            viewBox="0 0 24 24"
+                                            boxSize="20px"
+                                            color="#A1A1AA"
+                                            ml="auto"
+                                            flexShrink={0}
+                                        >
+                                            <path
+                                                fill="currentColor"
+                                                d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"
+                                            />
+                                        </Icon>
+                                    </Button>
+                                </Flex>
                             </VStack>
-                        </VStack>
-                    </Box>
+                        </Box>
+                    </VStack>
 
-                    {/* Benefits Card */}
-                    <Box
-                        bg="white"
-                        border="1px solid"
-                        borderColor="#BFDBFE"
-                        borderRadius="20px"
-                        p="16px"
+                    {/* Right Column */}
+                    <VStack 
+                        align="stretch" 
+                        gap="16px"
+                        flex="1"
+                        pb={{ base: '16px', lg: '0' }}
                     >
-                        <VStack align="stretch" gap="16px">
-                            <Heading
-                                as="h2"
-                                fontSize="24px"
-                                lineHeight="32px"
-                                fontWeight="bold"
-                                color="#27272A"
-                                letterSpacing="-0.2px"
-                            >
-                                Мои льготы
-                            </Heading>
-
-                            <Flex gap="12px">
-                                <Button
-                                    flex="1"
-                                    variant="ghost"
-                                    borderRadius="12px"
-                                    h="auto"
-                                    p="12px"
-                                    justifyContent="flex-start"
-                                    onClick={() => navigate({ to: '/benefits' })}
-                                    _hover={{ bg: 'gray.50' }}
-                                >
-                                    <VStack align="flex-start" gap="4px" w="full">
-                                        <Text
-                                            fontSize="18px"
-                                            lineHeight="24px"
-                                            fontWeight="normal"
-                                            color="#52525B"
-                                        >
-                                            Для вас
-                                        </Text>
-                                        <Heading
-                                            as="h3"
-                                            fontSize="32px"
-                                            lineHeight="40px"
-                                            fontWeight="bold"
-                                            color="#3B82F6"
-                                        >
-                                            {statsData?.total_benefits ?? 0}
-                                        </Heading>
-                                    </VStack>
-                                    <Icon
-                                        viewBox="0 0 24 24"
-                                        boxSize="20px"
-                                        color="#A1A1AA"
-                                        ml="auto"
-                                        flexShrink={0}
-                                    >
-                                        <path
-                                            fill="currentColor"
-                                            d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"
-                                        />
-                                    </Icon>
-                                </Button>
-
-                                <Button
-                                    flex="1"
-                                    variant="ghost"
-                                    borderRadius="12px"
-                                    h="auto"
-                                    p="12px"
-                                    justifyContent="flex-start"
-                                    onClick={() => navigate({ to: '/benefits' })}
-                                    _hover={{ bg: 'gray.50' }}
-                                >
-                                    <VStack align="flex-start" gap="4px" w="full">
-                                        <Text
-                                            fontSize="18px"
-                                            lineHeight="24px"
-                                            fontWeight="normal"
-                                            color="#52525B"
-                                        >
-                                            Сохранено
-                                        </Text>
-                                        <Heading
-                                            as="h3"
-                                            fontSize="32px"
-                                            lineHeight="40px"
-                                            fontWeight="bold"
-                                            color="#3B82F6"
-                                        >
-                                            {statsData?.total_favorites ?? 0}
-                                        </Heading>
-                                    </VStack>
-                                    <Icon
-                                        viewBox="0 0 24 24"
-                                        boxSize="20px"
-                                        color="#A1A1AA"
-                                        ml="auto"
-                                        flexShrink={0}
-                                    >
-                                        <path
-                                            fill="currentColor"
-                                            d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"
-                                        />
-                                    </Icon>
-                                </Button>
-                            </Flex>
-                        </VStack>
-                    </Box>
-
-                    {/* Documents Card */}
-                    <Box
-                        bg="white"
-                        border="1px solid"
-                        borderColor="#BFDBFE"
-                        borderRadius="20px"
-                        p="16px"
-                    >
-                        <VStack align="stretch" gap="16px">
-                            <Heading
-                                as="h2"
-                                fontSize="24px"
-                                lineHeight="32px"
-                                fontWeight="bold"
-                                color="#27272A"
-                                letterSpacing="-0.2px"
-                            >
-                                Документы
-                            </Heading>
-
+                        {/* Personal Information Card */}
+                        <Box
+                            bg="white"
+                            border="1px solid"
+                            borderColor="#BFDBFE"
+                            borderRadius="20px"
+                            p="16px"
+                        >
                             <VStack align="stretch" gap="16px">
-                                {snilsDoc?.document_number && (
+                                <Heading
+                                    as="h2"
+                                    fontSize="24px"
+                                    lineHeight="32px"
+                                    fontWeight="bold"
+                                    color="#27272A"
+                                    letterSpacing="-0.2px"
+                                >
+                                    Личная информация
+                                </Heading>
+
+                                <VStack align="stretch" gap="16px">
                                     <VStack align="stretch" gap="4px">
                                         <Text
                                             fontSize="18px"
@@ -496,7 +435,7 @@ export const ProfilePage = () => {
                                             fontWeight="bold"
                                             color="#27272A"
                                         >
-                                            СНИЛС
+                                            ФИО
                                         </Text>
                                         <Text
                                             fontSize="18px"
@@ -504,12 +443,10 @@ export const ProfilePage = () => {
                                             fontWeight="normal"
                                             color="#52525B"
                                         >
-                                            {formatSnils(snilsDoc.document_number)}
+                                            {fullName || '—'}
                                         </Text>
                                     </VStack>
-                                )}
 
-                                {passportDoc?.document_number && (
                                     <VStack align="stretch" gap="4px">
                                         <Text
                                             fontSize="18px"
@@ -517,59 +454,124 @@ export const ProfilePage = () => {
                                             fontWeight="bold"
                                             color="#27272A"
                                         >
-                                            Паспорт
+                                            Телефон
                                         </Text>
                                         <Text
                                             fontSize="18px"
                                             lineHeight="24px"
                                             fontWeight="normal"
                                             color="#52525B"
-                                            whiteSpace="pre-line"
                                         >
-                                            {passportDoc.document_number}
+                                            {formatPhoneNumber(profile?.phone_number)}
                                         </Text>
                                     </VStack>
-                                )}
 
-                                {/* Адрес регистрации - пока нет в API, но оставляем для будущего */}
-                                {/* <VStack align="stretch" gap="4px">
-                                    <Text
-                                        fontSize="18px"
-                                        lineHeight="24px"
-                                        fontWeight="bold"
-                                        color="#27272A"
-                                    >
-                                        Адрес регистрации
-                                    </Text>
-                                    <Text
-                                        fontSize="18px"
-                                        lineHeight="24px"
-                                        fontWeight="normal"
-                                        color="#52525B"
-                                    >
-                                        Республика Саха (Якутия), Якутск, ул. Петра-Алексеева, д. 100, кв.100
-                                    </Text>
-                                </VStack> */}
+                                    <VStack align="stretch" gap="4px">
+                                        <Text
+                                            fontSize="18px"
+                                            lineHeight="24px"
+                                            fontWeight="bold"
+                                            color="#27272A"
+                                        >
+                                            Почта
+                                        </Text>
+                                        <Text
+                                            fontSize="18px"
+                                            lineHeight="24px"
+                                            fontWeight="normal"
+                                            color="#52525B"
+                                        >
+                                            {profile?.email || '—'}
+                                        </Text>
+                                    </VStack>
+                                </VStack>
                             </VStack>
-                        </VStack>
-                    </Box>
+                        </Box>
 
-                    {/* Logout Button */}
-                    <Button
-                        variant="ghost"
-                        colorScheme="blue"
-                        borderRadius="16px"
-                        fontWeight="semibold"
-                        fontSize="md"
-                        h="56px"
-                        onClick={() => {
-                            // TODO: Implement logout
-                            console.log('Logout clicked')
-                        }}
-                    >
-                        Выйти
-                    </Button>
-                </VStack>
+                        {/* Documents Card */}
+                        <Box
+                            bg="white"
+                            border="1px solid"
+                            borderColor="#BFDBFE"
+                            borderRadius="20px"
+                            p="16px"
+                        >
+                            <VStack align="stretch" gap="16px">
+                                <Heading
+                                    as="h2"
+                                    fontSize="24px"
+                                    lineHeight="32px"
+                                    fontWeight="bold"
+                                    color="#27272A"
+                                    letterSpacing="-0.2px"
+                                >
+                                    Документы
+                                </Heading>
+
+                                <VStack align="stretch" gap="16px">
+                                    {snilsDoc?.document_number && (
+                                        <VStack align="stretch" gap="4px">
+                                            <Text
+                                                fontSize="18px"
+                                                lineHeight="24px"
+                                                fontWeight="bold"
+                                                color="#27272A"
+                                            >
+                                                СНИЛС
+                                            </Text>
+                                            <Text
+                                                fontSize="18px"
+                                                lineHeight="24px"
+                                                fontWeight="normal"
+                                                color="#52525B"
+                                            >
+                                                {formatSnils(snilsDoc.document_number)}
+                                            </Text>
+                                        </VStack>
+                                    )}
+
+                                    {passportDoc?.document_number && (
+                                        <VStack align="stretch" gap="4px">
+                                            <Text
+                                                fontSize="18px"
+                                                lineHeight="24px"
+                                                fontWeight="bold"
+                                                color="#27272A"
+                                            >
+                                                Паспорт
+                                            </Text>
+                                            <Text
+                                                fontSize="18px"
+                                                lineHeight="24px"
+                                                fontWeight="normal"
+                                                color="#52525B"
+                                                whiteSpace="pre-line"
+                                            >
+                                                {passportDoc.document_number}
+                                            </Text>
+                                        </VStack>
+                                    )}
+                                </VStack>
+                            </VStack>
+                        </Box>
+
+                        {/* Logout Button */}
+                        <Button
+                            variant="ghost"
+                            colorScheme="blue"
+                            borderRadius="16px"
+                            fontWeight="semibold"
+                            fontSize="md"
+                            h="56px"
+                            onClick={() => {
+                                // TODO: Implement logout
+                                console.log('Logout clicked')
+                            }}
+                        >
+                            Выйти
+                        </Button>
+                    </VStack>
+                </Flex>
             </Container>
 
             {/* Certificate Drawer */}
