@@ -303,8 +303,8 @@ export const BenefitDrawer = ({ isOpen, onClose, benefitId }: BenefitDrawerProps
                                 const getBuildingName = () => {
                                     if (building.category) return building.category
                                     if (building.name) return building.name
-                                    if (building.type === 'pharmacy') return `Аптека ${index + 1}`
-                                    return `Место ${index + 1}`
+                                    if (building.type === 'pharmacy') return `Аптека`
+                                    return `Место`
                                 }
                                 
                                 return (
