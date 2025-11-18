@@ -1,20 +1,20 @@
-import { Box, Button, Grid, Heading, Image, Stack, Text, VStack } from '@chakra-ui/react'
+import { Box, Button, Grid, Heading, Image, Text, VStack } from '@chakra-ui/react'
 import { useNavigate } from '@tanstack/react-router'
 import { CircleCheckBig, FileCheck, HandHeart } from 'lucide-react'
 import { LuSearchCheck } from 'react-icons/lu'
 
 import { useAuthState } from '@/entities/auth'
-import { useOnlineStatus } from '@/shared/hooks/use-online-status'
-import { AppHeader } from '@/shared/ui/app-header'
-import { Footer } from '@/shared/ui/footer'
-import { FeatureCard } from '@/shared/ui/feature-card'
-
-import mainBannerImage from '@/shared/assets/images/main-banner.png'
 import bannerDesktopImage from '@/shared/assets/images/banner_desktop.png'
+import mainBannerImage from '@/shared/assets/images/main-banner.png'
 import popular1Image from '@/shared/assets/images/popular-1.png'
 import popular2Image from '@/shared/assets/images/popular-2.png'
 import popular3Image from '@/shared/assets/images/popular-3.png'
 import popular4Image from '@/shared/assets/images/popular-4.png'
+import { useDeviceDetect } from '@/shared/hooks/use-device-detect'
+import { useOnlineStatus } from '@/shared/hooks/use-online-status'
+import { AppHeader } from '@/shared/ui/app-header'
+import { FeatureCard } from '@/shared/ui/feature-card'
+import { Footer } from '@/shared/ui/footer'
 
 export const HomePage = () => {
     const navigate = useNavigate()
@@ -63,52 +63,74 @@ export const HomePage = () => {
         },
     ]
 
-    return (
-        <Box minH="100vh">
-            <AppHeader />
+    const { isDesktop } = useDeviceDetect()
 
-            <Box 
-                pb="54px" 
-                pt="16px" 
-                px={{ base: '16px', lg: '80px' }}
+    return (
+        <Box minH='100dvh'>
+            <Box
+                bg='white'
+                h='88px'
+                maxW='1280px'
+                mx='auto'
+                position='sticky'
+                top={0}
+                w='100%'
+                zIndex={1000}
             >
-                <VStack align="stretch" gap={{ base: 6, lg: 8 }} maxW="1440px" mx="auto">
+                <AppHeader />
+            </Box>
+
+            <Box
+                maxW='1280px'
+                mx='auto'
+                {...(isDesktop && { pt: '22px' })}
+                {...(!isDesktop && { px: '16px' })}
+            >
+                <VStack align='stretch' gap={{ base: 6, lg: 12 }}>
                     {/* Hero Section */}
                     <Box
-                        bgImage={isOnline ? {
-                            base: `url(${mainBannerImage})`,
-                            lg: `url(${bannerDesktopImage})`
-                        } : undefined}
-                        bg={!isOnline ? 'blue.50' : undefined}
-                        bgSize="cover"
+                        bg={isOnline ? undefined : 'blue.50'}
+                        bgSize='cover'
                         borderRadius={{ base: '20px', lg: '32px' }}
                         h={{ base: '500px', lg: '480px' }}
                         p={{ base: '20px', lg: '48px' }}
-                        position="relative"
-                        style={isOnline ? {
-                            backgroundPosition: 'center',
-                            backgroundRepeat: 'no-repeat',
-                        } : undefined}
+                        position='relative'
+                        bgImage={
+                            isOnline
+                                ? {
+                                      base: `url(${mainBannerImage})`,
+                                      lg: `url(${bannerDesktopImage})`,
+                                  }
+                                : undefined
+                        }
+                        style={
+                            isOnline
+                                ? {
+                                      backgroundPosition: 'center',
+                                      backgroundRepeat: 'no-repeat',
+                                  }
+                                : undefined
+                        }
                     >
-                        <VStack 
-                            align="start" 
+                        <VStack
+                            align='start'
                             gap={{ base: '10px', lg: '20px' }}
-                            maxW={{ base: '100%', lg: '580px' }}
                             h={{ base: 'auto', lg: 'full' }}
                             justify={{ base: 'flex-start', lg: 'space-between' }}
+                            maxW={{ base: '100%', lg: '580px' }}
                         >
-                            <VStack align="start" gap={{ base: '10px', lg: '16px' }}>
+                            <VStack align='start' gap={{ base: '10px', lg: '16px' }}>
                                 <Heading
-                                    as="h1"
+                                    as='h1'
                                     fontSize={{ base: '3xl', lg: '56px' }}
-                                    fontWeight="bold"
+                                    fontWeight='bold'
                                     lineHeight={{ base: '38px', lg: '64px' }}
                                 >
                                     Все льготы —<br />в одном месте
                                 </Heading>
-                                <Text 
-                                    color="gray.800" 
-                                    fontSize={{ base: 'lg', lg: '24px' }} 
+                                <Text
+                                    color='gray.800'
+                                    fontSize={{ base: 'lg', lg: '24px' }}
                                     lineHeight={{ base: '28px', lg: '36px' }}
                                 >
                                     Найдите все положенные льготы и экономьте на аптечных покупках,
@@ -118,16 +140,16 @@ export const HomePage = () => {
 
                             {/* CTA Button - внутри баннера только на desktop */}
                             <Button
-                                display={{ base: 'none', lg: 'flex' }}
-                                bg="blue.solid"
-                                borderRadius="20px"
-                                fontWeight="semibold"
-                                fontSize="24px"
-                                lineHeight="36px"
-                                size="2xl"
-                                h="64px"
-                                w="280px"
                                 _hover={{ bg: 'blue.600' }}
+                                bg='blue.solid'
+                                borderRadius='20px'
+                                display={{ base: 'none', lg: 'flex' }}
+                                fontSize='24px'
+                                fontWeight='semibold'
+                                h='64px'
+                                lineHeight='36px'
+                                size='2xl'
+                                w='280px'
                                 onClick={() => navigate({ to: '/benefits' })}
                             >
                                 Смотреть льготы
@@ -137,43 +159,50 @@ export const HomePage = () => {
 
                     {/* CTA Button - вне баннера только на mobile */}
                     <Button
-                        display={{ base: 'flex', lg: 'none' }}
-                        bg="blue.solid"
-                        borderRadius="16px"
-                        fontWeight="semibold"
-                        fontSize="xl"
-                        lineHeight="30px"
-                        size="2xl"
-                        w="full"
                         _hover={{ bg: 'blue.600' }}
+                        bg='blue.solid'
+                        borderRadius='16px'
+                        display={{ base: 'flex', lg: 'none' }}
+                        fontSize='xl'
+                        fontWeight='semibold'
+                        lineHeight='30px'
+                        size='2xl'
+                        w='full'
                         onClick={() => navigate({ to: '/benefits' })}
                     >
                         Смотреть льготы
                     </Button>
 
                     {/* Features Section */}
-                    <VStack align="stretch" gap={{ base: 5, lg: 8 }} mt={{ base: 0, lg: 4 }}>
+                    <VStack
+                        align='stretch'
+                        gap={{ base: 5, lg: 8 }}
+                        maxW='1020px'
+                        mt={{ base: 0, lg: 4 }}
+                        mx='auto'
+                        w='100%'
+                    >
                         <Heading
-                            as="h2"
-                            fontSize={{ base: '2xl', lg: '48px' }}
-                            fontWeight="bold"
-                            lineHeight={{ base: '32px', lg: '56px' }}
-                            textAlign="center"
-                            mt={4}
+                            as='h2'
+                            fontSize={{ base: '2xl', lg: '6xl' }}
+                            fontWeight='bold'
+                            lineHeight={{ base: '32px', lg: '72px' }}
+                            textAlign={isDesktop ? 'start' : 'center'}
                         >
-                            Быстрый и понятный доступ к вашим льготам
+                            Быстрый и понятный <br />
+                            доступ к вашим льготам
                         </Heading>
 
-                        <Grid 
-                            templateColumns={{ base: '1fr', lg: 'repeat(2, 1fr)' }} 
-                            gap={{ base: 5, lg: 6 }}
+                        <Grid
+                            gap={{ base: 5, lg: 7 }}
+                            templateColumns={{ base: '1fr', lg: 'repeat(2, 1fr)' }}
                         >
                             {features.map((feature, index) => (
                                 <FeatureCard
                                     key={index}
+                                    description={feature.description}
                                     icon={feature.icon}
                                     title={feature.title}
-                                    description={feature.description}
                                 />
                             ))}
                         </Grid>
@@ -181,53 +210,58 @@ export const HomePage = () => {
 
                     {/* Popular Benefits Section - только для неавторизованных */}
                     {!isAuthenticated && (
-                        <VStack align="stretch" gap={{ base: 5, lg: 8 }} py={{ base: 5, lg: 8 }}>
+                        <VStack
+                            align='stretch'
+                            gap={{ base: 5, lg: 8 }}
+                            maxW='1020px'
+                            mx='auto'
+                            w='100%'
+                        >
                             <Heading
-                                as="h2"
-                                fontSize={{ base: '2xl', lg: '48px' }}
-                                fontWeight="bold"
-                                lineHeight={{ base: '32px', lg: '56px' }}
-                                textAlign="center"
+                                as='h2'
+                                fontSize={{ base: '2xl', lg: '6xl' }}
+                                fontWeight='bold'
+                                lineHeight={{ base: '32px', lg: '72px' }}
+                                textAlign={isDesktop ? 'start' : 'center'}
                             >
                                 Популярные льготы
                             </Heading>
-                            <Grid 
-                                templateColumns={{ base: 'repeat(2, 1fr)', lg: 'repeat(4, 1fr)' }} 
-                                gap={{ base: 4, lg: 6 }}
+                            <Grid
+                                gap={{ base: 4, lg: 12 }}
+                                templateColumns={{ base: 'repeat(2, 1fr)', lg: 'repeat(4, 1fr)' }}
                             >
                                 {popularBenefits.map((benefit, index) => (
                                     <Box
                                         key={index}
                                         borderRadius={{ base: '16px', lg: '20px' }}
-                                        cursor="pointer"
-                                        h={{ base: '208px', lg: '240px' }}
-                                        onClick={() => navigate({ to: '/login' })}
-                                        transition="all 0.2s"
+                                        cursor='pointer'
+                                        transition='all 0.2s'
                                         _hover={{
                                             bg: 'gray.300',
                                             transform: 'scale(1.02)',
                                         }}
+                                        onClick={() => navigate({ to: '/login' })}
                                     >
                                         <VStack
-                                            align="center"
-                                            h="full"
-                                            justify="center"
+                                            align='center'
                                             gap={{ base: 2, lg: 3 }}
+                                            h='full'
+                                            justify='center'
                                         >
                                             <Image
-                                                src={benefit.image}
                                                 alt={benefit.title}
                                                 borderRadius={{ base: '16px', lg: '20px' }}
-                                                h={{ base: '140px', lg: '160px' }}
-                                                w={{ base: '140px', lg: '160px' }}
-                                                objectFit="cover"
+                                                h={{ base: '140px', lg: '200px' }}
+                                                objectFit='cover'
+                                                src={benefit.image}
+                                                w={{ base: '140px', lg: '200px' }}
                                             />
                                             <Text
-                                                color="gray.800"
-                                                fontSize={{ base: 'xl', lg: '22px' }}
-                                                fontWeight="bold"
+                                                color='gray.800'
+                                                fontSize={{ base: 'xl', lg: '2xl' }}
+                                                fontWeight='bold'
                                                 lineHeight={{ base: '30px', lg: '32px' }}
-                                                textAlign="center"
+                                                textAlign='center'
                                             >
                                                 {benefit.title}
                                             </Text>
@@ -237,10 +271,10 @@ export const HomePage = () => {
                             </Grid>
                         </VStack>
                     )}
-
-                    <Footer />
                 </VStack>
             </Box>
+
+            <Footer />
         </Box>
     )
 }
