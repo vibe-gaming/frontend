@@ -106,7 +106,7 @@ export const FiltersSidebar = ({
                 />
 
                 <MultiSelectFilter
-                    title="Тип целевой группы"
+                    title="Тип"
                     options={TARGET_GROUPS}
                     selectedValues={tempTargetGroups}
                     onChange={onTargetGroupsChange}
@@ -153,29 +153,18 @@ export const FiltersSidebar = ({
                     </Box>
                 </Show>
 
-                {/* Кнопки */}
-                <HStack gap={4} w='full' mt={4}>
-                    <Button
-                        flex={1}
-                        size="lg"
-                        variant="outline"
-                        colorPalette="blue"
-                        rounded={'xl'}
-                        onClick={onReset}
-                    >
-                        Сбросить
-                    </Button>
-                    <Button
-                        flex={1}
-                        size="lg"
-                        variant="solid"
-                        colorPalette="blue"
-                        rounded={'xl'}
-                        onClick={onApply}
-                    >
-                        Применить
-                    </Button>
-                </HStack>
+                {/* Кнопка сброса */}
+                <Button
+                    w='full'
+                    size="lg"
+                    variant="outline"
+                    colorPalette="blue"
+                    rounded={'xl'}
+                    onClick={onReset}
+                    mt={4}
+                >
+                    Сбросить
+                </Button>
             </VStack>
         </Box>
     )

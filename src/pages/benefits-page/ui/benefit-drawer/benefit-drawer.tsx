@@ -220,7 +220,7 @@ export const BenefitDrawer = ({ isOpen, onClose, benefitId }: BenefitDrawerProps
                     </Text>
                 </Box>
             ) : (
-                <Box as="article">
+                <VStack as="article" align="stretch">
                     {/* Теги/фильтры */}
                     {tagsToDisplay.length > 0 && (
                         <Box as="nav" aria-label="Категории льготы" mb={5}>
@@ -245,7 +245,7 @@ export const BenefitDrawer = ({ isOpen, onClose, benefitId }: BenefitDrawerProps
                     )}
 
                     {/* Заголовок */}
-                    <Heading as="h1" fontSize="2xl" lineHeight="32px" fontWeight="bold" mb={2} id="benefit-title">
+                    <Heading as="h1" fontSize={{ base: "2xl", md: "3xl" }} lineHeight={{ base: "32px", md: "38px" }} fontWeight="bold" mb={2} id="benefit-title">
                         {benefit.title || 'Без названия'}
                     </Heading>
 
@@ -262,12 +262,13 @@ export const BenefitDrawer = ({ isOpen, onClose, benefitId }: BenefitDrawerProps
                         borderRadius="20px"
                         objectFit="cover"
                         mb={5}
+                        width={"512px"}
                     />
 
                     {/* Секция "Кому положено" */}
                     {benefit.target_groups && benefit.target_groups.length > 0 && (
                         <Box as="section" aria-labelledby="eligible-heading" bg={'gray.100'} borderRadius="20px" p={4} mb={5}>
-                            <Heading as="h2" id="eligible-heading" fontSize="xl" fontWeight="bold" mb={4} lineHeight="30px">
+                            <Heading as="h2" id="eligible-heading" fontSize={{ base: "xl", md: "2xl" }} fontWeight="bold" mb={4} lineHeight={{ base: "30px", md: "38px" }}>
                                 Кому положено
                             </Heading>
                             <Box as="ul" pl={5} style={{ listStyleType: 'disc' }}>
@@ -286,7 +287,7 @@ export const BenefitDrawer = ({ isOpen, onClose, benefitId }: BenefitDrawerProps
                     {/* Секция "Какие документы нужны" */}
                     {benefit.requirement && (
                         <Box as="section" aria-labelledby="documents-heading" bg={'gray.100'} borderRadius="20px" p={4} mb={5}>
-                            <Heading as="h2" id="documents-heading" fontSize="xl" fontWeight="bold" mb={4} lineHeight="30px">
+                            <Heading as="h2" id="documents-heading" fontSize={{ base: "xl", md: "2xl" }} fontWeight="bold" mb={4} lineHeight={{ base: "30px", md: "38px" }}>
                                 Какие документы нужны
                             </Heading>
                             <Text fontSize="lg" color="gray.600" lineHeight="28px" whiteSpace="pre-line">
@@ -298,7 +299,7 @@ export const BenefitDrawer = ({ isOpen, onClose, benefitId }: BenefitDrawerProps
                     {/* Секция "Как получить" */}
                     {benefit.how_to_use && (
                         <Box as="section" aria-labelledby="how-to-heading" bg={'gray.100'} borderRadius="20px" p={4} mb={5}>
-                            <Heading as="h2" id="how-to-heading" fontSize="xl" fontWeight="bold" mb={4} lineHeight="30px">
+                            <Heading as="h2" id="how-to-heading" fontSize={{ base: "xl", md: "2xl" }} fontWeight="bold" mb={4} lineHeight={{ base: "30px", md: "38px" }}>
                                 Как получить
                             </Heading>
                             <Text fontSize="lg" color="gray.600" lineHeight="28px" whiteSpace="pre-line">
@@ -308,10 +309,49 @@ export const BenefitDrawer = ({ isOpen, onClose, benefitId }: BenefitDrawerProps
                     )}
 
                     {/* Секция "Где получить" */}
+<<<<<<< Updated upstream
                     {buildings.length > 0 && (
                         <VStack as="section" aria-labelledby="where-heading" bg={'gray.100'} borderRadius="20px" p={4} mb={5} gap={4} align="stretch">
                             <Heading as="h2" id="where-heading" fontSize="xl" fontWeight="bold" lineHeight="30px">
                                 Где получить
+=======
+                    <VStack as="section" aria-labelledby="where-heading" bg={'gray.100'} borderRadius="20px" p={4} mb={5} gap={4} align="stretch">
+                        <Heading as="h2" id="where-heading" fontSize={{ base: "xl", md: "2xl" }} fontWeight="bold" lineHeight={{ base: "30px", md: "38px" }}>
+                            Где получить
+                        </Heading>
+
+                        {/* Аптека 1 */}
+                        <Box p={4} bg="white" borderRadius="xl">
+                            {/* Теги доступности */}
+                            <HStack gap={2} mb={2}>
+                                <Badge
+                                    bg="gray.subtle"
+                                    color="gray.fg"
+                                    fontSize="sm"
+                                    variant="subtle"
+                                    size="lg"
+                                    rounded="md"
+                                    px={2.5}
+                                    py={1}
+                                >
+                                    С пандусом
+                                </Badge>
+                                <Badge
+                                    bg="gray.subtle"
+                                    color="gray.fg"
+                                    fontSize="sm"
+                                    variant="subtle"
+                                    size="lg"
+                                    rounded="md"
+                                    px={2.5}
+                                    py={1}
+                                >
+                                    С подъемником
+                                </Badge>
+                            </HStack>
+                            <Heading as="h3" fontSize="xl" fontWeight="bold" mb={2} lineHeight="30px">
+                                Аптека 1
+>>>>>>> Stashed changes
                             </Heading>
 
                             {buildings.map((building, index) => {
@@ -429,7 +469,8 @@ export const BenefitDrawer = ({ isOpen, onClose, benefitId }: BenefitDrawerProps
                     )}
 
                     <Button
-                        w="full"
+                        w={{"base": "full", md: "218px"}}
+                        ml={{base: "auto", md: "auto"}}
                         size="2xl"
                         bg="blue.subtle"
                         color="blue.fg"
@@ -447,7 +488,7 @@ export const BenefitDrawer = ({ isOpen, onClose, benefitId }: BenefitDrawerProps
                         <Download size={24} style={{ marginRight: '12px' }} />
                         Скачать PDF
                     </Button>
-                </Box>
+                </VStack>
             )}
         </FullScreenDrawer>
     )
