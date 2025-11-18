@@ -24,7 +24,7 @@ export const Pagination = ({ currentPage, totalPages, onPageChange }: Pagination
 
     return (
         <nav aria-label="Навигация по страницам">
-            <HStack gap={2} justify='center' mt={4}>
+            <HStack gap={4} justify='center' mt={4}>
                 <Button
                     size="lg"
                     colorPalette="blue"
@@ -41,11 +41,11 @@ export const Pagination = ({ currentPage, totalPages, onPageChange }: Pagination
                 </Button>
                 <Text 
                     color='text.secondary' 
-                    fontSize='sm'
+                    fontSize='lg'
                     aria-live="polite"
                     aria-atomic="true"
                 >
-                    Страница {currentPage} из {totalPages}
+                    {currentPage} из {totalPages}
                 </Text>
                 <Button
                     disabled={isLastPage}

@@ -16,10 +16,7 @@ export const TARGET_GROUPS = [
 ] as const
 
 export const TAGS = [
-    { value: 'most_popular', label: 'Самые популярные' },
     { value: 'new', label: 'Новые' },
-    { value: 'hot', label: 'Горячие' },
-    { value: 'best', label: 'Лучшие' },
     { value: 'recommended', label: 'Рекомендуемые' },
     { value: 'popular', label: 'Популярные' },
 ] as const
@@ -37,7 +34,6 @@ export const CATEGORIES = [
 export const SORT_OPTIONS = [
     { value: 'created_at', label: 'По дате создания' },
     { value: 'views', label: 'По популярности' },
-    { value: 'updated_at', label: 'По дате обновления' },
 ] as const
 
 export const SORT_ORDER_OPTIONS = [

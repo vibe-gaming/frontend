@@ -93,7 +93,7 @@ export const SortDrawer = ({
                 </Box>
 
                 {/* Направление сортировки */}
-                <Box>
+                {/* <Box>
                     <Text fontSize='xl' fontWeight='bold' mb={4}>
                         Направление
                     </Text>
@@ -116,7 +116,7 @@ export const SortDrawer = ({
                             )
                         })}
                     </Flex>
-                </Box>
+                </Box> */}
             </VStack>
         </BaseDrawer>
     )
