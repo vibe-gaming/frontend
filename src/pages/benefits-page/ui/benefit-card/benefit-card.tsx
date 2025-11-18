@@ -4,6 +4,7 @@ import { LuHeart } from 'react-icons/lu';
 import { FaHeart } from "react-icons/fa";
 
 import { usePostBenefitsIdFavorite } from '@/shared/api/generated/hooks/usePostBenefitsIdFavorite'
+import { useOnlineStatus } from '@/shared/hooks/use-online-status'
 import { BENEFIT_TYPES, CATEGORIES, TAGS, TARGET_GROUPS } from '../benefits-page/constants'
 
 import type { V1BenefitResponse } from '@/shared/api/generated/entities/v1/BenefitResponse'
@@ -17,6 +18,7 @@ interface BenefitCardProps {
 
 export const BenefitCard = ({ benefit, isFavorite = false, onFavoriteChange, onClick }: BenefitCardProps) => {
     const [isDesktop] = useMediaQuery(["(min-width: 768px)"])
+    const isOnline = useOnlineStatus()
     const [localIsFavorite, setLocalIsFavorite] = useState(isFavorite)
 
     const favoriteMutation = usePostBenefitsIdFavorite({
@@ -191,21 +193,24 @@ export const BenefitCard = ({ benefit, isFavorite = false, onFavoriteChange, onC
                     >
                         Подробнее
                     </Button>
-                    <IconButton
-                        aria-label='Добавить в избранное'
-                        variant='solid'
-                        size='2xl'
-                        rounded='2xl'
-                        bg={localIsFavorite ? 'red.50' : 'blue.50'}
-                        color={localIsFavorite ? 'red.fg' : 'blue.fg'}
-                        onClick={handleFavoriteClick}
-                        loading={favoriteMutation.isPending}
-                        _hover={{
-                            bg: localIsFavorite ? 'red.100' : 'blue.100',
-                        }}
-                    >
-                        <FaHeart size={24} />
-                    </IconButton>
+                    {/* Кнопка избранного - скрыта в офлайне */}
+                    {isOnline && (
+                        <IconButton
+                            aria-label='Добавить в избранное'
+                            variant='solid'
+                            size='2xl'
+                            rounded='2xl'
+                            bg={localIsFavorite ? 'red.50' : 'blue.50'}
+                            color={localIsFavorite ? 'red.fg' : 'blue.fg'}
+                            onClick={handleFavoriteClick}
+                            loading={favoriteMutation.isPending}
+                            _hover={{
+                                bg: localIsFavorite ? 'red.100' : 'blue.100',
+                            }}
+                        >
+                            <FaHeart size={24} />
+                        </IconButton>
+                    )}
                 </HStack>
             </VStack>
         </Box>
