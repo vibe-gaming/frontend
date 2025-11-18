@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from 'react'
-import { Box, Button, Heading, HStack, IconButton, Input, Spinner, Stack, Text, useMediaQuery, VStack } from '@chakra-ui/react';
+import { Box, Button, createListCollection, Grid, Heading, HStack, IconButton, Input, Select, Spinner, Stack, Text, useMediaQuery, VStack } from '@chakra-ui/react';
 import { Show } from "@chakra-ui/react";
 
 import { LuChevronDown, LuSearch } from 'react-icons/lu'
@@ -7,10 +7,11 @@ import { LuChevronDown, LuSearch } from 'react-icons/lu'
 import { useGetBenefits } from '@/shared/api/generated/hooks/useGetBenefits'
 import { useDebounce } from '@/shared/hooks/use-debounce'
 
-import { ITEMS_PER_PAGE } from './constants'
+import { ITEMS_PER_PAGE, SORT_OPTIONS, TARGET_GROUPS } from './constants'
 import { BenefitCard } from '../benefit-card'
 import { BenefitDrawer } from '../benefit-drawer'
 import { FiltersDrawer } from '../filters-drawer'
+import { FiltersSidebar } from '../filters-sidebar'
 import { Pagination } from '../pagination'
 import { SortDrawer } from '../sort-drawer'
 import styles from './benefits-page.module.scss'
@@ -192,6 +193,30 @@ export const BenefitsPage = () => {
         )
     }
 
+    // Теги для отображения под поиском (пока только визуально)
+    const quickFilterTags = [
+        { value: 'pensioners', label: 'Пенсионерам' },
+        { value: 'disabled', label: 'Инвалидам' },
+        { value: 'large_families', label: 'Многодетным' },
+        { value: 'students', label: 'Студентам' },
+        { value: 'veterans', label: 'Ветеранам труда' },
+    ]
+
+    // Коллекция для селекта сортировки
+    const sortCollection = useMemo(() => {
+        const items = SORT_OPTIONS.map((option) => ({
+            value: option.value,
+            label: option.label,
+        }))
+        return createListCollection({ items })
+    }, [])
+
+    // Обработчик изменения сортировки на десктопе
+    const handleSortChange = (value: string) => {
+        setSortBy(value)
+        setCurrentPage(1)
+    }
+
     return (
         <>
             <AppHeader />
@@ -226,25 +251,48 @@ export const BenefitsPage = () => {
 
                     </HStack>
 
-                    {/* Кнопки Фильтр и Сортировка */}
-                    <HStack gap={2}>
-                        <Button
-                            size="xl"
-                            variant="outline"
-                            rounded="xl"
-                            onClick={() => setIsFiltersOpen(true)}
-                        >
-                            Фильтр <LuChevronDown />
-                        </Button>
-                        <Button
-                            size="xl"
-                            variant="outline"
-                            rounded="xl"
-                            onClick={() => setIsSortOpen(true)}
-                        >
-                            Сортировка <LuChevronDown />
-                        </Button>
-                    </HStack>
+                    <Show when={isDesktop}>
+                        {/* Теги под поиском */}
+                        <HStack gap={2} wrap="wrap" mb={6}>
+                            {quickFilterTags.map((tag) => (
+                                <Button
+                                    key={tag.value}
+                                    size="xl"
+                                    variant="subtle"
+                                    rounded="4xl"
+                                    colorPalette="gray"
+                                    fontSize="lg"
+                                    fontWeight="normal"
+                                    lineHeight="28px"
+                                    color={"gray.fg"}
+                                >
+                                    {tag.label}
+                                </Button>
+                            ))}
+                        </HStack>
+                    </Show>
+
+                    {/* Кнопки Фильтр и Сортировка - только на мобильных */}
+                    <Show when={!isDesktop}>
+                        <HStack gap={2}>
+                            <Button
+                                size="xl"
+                                variant="outline"
+                                rounded="xl"
+                                onClick={() => setIsFiltersOpen(true)}
+                            >
+                                Фильтр <LuChevronDown />
+                            </Button>
+                            <Button
+                                size="xl"
+                                variant="outline"
+                                rounded="xl"
+                                onClick={() => setIsSortOpen(true)}
+                            >
+                                Сортировка <LuChevronDown />
+                            </Button>
+                        </HStack>
+                    </Show>
 
                     {/* Результаты */}
                     {isLoading ? (
@@ -262,26 +310,94 @@ export const BenefitsPage = () => {
                         </Box>
                     ) : (
                         <>
-                            <Text color='text.secondary' fontSize='md' mt={2}>
-                                Найдено льгот:{' '}
-                                {data.total ?? data.benefits?.length ?? 0}
-                            </Text>
+                            {/* Layout для десктопа: sidebar слева, карточки справа */}
+                            <Show when={isDesktop}>
+                                <Grid templateColumns="300px 1fr" gap={6} alignItems="start">
+                                    {/* Sidebar с фильтрами */}
+                                    <Box position="sticky" top={20}>
+                                        <FiltersSidebar
+                                            tempBenefitTypes={tempBenefitTypes}
+                                            tempTargetGroups={tempTargetGroups}
+                                            tempTags={tempTags}
+                                            tempCategories={tempCategories}
+                                            tempCityId={tempCityId}
+                                            onBenefitTypesChange={setTempBenefitTypes}
+                                            onTargetGroupsChange={setTempTargetGroups}
+                                            onTagsChange={setTempTags}
+                                            onCategoriesChange={setTempCategories}
+                                            onCityIdChange={setTempCityId}
+                                            onReset={handleResetFilters}
+                                            onApply={handleApplyFilters}
+                                        />
+                                    </Box>
 
-                            <VStack align='stretch' gap={4}>
-                                {data.benefits.map((benefit) => (
-                                    <BenefitCard
-                                        key={benefit.id}
-                                        benefit={benefit}
-                                        onClick={openBenefitDrawer}
-                                    />
-                                ))}
-                            </VStack>
+                                    {/* Контент с карточками */}
+                                    <VStack align='stretch' gap={5}>
+                                        <Select.Root
+                                                collection={sortCollection}
+                                                value={sortBy ? [sortBy] : []}
+                                                position={'relative'}
+                                                onValueChange={(details) => handleSortChange(details.value[0] || 'created_at')}
+                                                size="md"
+                                            >
+                                                <Select.Trigger rounded={'xl'} borderRadius={'xl'} w="200px">
+                                                    <Select.ValueText fontSize={'md'} placeholder="Сортировка" />
+                                                </Select.Trigger>
+                                                <Select.IndicatorGroup mr={4}>
+                                                    <Select.Indicator />
+                                                </Select.IndicatorGroup>
+                                                <Select.Content p={4} gap={4} rounded={'xl'}>
+                                                    {sortCollection.items.map((item) => (
+                                                        <Select.Item key={item.value} item={item} fontSize={'md'}>
+                                                            {item.label}
+                                                        </Select.Item>
+                                                    ))}
+                                                </Select.Content>
+                                            </Select.Root>
 
-                            <Pagination
-                                currentPage={currentPage}
-                                totalPages={totalPages}
-                                onPageChange={setCurrentPage}
-                            />
+                                        {/* Карточки в 2 колонки на десктопе */}
+                                        <Grid templateColumns="repeat(2, 1fr)" gap={4}>
+                                            {data.benefits.map((benefit) => (
+                                                <BenefitCard
+                                                    key={benefit.id}
+                                                    benefit={benefit}
+                                                    onClick={openBenefitDrawer}
+                                                />
+                                            ))}
+                                        </Grid>
+
+                                        <Pagination
+                                            currentPage={currentPage}
+                                            totalPages={totalPages}
+                                            onPageChange={setCurrentPage}
+                                        />
+                                    </VStack>
+                                </Grid>
+                            </Show>
+
+                            {/* Layout для мобильных: карточки в один столбец */}
+                            <Show when={!isDesktop}>
+                                <Text color='text.secondary' fontSize='md' mt={2}>
+                                    Найдено льгот:{' '}
+                                    {data.total ?? data.benefits?.length ?? 0}
+                                </Text>
+
+                                <VStack align='stretch' gap={4}>
+                                    {data.benefits.map((benefit) => (
+                                        <BenefitCard
+                                            key={benefit.id}
+                                            benefit={benefit}
+                                            onClick={openBenefitDrawer}
+                                        />
+                                    ))}
+                                </VStack>
+
+                                <Pagination
+                                    currentPage={currentPage}
+                                    totalPages={totalPages}
+                                    onPageChange={setCurrentPage}
+                                />
+                            </Show>
                         </>
                     )}
                 </VStack>
