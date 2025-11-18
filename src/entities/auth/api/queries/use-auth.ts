@@ -1,6 +1,5 @@
 import { AxiosError } from 'axios'
-import { atom } from 'jotai'
-import { useAtom, useAtomValue } from 'jotai'
+import { atom, useAtom, useAtomValue } from 'jotai'
 import { atomWithStorage, createJSONStorage } from 'jotai/utils'
 
 import { useGetUsersProfile } from '@/shared/api/generated'
@@ -24,6 +23,7 @@ export const authAtom = atomWithStorage<Auth | undefined>(
 // Производный атом для проверки аутентификации (стабильное значение)
 const isAuthenticatedAtom = atom((get) => {
     const auth = get(authAtom)
+
     return Boolean(auth?.access_token)
 })
 
@@ -34,12 +34,7 @@ const isAuthenticatedAtom = atom((get) => {
 export const useAuth = () => {
     const [auth, setAuth] = useAtom(authAtom)
 
-    const {
-        data: profile,
-        isLoading,
-        isFetching,
-        status,
-    } = useGetUsersProfile({
+    const { data: profile, isLoading } = useGetUsersProfile({
         query: {
             // Запрашиваем профиль только если есть токен
             enabled: Boolean(auth?.access_token),

@@ -1,9 +1,21 @@
 import * as React from 'react'
-import { Box, Button, Center, Input, List, Text } from '@chakra-ui/react'
+import { Combobox, Portal, Spinner, Text, useFilter, useListCollection } from '@chakra-ui/react'
 import { useNavigate, useRouter } from '@tanstack/react-router'
+import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react'
+import { toast } from 'sonner'
 
+import {
+    AuthBackButton,
+    AuthButton,
+    AuthButtonBox,
+    AuthContent,
+    AuthContentBox,
+    AuthHeading,
+    AuthPageBox,
+} from '@/entities/auth'
 import { useGetCities, usePostUsersUpdateInfo } from '@/shared/api/generated'
-import { HeaderMobile } from '@/shared/ui/header-mobile'
+import { useDeviceDetect } from '@/shared/hooks/use-device-detect'
+import { AppHeader } from '@/shared/ui/app-header'
 
 export const RegisterCityPage = () => {
     const navigate = useNavigate()
@@ -12,79 +24,150 @@ export const RegisterCityPage = () => {
         group_type?: string[]
     }
 
-    const [filter, setFilter] = React.useState('')
     const [selectedCityId, setSelectedCityId] = React.useState<string | null>(null)
 
-    const { data: cities } = useGetCities({})
+    const { data: cities } = useGetCities()
+
+    const initialItems = cities?.map((city) => ({
+        label: city.name,
+        value: city.id,
+    }))
 
     const { mutateAsync, isPending } = usePostUsersUpdateInfo({})
-
-    const filteredCities =
-        cities?.filter((city) => city.name?.toLowerCase().includes(filter.toLowerCase())) ?? []
 
     const handleSubmit = async () => {
         if (!selectedCityId || !search.group_type?.length) return
 
         try {
-            await mutateAsync({
-                data: {
-                    city_id: selectedCityId,
-                    groups: search.group_type,
+            await mutateAsync(
+                {
+                    data: {
+                        city_id: selectedCityId,
+                        groups: search.group_type,
+                    },
                 },
-            })
-
-            navigate({ to: '/benefits' })
+                {
+                    onSuccess: () => {
+                        navigate({ to: '/benefits' })
+                        toast.success('Данные успешно сохранены')
+                    },
+                }
+            )
         } catch (error) {
             console.error(error)
         }
     }
 
+    const { isDesktop } = useDeviceDetect()
+
+    const { contains } = useFilter({ sensitivity: 'base' })
+
+    const { collection, filter } = useListCollection({
+        initialItems: initialItems ?? [],
+        filter: contains,
+    })
+
     return (
-        <Box bg='gray.50' minH='100dvh' paddingTop='56px' w='100dvw'>
-            <HeaderMobile title='Ваш город' />
+        <AuthPageBox>
+            {isDesktop && <AppHeader />}
 
-            <Center pt='24px' px='16px'>
-                <Box display='flex' flexDirection='column' gap='16px' w='100%'>
-                    <Input
-                        bg='white'
-                        borderRadius='16px'
-                        placeholder='Название города'
-                        value={filter}
-                        onChange={(event) => setFilter(event.target.value)}
-                    />
-
-                    <Box bg='white' borderRadius='16px' maxH='260px' overflowY='auto' w='100%'>
-                        <List.Root>
-                            {filteredCities.map((city) => (
-                                <List.Item
-                                    key={city.id}
-                                    _hover={{ bg: 'gray.50' }}
-                                    bg={selectedCityId === city.id ? 'blue.50' : 'transparent'}
-                                    cursor='pointer'
-                                    px='16px'
-                                    py='10px'
-                                    onClick={() => setSelectedCityId(city.id!)}
-                                >
-                                    <Text color='gray.800' fontSize='14px'>
-                                        {city.name}
-                                    </Text>
-                                </List.Item>
-                            ))}
-                        </List.Root>
-                    </Box>
-
-                    <Button
-                        borderRadius='999px'
-                        colorScheme='blue'
-                        disabled={isPending || !selectedCityId || !search.group_type?.length}
-                        h='56px'
+            <AuthContentBox>
+                <AuthHeading>Ваш город</AuthHeading>
+                <AuthContent>
+                    <Combobox.Root
+                        openOnClick
+                        collection={collection}
+                        maxW='343px'
                         w='100%'
-                        onClick={handleSubmit}
+                        onInputValueChange={(event) => filter(event.inputValue)}
+                        onValueChange={(event) => setSelectedCityId(event.value[0] ?? null)}
                     >
-                        Далее
-                    </Button>
-                </Box>
-            </Center>
-        </Box>
+                        <Combobox.Control>
+                            <Combobox.Input
+                                bgColor='bg.subtle'
+                                border='1px solid'
+                                borderColor='whiteAlpha.50'
+                                borderRadius='2xl'
+                                color={selectedCityId ? 'fg.subtle' : '#A1A1AA'}
+                                fontSize='lg'
+                                fontWeight='normal'
+                                height='16'
+                                placeholder='Название города'
+                                px='5'
+                                py='10px'
+                            />
+                            <Combobox.IndicatorGroup pr='4'>
+                                <Combobox.ClearTrigger />
+                                {isPending && (
+                                    <Spinner borderWidth='1.5px' color='fg.muted' size='xs' />
+                                )}
+                            </Combobox.IndicatorGroup>
+                        </Combobox.Control>
+                        <Portal>
+                            <Combobox.Positioner>
+                                <Combobox.Content
+                                    borderRadius='xl'
+                                    display='flex'
+                                    flexDirection='column'
+                                    gap='12px'
+                                    px='1.5'
+                                    py='3'
+                                >
+                                    <Combobox.Empty gap='2' pb='1' pl='1.5' pr='1.5' pt='1'>
+                                        <Text color='fg' fontSize='md' fontWeight={500}>
+                                            Город не найден
+                                        </Text>
+                                    </Combobox.Empty>
+                                    {collection.items.map((item) => (
+                                        <Combobox.Item
+                                            key={item.value}
+                                            cursor='pointer'
+                                            gap='2'
+                                            item={item}
+                                            pb='1'
+                                            pl='1.5'
+                                            pr='1.5'
+                                            pt='1'
+                                        >
+                                            <Text color='fg' fontSize='md' fontWeight={500}>
+                                                {item.label}
+                                            </Text>
+                                            <Combobox.ItemIndicator />
+                                        </Combobox.Item>
+                                    ))}
+                                </Combobox.Content>
+                            </Combobox.Positioner>
+                        </Portal>
+                    </Combobox.Root>
+
+                    <AuthButtonBox
+                        display={isDesktop ? 'flex' : 'grid'}
+                        gap='16px'
+                        {...(isDesktop
+                            ? { alignSelf: 'flex-start' }
+                            : { gridTemplateColumns: '1fr 1fr' })}
+                    >
+                        <AuthBackButton
+                            flexGrow={1}
+                            onClick={() =>
+                                navigate({
+                                    to: '/register/category',
+                                    search: { group_type: search.group_type },
+                                })
+                            }
+                        >
+                            <ArrowLeftIcon color='#173DA6' size={6} /> Назад
+                        </AuthBackButton>
+                        <AuthButton
+                            disabled={isPending || !selectedCityId || !search.group_type?.length}
+                            flexGrow={1}
+                            onClick={handleSubmit}
+                        >
+                            Далее <ArrowRightIcon />
+                        </AuthButton>
+                    </AuthButtonBox>
+                </AuthContent>
+            </AuthContentBox>
+        </AuthPageBox>
     )
 }

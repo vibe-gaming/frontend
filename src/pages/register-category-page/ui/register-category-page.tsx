@@ -1,8 +1,19 @@
 import * as React from 'react'
-import { Box, Button, Center, Flex, SimpleGrid, Text } from '@chakra-ui/react'
-import { useNavigate } from '@tanstack/react-router'
+import { Box, Button } from '@chakra-ui/react'
+import { useNavigate, useSearch } from '@tanstack/react-router'
+import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react'
 
-import { HeaderMobile } from '@/shared/ui/header-mobile'
+import {
+    AuthBackButton,
+    AuthButton,
+    AuthButtonBox,
+    AuthContentBox,
+    AuthHeading,
+    AuthPageBox,
+} from '@/entities/auth'
+import { AuthContent } from '@/entities/auth/ui/auth-content'
+import { useDeviceDetect } from '@/shared/hooks/use-device-detect'
+import { AppHeader } from '@/shared/ui/app-header'
 
 // Константы для типов групп
 const GROUP_TYPES = {
@@ -16,7 +27,7 @@ const GROUP_TYPES = {
     VETERANS: 'veterans',
 } as const
 
-type GroupType = (typeof GROUP_TYPES)[keyof typeof GROUP_TYPES]
+export type GroupType = (typeof GROUP_TYPES)[keyof typeof GROUP_TYPES]
 
 const GROUP_TYPE_LABELS: Record<GroupType, string> = {
     [GROUP_TYPES.PENSIONERS]: 'Пенсионеры',
@@ -33,7 +44,10 @@ const groupTypes = Object.values(GROUP_TYPES)
 
 export const RegisterCategoryPage = () => {
     const navigate = useNavigate()
-    const [selected, setSelected] = React.useState<GroupType[]>([])
+    const { group_type } = useSearch({ from: '/_auth/register/category' })
+    const [selected, setSelected] = React.useState<GroupType[]>((group_type as GroupType[]) ?? [])
+
+    const { isDesktop } = useDeviceDetect()
 
     const toggleType = (type: GroupType) => {
         setSelected((previous) =>
@@ -54,56 +68,56 @@ export const RegisterCategoryPage = () => {
     }
 
     return (
-        <Box bg='gray.50' minH='100dvh' paddingTop='56px' w='100dvw'>
-            <HeaderMobile title='Выберите категорию льготы' />
+        <AuthPageBox>
+            {isDesktop && <AppHeader />}
 
-            <Center pt='24px' px='16px'>
-                <Box display='flex' flexDirection='column' gap='24px' w='100%'>
+            <AuthContentBox>
+                <AuthHeading>Выберите категорию льготы</AuthHeading>
+                <AuthContent>
                     <Box w='100%'>
-                        <SimpleGrid columns={2} gap='12px'>
+                        <Box display='flex' flexWrap='wrap' gap='16px'>
                             {groupTypes.map((type) => {
                                 const isActive = selected.includes(type)
 
                                 return (
                                     <Button
                                         key={type}
-                                        borderRadius='999px'
-                                        colorScheme='blue'
-                                        fontSize='14px'
-                                        h='40px'
-                                        variant={isActive ? 'solid' : 'outline'}
+                                        borderRadius='xl'
+                                        colorPalette={isActive ? 'blue' : 'gray'}
+                                        size='xl'
+                                        variant={isActive ? 'subtle' : 'surface'}
                                         onClick={() => toggleType(type)}
                                     >
                                         {GROUP_TYPE_LABELS[type]}
                                     </Button>
                                 )
                             })}
-                        </SimpleGrid>
+                        </Box>
                     </Box>
 
-                    <Flex gap='12px' justify='space-between' w='100%'>
-                        <Button
-                            borderRadius='999px'
-                            h='48px'
-                            variant='outline'
-                            w='50%'
+                    <AuthButtonBox
+                        display={isDesktop ? 'flex' : 'grid'}
+                        gap='16px'
+                        {...(isDesktop
+                            ? { alignSelf: 'flex-start' }
+                            : { gridTemplateColumns: '1fr 1fr' })}
+                    >
+                        <AuthBackButton
+                            flexGrow={1}
                             onClick={() => navigate({ to: '/register/check-info' })}
                         >
-                            <Text>Назад</Text>
-                        </Button>
-                        <Button
-                            borderRadius='999px'
-                            colorScheme='blue'
+                            <ArrowLeftIcon color='#173DA6' size={6} /> Назад
+                        </AuthBackButton>
+                        <AuthButton
                             disabled={selected.length === 0}
-                            h='48px'
-                            w='50%'
+                            flexGrow={1}
                             onClick={handleNext}
                         >
-                            Далее
-                        </Button>
-                    </Flex>
-                </Box>
-            </Center>
-        </Box>
+                            Далее <ArrowRightIcon />
+                        </AuthButton>
+                    </AuthButtonBox>
+                </AuthContent>
+            </AuthContentBox>
+        </AuthPageBox>
     )
 }
