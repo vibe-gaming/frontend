@@ -166,7 +166,7 @@ export const ProfilePage = () => {
             {/* Header */}
             <AppHeader />
 
-            <Container maxW="container.lg" pb="16px" pt="16px" px="16px">
+            <Container maxW="640px" pb="16px" pt="16px" px="16px" mx="auto">
                 <VStack align="stretch" gap="16px">
                     {/* Social Status Section */}
             {profile?.groups && profile.groups.length > 0 && (
