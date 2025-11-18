@@ -17,6 +17,11 @@ import { useGetCities, usePostUsersUpdateInfo } from '@/shared/api/generated'
 import { useDeviceDetect } from '@/shared/hooks/use-device-detect'
 import { AppHeader } from '@/shared/ui/app-header'
 
+interface CityOption {
+    label: string
+    value: string
+}
+
 export const RegisterCityPage = () => {
     const navigate = useNavigate()
     const router = useRouter()
@@ -26,18 +31,9 @@ export const RegisterCityPage = () => {
 
     const [selectedCityId, setSelectedCityId] = React.useState<string | null>(null)
 
-    const { data: cities } = useGetCities()
+    const { data: cities, isLoading } = useGetCities()
 
-    const initialItems = React.useMemo(
-        () =>
-            cities?.map((city) => ({
-                label: city.name,
-                value: city.id,
-            })),
-        [cities]
-    )
-
-    const { mutateAsync, isPending } = usePostUsersUpdateInfo({})
+    const { mutateAsync, isPending } = usePostUsersUpdateInfo()
 
     const handleSubmit = async () => {
         if (!selectedCityId || !search.group_type?.length) return
@@ -66,10 +62,21 @@ export const RegisterCityPage = () => {
 
     const { contains } = useFilter({ sensitivity: 'base' })
 
-    const { collection, filter } = useListCollection({
-        initialItems: initialItems ?? [],
+    const { collection, filter, set } = useListCollection<CityOption>({
+        initialItems: [],
         filter: contains,
     })
+
+    React.useEffect(() => {
+        if (cities && !isLoading) {
+            const initialItems: CityOption[] = cities.map((city) => ({
+                label: city.name ?? '',
+                value: city.id ?? '',
+            }))
+
+            set(initialItems)
+        }
+    }, [cities, isLoading, set])
 
     return (
         <AuthPageBox>
@@ -102,7 +109,7 @@ export const RegisterCityPage = () => {
                             />
                             <Combobox.IndicatorGroup pr='4'>
                                 <Combobox.ClearTrigger />
-                                {isPending && (
+                                {isLoading && (
                                     <Spinner borderWidth='1.5px' color='fg.muted' size='xs' />
                                 )}
                             </Combobox.IndicatorGroup>
