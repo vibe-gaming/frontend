@@ -309,49 +309,10 @@ export const BenefitDrawer = ({ isOpen, onClose, benefitId }: BenefitDrawerProps
                     )}
 
                     {/* Секция "Где получить" */}
-<<<<<<< Updated upstream
                     {buildings.length > 0 && (
                         <VStack as="section" aria-labelledby="where-heading" bg={'gray.100'} borderRadius="20px" p={4} mb={5} gap={4} align="stretch">
                             <Heading as="h2" id="where-heading" fontSize="xl" fontWeight="bold" lineHeight="30px">
                                 Где получить
-=======
-                    <VStack as="section" aria-labelledby="where-heading" bg={'gray.100'} borderRadius="20px" p={4} mb={5} gap={4} align="stretch">
-                        <Heading as="h2" id="where-heading" fontSize={{ base: "xl", md: "2xl" }} fontWeight="bold" lineHeight={{ base: "30px", md: "38px" }}>
-                            Где получить
-                        </Heading>
-
-                        {/* Аптека 1 */}
-                        <Box p={4} bg="white" borderRadius="xl">
-                            {/* Теги доступности */}
-                            <HStack gap={2} mb={2}>
-                                <Badge
-                                    bg="gray.subtle"
-                                    color="gray.fg"
-                                    fontSize="sm"
-                                    variant="subtle"
-                                    size="lg"
-                                    rounded="md"
-                                    px={2.5}
-                                    py={1}
-                                >
-                                    С пандусом
-                                </Badge>
-                                <Badge
-                                    bg="gray.subtle"
-                                    color="gray.fg"
-                                    fontSize="sm"
-                                    variant="subtle"
-                                    size="lg"
-                                    rounded="md"
-                                    px={2.5}
-                                    py={1}
-                                >
-                                    С подъемником
-                                </Badge>
-                            </HStack>
-                            <Heading as="h3" fontSize="xl" fontWeight="bold" mb={2} lineHeight="30px">
-                                Аптека 1
->>>>>>> Stashed changes
                             </Heading>
 
                             {buildings.map((building, index) => {
