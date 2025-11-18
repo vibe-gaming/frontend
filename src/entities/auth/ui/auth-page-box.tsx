@@ -13,7 +13,7 @@ export const AuthPageBox: React.FC<React.PropsWithChildren> = ({ children }) => 
             maxW='1200px'
             minH='100dvh'
             mx='auto'
-            px='16px'
+            px={isDesktop ? '0' : '16px'}
             py={isDesktop ? '0' : '20px'}
             w='100%'
         >
