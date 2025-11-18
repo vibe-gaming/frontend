@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Badge, Box, Button, Heading, HStack, IconButton, Text, VStack } from '@chakra-ui/react'
+import { Badge, Box, Button, Heading, HStack, IconButton, Text, useMediaQuery, VStack } from '@chakra-ui/react'
 import { LuHeart } from 'react-icons/lu'
 
 import { usePostBenefitsIdFavorite } from '@/shared/api/generated/hooks/usePostBenefitsIdFavorite'
@@ -15,6 +15,7 @@ interface BenefitCardProps {
 }
 
 export const BenefitCard = ({ benefit, isFavorite = false, onFavoriteChange, onClick }: BenefitCardProps) => {
+    const [isDesktop] = useMediaQuery(["(min-width: 768px)"])
     const [localIsFavorite, setLocalIsFavorite] = useState(isFavorite)
 
     const favoriteMutation = usePostBenefitsIdFavorite({
@@ -91,16 +92,24 @@ export const BenefitCard = ({ benefit, isFavorite = false, onFavoriteChange, onC
             borderStyle='solid'
             p={5}
             w='100%'
+            minW={0}
+            h={isDesktop ? '428px' : 'auto'}
+            display='flex'
+            flexDirection='column'
             transition='all 0.2s'
+            style={{
+                wordBreak: 'break-word',
+                overflowWrap: 'break-word',
+            }}
             _hover={{
                 borderColor: 'border.accent',
                 boxShadow: 'md',
             }}
             onClick={handleDetailsClick}
         >
-            <VStack align='stretch' gap={5}>
+            <VStack align='stretch' gap={5} flex={1} h='100%'>
                 {/* Теги сверху */}
-                <HStack flexWrap='wrap' gap={2}>
+                <HStack flexWrap='wrap' gap={2} flexShrink={0}>
                     {tagsToDisplay.map((tag, index) => (
                         <Badge
                             key={`${tag.label}-${index}`}
@@ -118,24 +127,54 @@ export const BenefitCard = ({ benefit, isFavorite = false, onFavoriteChange, onC
                     ))}
                 </HStack>
 
-                <VStack align='stretch' gap={2}>
+                <VStack align='stretch' gap={2} flex={1} minH={0} minW={0}>
                     {/* Заголовок */}
-                    <Heading fontSize='2xl' fontWeight='bold' lineHeight='32px'>
+                    <Heading 
+                        fontSize='2xl' 
+                        fontWeight='bold' 
+                        lineHeight='32px'
+                        style={{
+                            display: '-webkit-box',
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: 'vertical',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            wordBreak: 'break-word',
+                            overflowWrap: 'break-word',
+                        }}
+                    >
                         {benefit.title || 'Без названия'}
                     </Heading>
 
                     {/* Описание */}
                     {benefit.description && (
-                        <Text color='gray.600' fontSize='lg' lineHeight='28px'>
+                        <Text 
+                            color='gray.600' 
+                            fontSize='lg' 
+                            lineHeight='28px'
+                            flex={1}
+                            minW={0}
+                            style={{
+                                ...(isDesktop ? {
+                                    display: '-webkit-box',
+                                    WebkitLineClamp: 4,
+                                    WebkitBoxOrient: 'vertical',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                } : {}),
+                                wordBreak: 'break-word',
+                                overflowWrap: 'break-word',
+                            }}
+                        >
                             {benefit.description}
                         </Text>
                     )}
                 </VStack>
 
                 {/* Кнопки внизу */}
-                <HStack justify='space-between' mt={2} gap={4}>
+                <HStack justify='space-between' gap={4} flexShrink={0} mt='auto'>
                     <Button
-                    flex={1}
+                        flex={1}
                         size="2xl"
                         variant="solid"
                         colorPalette="blue"
