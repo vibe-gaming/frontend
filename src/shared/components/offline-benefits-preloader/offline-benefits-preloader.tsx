@@ -16,7 +16,7 @@ export const OfflineBenefitsPreloader = () => {
 
     // Загрузка всех льгот в фоне для офлайн доступа (только на мобильных, только когда есть интернет)
     const { data: allBenefitsData } = useGetBenefits(
-        { limit: 10000 }, // Загружаем все льготы
+        { limit: 100 }, // Загружаем все льготы
         {
             query: {
                 enabled: isOnline && isMobile, // Только на мобильных, только когда есть интернет
