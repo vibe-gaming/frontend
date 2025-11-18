@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Box, Button, createListCollection, Grid, Heading, HStack, IconButton, Input, Select, Spinner, Stack, Text, useMediaQuery, VStack } from '@chakra-ui/react';
 import { Show } from "@chakra-ui/react";
 
@@ -6,6 +6,8 @@ import { LuChevronDown, LuSearch } from 'react-icons/lu'
 
 import { useGetBenefits } from '@/shared/api/generated/hooks/useGetBenefits'
 import { useDebounce } from '@/shared/hooks/use-debounce'
+import { useOnlineStatus } from '@/shared/hooks/use-online-status'
+import { getBenefitsFromStorage, filterStoredBenefits, type StoredBenefits } from '@/shared/utils/benefits-storage'
 
 import { ITEMS_PER_PAGE, SORT_OPTIONS, TARGET_GROUPS } from './constants'
 import { BenefitCard } from '../benefit-card'
@@ -19,6 +21,8 @@ import { AppHeader } from '@/shared/ui/app-header'
 
 export const BenefitsPage = () => {
     const [isDesktop] = useMediaQuery(["(min-width: 768px)"]); // 768px is the breakpoint for desktop
+    const isOnline = useOnlineStatus()
+    const isMobile = !isDesktop
 
     const [searchQuery, setSearchQuery] = useState('')
     const [benefitTypes, setBenefitTypes] = useState<string[]>([])
@@ -43,6 +47,57 @@ export const BenefitsPage = () => {
     const [isSortOpen, setIsSortOpen] = useState(false)
     const [selectedBenefitId, setSelectedBenefitId] = useState<string | null>(null)
     const [appliedSearchQuery, setAppliedSearchQuery] = useState('')
+    // Офлайн данные - инициализируем из localStorage сразу
+    const [offlineData, setOfflineData] = useState<StoredBenefits | null>(() => {
+        if (typeof window !== 'undefined') {
+            const stored = getBenefitsFromStorage()
+            if (stored) {
+                console.log('Инициализация offlineData из localStorage:', stored.benefits.length, 'льгот')
+                return stored
+            }
+        }
+        return null
+    })
+
+    // Данные для офлайна теперь загружаются глобально через OfflineBenefitsPreloader
+    // Обновляем offlineData когда данные сохраняются в localStorage
+
+    // Загружаем сохраненные данные при монтировании или когда переходим в офлайн
+    useEffect(() => {
+        if (isMobile) {
+            const stored = getBenefitsFromStorage()
+            if (stored) {
+                console.log('Загружено из localStorage:', stored.benefits.length, 'льгот')
+                setOfflineData(stored)
+            }
+        }
+    }, [isMobile]) // Загружаем при монтировании и при изменении isMobile
+
+    // Обновляем offlineData при изменении онлайн статуса
+    useEffect(() => {
+        if (isMobile && !isOnline) {
+            const stored = getBenefitsFromStorage()
+            if (stored) {
+                console.log('Обновление offlineData при переходе в офлайн:', stored.benefits.length, 'льгот')
+                setOfflineData(stored)
+            }
+        }
+    }, [isMobile, isOnline])
+
+    // Периодически проверяем обновления в localStorage (когда данные загружаются глобально)
+    useEffect(() => {
+        if (!isMobile) return
+
+        const interval = setInterval(() => {
+            const stored = getBenefitsFromStorage()
+            if (stored && (!offlineData || stored.benefits.length !== offlineData.benefits.length)) {
+                console.log('Обновление offlineData из localStorage:', stored.benefits.length, 'льгот')
+                setOfflineData(stored)
+            }
+        }, 2000) // Проверяем каждые 2 секунды
+
+        return () => clearInterval(interval)
+    }, [isMobile, offlineData])
 
     const queryParams = useMemo(() => {
         const params: Parameters<typeof useGetBenefits>[0] = {
@@ -91,7 +146,70 @@ export const BenefitsPage = () => {
         return params
     }, [isDesktop, appliedSearchQuery, benefitTypes, targetGroups, tags, categories, cityId, dateFrom, dateTo, sortBy, sortOrder, currentPage])
 
-    const { data, isLoading, isError, error } = useGetBenefits(queryParams)
+    // Используем офлайн данные если нет интернета на мобильных
+    // Также используем офлайн данные если запрос упал с сетевой ошибкой
+    const { data, isLoading, isError, error } = useGetBenefits(
+        queryParams,
+        {
+            query: {
+                enabled: isMobile ? (isOnline && !offlineData ? false : isOnline) : true, // На мобильных не делаем запрос если есть офлайн данные и нет интернета
+                retry: (failureCount, error) => {
+                    // Не повторяем запрос если это сетевая ошибка и есть офлайн данные
+                    if (isMobile && offlineData) {
+                        const isNetworkError = error instanceof Error && (
+                            error.message.includes('Failed to fetch') ||
+                            error.message.includes('NetworkError') ||
+                            error.message.includes('Network request failed')
+                        )
+                        if (isNetworkError) {
+                            return false
+                        }
+                    }
+                    return failureCount < 2
+                },
+            },
+        }
+    )
+
+    // Определяем, нужно ли использовать офлайн данные
+    // Используем если: мобильный + (нет интернета ИЛИ запрос упал с сетевой ошибкой) + есть офлайн данные
+    const isNetworkError = error instanceof Error && (
+        error.message.includes('Failed to fetch') ||
+        error.message.includes('NetworkError') ||
+        error.message.includes('Network request failed') ||
+        (error as any)?.code === 'ERR_NETWORK'
+    )
+    const shouldUseOffline = isMobile && offlineData && (!isOnline || (isError && isNetworkError))
+
+    // Обрабатываем офлайн данные
+    const displayData = useMemo(() => {
+        console.log('displayData вычисление:', {
+            shouldUseOffline,
+            hasOfflineData: !!offlineData,
+            offlineDataLength: offlineData?.benefits?.length,
+            hasData: !!data,
+            dataLength: data?.benefits?.length,
+            isOnline,
+            isMobile,
+        })
+        
+        if (shouldUseOffline && offlineData) {
+            // Фильтруем по поисковому запросу
+            const filtered = filterStoredBenefits(offlineData.benefits, appliedSearchQuery)
+            console.log('Офлайн режим - возвращаем данные:', {
+                totalInStorage: offlineData.benefits.length,
+                filtered: filtered.length,
+                searchQuery: appliedSearchQuery,
+            })
+            // В офлайне показываем все льготы без пагинации
+            return {
+                benefits: filtered,
+                total: filtered.length,
+            }
+        }
+        console.log('Онлайн режим - возвращаем data:', data?.benefits?.length)
+        return data
+    }, [shouldUseOffline, offlineData, appliedSearchQuery, data, isOnline, isMobile])
 
     const handleResetFilters = () => {
         // Сбрасываем временные состояния к значениям по умолчанию
@@ -218,9 +336,12 @@ export const BenefitsPage = () => {
         }
     }
 
-    const totalPages = data?.total ? Math.ceil(data.total / ITEMS_PER_PAGE) : 1
+    // В офлайне не используем пагинацию, показываем все
+    const isOfflineMode = isMobile && !isOnline && offlineData
+    const totalPages = isOfflineMode ? 1 : (displayData?.total ? Math.ceil(displayData.total / ITEMS_PER_PAGE) : 1)
 
-    if (isError) {
+    // Показываем ошибку только если не в офлайне (в офлайне используем сохраненные данные)
+    if (isError && !isOfflineMode) {
         const errorMessage = error && typeof error === 'object' && 'error_message' in error
             ? String(error.error_message)
             : null;
@@ -341,8 +462,8 @@ export const BenefitsPage = () => {
                         </HStack>
                     </Show>
 
-                    {/* Кнопки Фильтр и Сортировка - только на мобильных */}
-                    <Show when={!isDesktop}>
+                    {/* Кнопки Фильтр и Сортировка - только на мобильных, только когда есть интернет */}
+                    <Show when={!isDesktop && isOnline}>
                         <HStack gap={2}>
                             <Button
                                 size="xl"
@@ -364,31 +485,38 @@ export const BenefitsPage = () => {
                     </Show>
 
                     <Show when={!isDesktop}>
-                        {/* Результаты */}
-                        {isLoading ? (
-                            <Box py={12} textAlign='center'>
-                                <Spinner size='lg' />
-                            </Box>
-                        ) : !data?.benefits || data.benefits.length === 0 ? (
-                            <Box py={12} textAlign='center'>
-                                <Text color='text.secondary' fontSize='lg'>
-                                    Льготы не найдены
+                    {/* Результаты */}
+                    {(isLoading && !isOfflineMode) ? (
+                        <Box py={12} textAlign='center'>
+                            <Spinner size='lg' />
+                        </Box>
+                    ) : !displayData?.benefits || displayData.benefits.length === 0 ? (
+                        <Box py={12} textAlign='center'>
+                            <Text color='text.secondary' fontSize='lg'>
+                                Льготы не найдены
+                            </Text>
+                            {isOfflineMode ? (
+                                <Text color='text.secondary' fontSize='sm' mt={2}>
+                                    Нет подключения к интернету. Показаны сохраненные льготы.
                                 </Text>
+                            ) : (
                                 <Text color='text.secondary' fontSize='sm' mt={2}>
                                     Попробуйте изменить параметры поиска или фильтры
                                 </Text>
-                            </Box>
-                        ) : (
+                            )}
+                        </Box>
+                    ) : (
                             <>
                                 {/* Layout для мобильных: карточки в один столбец */}
                                 <Show when={!isDesktop}>
                                     <Text color='text.secondary' fontSize='md' mt={2}>
                                         Найдено:{' '}
-                                        {data.total ?? data.benefits?.length ?? 0}
+                                        {displayData?.total ?? displayData?.benefits?.length ?? 0}
+                                        {isOfflineMode && ' (офлайн)'}
                                     </Text>
 
                                     <VStack align='stretch' gap={4}>
-                                        {data.benefits.map((benefit) => (
+                                        {displayData?.benefits?.map((benefit) => (
                                             <BenefitCard
                                                 key={benefit.id}
                                                 benefit={benefit}
@@ -397,11 +525,14 @@ export const BenefitsPage = () => {
                                         ))}
                                     </VStack>
 
-                                    <Pagination
-                                        currentPage={currentPage}
-                                        totalPages={totalPages}
-                                        onPageChange={setCurrentPage}
-                                    />
+                                    {/* Пагинация только когда есть интернет */}
+                                    {!isOfflineMode && (
+                                        <Pagination
+                                            currentPage={currentPage}
+                                            totalPages={totalPages}
+                                            onPageChange={setCurrentPage}
+                                        />
+                                    )}
                                 </Show>
                             </>
                         )}
@@ -474,7 +605,7 @@ export const BenefitsPage = () => {
 
                                         {/* Карточки в 2 колонки на десктопе */}
                                         <Grid templateColumns="repeat(2, 1fr)" gap={4}>
-                                            {data.benefits.map((benefit) => (
+                                            {displayData?.benefits?.map((benefit) => (
                                                 <BenefitCard
                                                     key={benefit.id}
                                                     benefit={benefit}
@@ -483,11 +614,14 @@ export const BenefitsPage = () => {
                                             ))}
                                         </Grid>
 
-                                        <Pagination
-                                            currentPage={currentPage}
-                                            totalPages={totalPages}
-                                            onPageChange={setCurrentPage}
-                                        />
+                                        {/* Пагинация только когда есть интернет */}
+                                        {!isOfflineMode && (
+                                            <Pagination
+                                                currentPage={currentPage}
+                                                totalPages={totalPages}
+                                                onPageChange={setCurrentPage}
+                                            />
+                                        )}
                                     </VStack>
                                 </>
                             )}

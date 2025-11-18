@@ -4,6 +4,7 @@ import { CircleCheckBig, FileCheck, HandHeart } from 'lucide-react'
 import { LuSearchCheck } from 'react-icons/lu'
 
 import { useAuthState } from '@/entities/auth'
+import { useOnlineStatus } from '@/shared/hooks/use-online-status'
 import { AppHeader } from '@/shared/ui/app-header'
 import { Footer } from '@/shared/ui/footer'
 import { FeatureCard } from '@/shared/ui/feature-card'
@@ -18,6 +19,7 @@ import popular4Image from '@/shared/assets/images/popular-4.png'
 export const HomePage = () => {
     const navigate = useNavigate()
     const { isAuthenticated } = useAuthState()
+    const isOnline = useOnlineStatus()
 
     const popularBenefits = [
         {
@@ -73,19 +75,20 @@ export const HomePage = () => {
                 <VStack align="stretch" gap={{ base: 6, lg: 8 }} maxW="1440px" mx="auto">
                     {/* Hero Section */}
                     <Box
-                        bgImage={{
+                        bgImage={isOnline ? {
                             base: `url(${mainBannerImage})`,
                             lg: `url(${bannerDesktopImage})`
-                        }}
+                        } : undefined}
+                        bg={!isOnline ? 'blue.50' : undefined}
                         bgSize="cover"
                         borderRadius={{ base: '20px', lg: '32px' }}
                         h={{ base: '500px', lg: '480px' }}
                         p={{ base: '20px', lg: '48px' }}
                         position="relative"
-                        style={{
+                        style={isOnline ? {
                             backgroundPosition: 'center',
                             backgroundRepeat: 'no-repeat',
-                        }}
+                        } : undefined}
                     >
                         <VStack 
                             align="start" 
