@@ -1,7 +1,8 @@
 import { useMemo, useRef, useState } from 'react'
-import { Box, Button, Heading, HStack, Input, Spinner, Stack, Text, VStack } from '@chakra-ui/react'
+import { Box, Button, Heading, HStack, IconButton, Input, Spinner, Stack, Text, useMediaQuery, VStack } from '@chakra-ui/react';
+import { Show } from "@chakra-ui/react";
 
-import { LuChevronDown } from 'react-icons/lu'
+import { LuChevronDown, LuSearch } from 'react-icons/lu'
 
 import { useGetBenefits } from '@/shared/api/generated/hooks/useGetBenefits'
 import { useDebounce } from '@/shared/hooks/use-debounce'
@@ -16,6 +17,8 @@ import styles from './benefits-page.module.scss'
 import { AppHeader } from '@/shared/ui/app-header'
 
 export const BenefitsPage = () => {
+    const [isDesktop] = useMediaQuery(["(min-width: 768px)"]); // 768px is the breakpoint for desktop
+
     const [searchQuery, setSearchQuery] = useState('')
     const [benefitTypes, setBenefitTypes] = useState<string[]>([])
     const [targetGroups, setTargetGroups] = useState<string[]>([])
@@ -38,6 +41,8 @@ export const BenefitsPage = () => {
     const [isFiltersOpen, setIsFiltersOpen] = useState(false)
     const [isSortOpen, setIsSortOpen] = useState(false)
     const [selectedBenefitId, setSelectedBenefitId] = useState<string | null>(null)
+    // Примененный поисковый запрос (для десктопа - только после клика на кнопку)
+    const [appliedSearchQuery, setAppliedSearchQuery] = useState('')
 
     const debouncedSearch = useDebounce(searchQuery, 500)
 
@@ -47,8 +52,10 @@ export const BenefitsPage = () => {
             limit: ITEMS_PER_PAGE,
         }
 
-        if (debouncedSearch) {
-            params.search = debouncedSearch
+        // На десктопе используем примененный поиск (после клика на кнопку), на мобильных - debounced
+        const searchValue = isDesktop ? appliedSearchQuery : debouncedSearch
+        if (searchValue) {
+            params.search = searchValue
         }
 
         if (benefitTypes.length > 0) {
@@ -84,7 +91,7 @@ export const BenefitsPage = () => {
         params.order = sortOrder
 
         return params
-    }, [debouncedSearch, benefitTypes, targetGroups, tags, categories, cityId, dateFrom, dateTo, sortBy, sortOrder, currentPage])
+    }, [isDesktop, appliedSearchQuery, debouncedSearch, benefitTypes, targetGroups, tags, categories, cityId, dateFrom, dateTo, sortBy, sortOrder, currentPage])
 
     const { data, isLoading, isError, error } = useGetBenefits(queryParams)
 
@@ -153,14 +160,26 @@ export const BenefitsPage = () => {
         setSelectedBenefitId(null)
     }
 
+    // Обработчик применения поиска (для десктопа)
+    const handleApplySearch = () => {
+        setAppliedSearchQuery(searchQuery)
+        setCurrentPage(1)
+    }
+
+    // Обработчик нажатия Enter в поле поиска (для десктопа)
+    const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter' && isDesktop) {
+            handleApplySearch()
+        }
+    }
 
     const totalPages = data?.total ? Math.ceil(data.total / ITEMS_PER_PAGE) : 1
 
     if (isError) {
-        const errorMessage = error && typeof error === 'object' && 'error_message' in error 
-            ? String(error.error_message) 
+        const errorMessage = error && typeof error === 'object' && 'error_message' in error
+            ? String(error.error_message)
             : null;
-        
+
         return (
             <Box p={8}>
                 <Text color='error.DEFAULT'>Не удалось загрузить льготы</Text>
@@ -177,23 +196,35 @@ export const BenefitsPage = () => {
         <>
             <AppHeader />
 
-            <Box className={styles['benefits-page']} w='100%'>
-                <VStack align='stretch' gap={4} px={{ base: 4, md: 8 }} pt={{ base: 3, md: 8 }} pb={{ base: 6, md: 10 }} w='100%'>
+            <Box className={styles['benefits-page']} w='100%' >
+                <VStack align='stretch' gap={4} px={{ base: 4, md: 5 }} pt={{ base: 3, md: 6 }} pb={{ base: 6, md: 10 }} w='100%' maxW="1200px" mx="auto">
                     <Heading as='h1' fontWeight='bold' size='2xl'>Льготы</Heading>
-                    <Input
-                        variant="subtle"
-                        type="default"
-                        size="2xl"
-                        placeholder='Поиск по льготам'
-                        value={searchQuery}
-                        bg='bg.muted'
-                        rounded={'2xl'}
-                        w='100%'
-                        onChange={(event) => {
-                            setSearchQuery(event.target.value)
-                            setCurrentPage(1)
-                        }}
-                    />
+                    <HStack gap={4}>
+                        <Input
+                            variant="subtle"
+                            type="default"
+                            size="2xl"
+                            placeholder='Поиск по льготам'
+                            value={searchQuery}
+                            bg='bg.muted'
+                            rounded={'2xl'}
+                            w='100%'
+                            onChange={(event) => {
+                                setSearchQuery(event.target.value)
+                                // На мобильных сбрасываем страницу при изменении, на десктопе - только при применении
+                                if (!isDesktop) {
+                                    setCurrentPage(1)
+                                }
+                            }}
+                            onKeyDown={handleSearchKeyDown}
+                        />
+                        <Show when={isDesktop}>
+                            <IconButton aria-label="Search" size="2xl" variant="solid" rounded="xl" colorPalette="blue" onClick={handleApplySearch}>
+                                <LuSearch size={24} />
+                            </IconButton>
+                        </Show>
+
+                    </HStack>
 
                     {/* Кнопки Фильтр и Сортировка */}
                     <HStack gap={2}>

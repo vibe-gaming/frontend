@@ -1,4 +1,4 @@
-import { Box, Flex, IconButton, Button, HStack } from '@chakra-ui/react'
+import { Box, Flex, IconButton, Button, HStack, Show, Heading, Text, useMediaQuery, VStack } from '@chakra-ui/react'
 import { User } from 'lucide-react'
 
 import { useAuthState } from '@/entities/auth'
@@ -8,6 +8,7 @@ import { useNavigate } from '@tanstack/react-router'
 
 export const AppHeader = () => {
     const navigate = useNavigate();
+    const [isDesktop] = useMediaQuery(["(min-width: 768px)"]); // 768px is the breakpoint for desktop
 
     const onLogoClick = () => navigate({ to: '/' });
     const onBenefitsClick = () => navigate({ to: '/benefits' });
@@ -21,40 +22,42 @@ export const AppHeader = () => {
             position="sticky"
             top={0}
             zIndex={10}
-            px="12px"
-            py="8px"
-            bg="white"
+            px={{ base: 4, md: 5 }}
+            py={{ base: 0, md: 5 }}
+            mt={{ base: 5, md: 0 }}
+            mx="auto"
+            maxW="1200px"
+            w="100%"
         >
-            {/* Серая карточка с хедером */}
-            <Box
-                borderRadius="16px"
-                px="12px"
-                py="8px"
-                maxW="container.lg"
-                mx="auto"
-            >
+            <Box bg="white" borderRadius="16px" p={{ base: 2, md: 5 }}>
                 <Flex align="center" justify="space-between">
                     {/* Логотип слева */}
-                    <IconButton
-                        aria-label="Логотип"
-                        bg="transparent"
-                        borderRadius="16px"
-                        color="white"
-                        size="lg"
-                        minW="48px"
-                        h="48px"
-                        p={0}
-                        _hover={{ opacity: 0.8 }}
-                        onClick={onLogoClick}
-                    >
-                        <img
-                            src={logoIcon}
-                            alt="Логотип"
-                            width="44"
-                            height="44"
-                            style={{ display: 'block' }}
-                        />
-                    </IconButton>
+                    <HStack gap={2}>
+                        <IconButton
+                            aria-label="Логотип"
+                            bg="transparent"
+                            borderRadius="16px"
+                            color="white"
+                            size="lg"
+                            minW="48px"
+                            h="48px"
+                            p={0}
+                            _hover={{ opacity: 0.8 }}
+                            onClick={onLogoClick}
+                        >
+                            <img
+                                src={logoIcon}
+                                alt="Логотип"
+                                width="48"
+                                height="48"
+                                style={{ display: 'block' }}
+                            />
+                        </IconButton>
+                        <Show when={isDesktop}>
+                            <Heading as="h3" fontSize="3xl" fontWeight="extrabold" lineHeight="40px" >мои<Text as="span" color="blue.solid" fontWeight="extrabold" lineHeight="40px">льготы</Text></Heading>
+                        </Show>
+                    </HStack>
+
 
                     {/* Кнопка "Льготы" и иконка профиля справа */}
                     <HStack gap="8px">
