@@ -87,20 +87,40 @@ export const BenefitDrawer = ({ isOpen, onClose, benefitId }: BenefitDrawerProps
     
     // Функция построения маршрута
     const handleBuildRoute = (building: Building) => {
-        // Используем gis_deeplink если есть, иначе координаты
+        console.log('handleBuildRoute called', building)
+        
+        // Определяем URL для перехода
+        let targetUrl = ''
+        
         if (building.gis_deeplink) {
-            window.open(building.gis_deeplink, '_blank')
+            targetUrl = building.gis_deeplink
+            console.log('Using gis_deeplink:', targetUrl)
+        } else if (building.latitude && building.longitude) {
+            targetUrl = `https://yandex.ru/maps/?rtext=~${building.latitude},${building.longitude}`
+            console.log('Using coordinates:', targetUrl)
+        } else {
+            console.warn('Нет данных для построения маршрута:', building)
             return
         }
         
-        if (!building.latitude || !building.longitude) {
-            console.warn('Нет данных для построения маршрута:', building.name)
-            return
+        // Пробуем открыть ссылку разными способами для максимальной совместимости
+        try {
+            // Способ 1: window.open с явными параметрами
+            const newWindow = window.open(targetUrl, '_blank', 'noopener,noreferrer')
+            
+            // Если window.open был заблокирован браузером
+            if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+                console.warn('window.open was blocked, using location.href')
+                // Способ 2: прямой переход
+                window.location.href = targetUrl
+            } else {
+                console.log('Successfully opened in new tab')
+            }
+        } catch (error) {
+            console.error('Error opening route:', error)
+            // Способ 3: fallback на location.href
+            window.location.href = targetUrl
         }
-        
-        // Fallback на Яндекс.Карты с маршрутом
-        const url = `https://yandex.ru/maps/?rtext=~${building.latitude},${building.longitude}`
-        window.open(url, '_blank')
     }
     
     // Функция форматирования времени из ISO в HH:MM
@@ -393,7 +413,12 @@ export const BenefitDrawer = ({ isOpen, onClose, benefitId }: BenefitDrawerProps
                                             lineHeight="30px"
                                             color="blue.fg"
                                             borderColor="blue.muted"
-                                            onClick={() => handleBuildRoute(building)}
+                                            onClick={(e) => {
+                                                e.preventDefault()
+                                                e.stopPropagation()
+                                                handleBuildRoute(building)
+                                            }}
+                                            cursor="pointer"
                                         >
                                             <LuRoute /> Построить маршрут
                                         </Button>
