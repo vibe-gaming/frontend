@@ -70,33 +70,27 @@ export const useAuth = () => {
      * Handle logout
      */
     const onLogout = useCallback(async () => {
-        const toastId = toast.loading('Выполняем выход...')
+        /**
+         * Clear the global auth state
+         */
+        setAuth(undefined)
 
-        try {
-            /**
-             * Clear the global auth state
-             */
-            setAuth(undefined)
+        /**
+         * Clear the axios instance headers
+         */
+        AXIOS_INSTANCE.defaults.headers.Authorization = ''
 
-            /**
-             * Clear the axios instance headers
-             */
-            AXIOS_INSTANCE.defaults.headers.Authorization = ''
+        /**
+         * Clear of registered user
+         */
+        /**
+         * Clear the tanstack-query cache
+         */
+        setTimeout(() => {
+            queryClient.clear()
+        }, 400)
 
-            /**
-             * Clear of registered user
-             */
-            /**
-             * Clear the tanstack-query cache
-             */
-            setTimeout(() => {
-                queryClient.clear()
-            }, 400)
-
-            toast.success('Вы успешно вышли из аккаунта')
-        } finally {
-            toast.dismiss(toastId)
-        }
+        toast.success('Вы успешно вышли из аккаунта')
     }, [queryClient, setAuth])
 
     return {
