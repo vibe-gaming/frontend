@@ -14,10 +14,12 @@ import { User } from 'lucide-react'
 
 import { useAuthState } from '@/entities/auth'
 import logoIcon from '@/shared/assets/icons/logo.svg'
+import { useOnlineStatus } from '@/shared/hooks/use-online-status'
 
 export const AppHeader = () => {
     const navigate = useNavigate()
     const [isDesktop] = useMediaQuery(['(min-width: 768px)']) // 768px is the breakpoint for desktop
+    const isOnline = useOnlineStatus()
 
     const onLogoClick = () => navigate({ to: '/' })
     const onBenefitsClick = () => navigate({ to: '/benefits' })
@@ -98,21 +100,24 @@ export const AppHeader = () => {
                             Льготы
                         </Button>
 
-                        <IconButton
-                            _hover={{ bg: 'blue.50' }}
-                            aria-label={isAuthenticated ? 'Профиль' : 'Войти'}
-                            bg='white'
-                            borderColor='blue.solid'
-                            borderRadius='16px'
-                            color='blue.solid'
-                            h='48px'
-                            minW='48px'
-                            size='lg'
-                            variant='outline'
-                            onClick={isAuthenticated ? onProfileClick : onLoginClick}
-                        >
-                            <User size={24} />
-                        </IconButton>
+                        {/* Кнопка профиля - скрыта в офлайне */}
+                        {isOnline && (
+                            <IconButton
+                                _hover={{ bg: 'blue.50' }}
+                                aria-label={isAuthenticated ? 'Профиль' : 'Войти'}
+                                bg='white'
+                                borderColor='blue.solid'
+                                borderRadius='16px'
+                                color='blue.solid'
+                                h='48px'
+                                minW='48px'
+                                size='lg'
+                                variant='outline'
+                                onClick={isAuthenticated ? onProfileClick : onLoginClick}
+                            >
+                                <User size={24} />
+                            </IconButton>
+                        )}
                     </HStack>
                 </Flex>
             </Box>

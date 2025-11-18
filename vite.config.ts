@@ -11,7 +11,7 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 const plugins = [
     tanstackRouter({
         target: 'react',
-        autoCodeSplitting: true,
+        autoCodeSplitting: false, // Отключаем автоматический code splitting для работы в офлайне
         routesDirectory: './src/app/routes',
         generatedRouteTree: './src/app/route-tree.generated.ts',
     }),

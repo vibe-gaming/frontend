@@ -1,10 +1,12 @@
 import { useState } from 'react'
-import { Badge, Box, Button, Heading, HStack, Spinner, Text, Image, VStack } from '@chakra-ui/react'
+import { Badge, Box, Button, Heading, HStack, Spinner, Text, Image, VStack, useMediaQuery } from '@chakra-ui/react'
 
 import { useGetBenefitsId } from '@/shared/api/generated/hooks/useGetBenefitsId'
 import { AXIOS_INSTANCE } from '@/shared/api/axios-client'
 import { FullScreenDrawer } from '@/shared/ui/full-screen-drawer'
 import { BENEFIT_TYPES, CATEGORIES, TAGS, TARGET_GROUPS } from '../benefits-page/constants'
+import { useOnlineStatus } from '@/shared/hooks/use-online-status'
+import { getBenefitsFromStorage } from '@/shared/utils/benefits-storage'
 
 import benefitImage from '@/shared/assets/images/benefit.png'
 import { LuRoute } from 'react-icons/lu'
@@ -46,18 +48,38 @@ interface BenefitResponseWithOrganization {
 }
 
 export const BenefitDrawer = ({ isOpen, onClose, benefitId }: BenefitDrawerProps) => {
+    const [isDesktop] = useMediaQuery(["(min-width: 768px)"])
+    const isMobile = !isDesktop
+    const isOnline = useOnlineStatus()
+    const isOfflineMode = isMobile && !isOnline
+    
+    // Пытаемся получить данные из localStorage в офлайне
+    const getOfflineBenefit = () => {
+        if (!isOfflineMode || !benefitId) return null
+        const stored = getBenefitsFromStorage()
+        if (stored) {
+            return stored.benefits.find(b => b.id === benefitId) || null
+        }
+        return null
+    }
+    
+    const offlineBenefit = isOfflineMode ? getOfflineBenefit() : null
+    
     const { data: benefitData, isLoading, isError, error } = useGetBenefitsId(benefitId || '', {
         query: {
-            enabled: Boolean(benefitId),
+            enabled: Boolean(benefitId) && !isOfflineMode, // Не делаем запрос в офлайне на мобильных
         },
     })
     const [isDownloading, setIsDownloading] = useState(false)
     
-    // Типизируем benefit с поддержкой organization
-    const benefit = benefitData as BenefitResponseWithOrganization | undefined
+    // Используем офлайн данные если они есть, иначе данные из API
+    const benefit = (isOfflineMode && offlineBenefit) 
+        ? (offlineBenefit as BenefitResponseWithOrganization)
+        : (benefitData as BenefitResponseWithOrganization | undefined)
     
-    // Получаем список зданий
+    // Получаем список зданий (может отсутствовать в офлайн данных)
     const buildings = benefit?.organization?.buildings || []
+    const hasOrganizationData = Boolean(benefit?.organization?.buildings?.length)
 
     // Функция скачивания PDF
     const handleDownloadPDF = async () => {
@@ -256,18 +278,21 @@ export const BenefitDrawer = ({ isOpen, onClose, benefitId }: BenefitDrawerProps
                         </Text>
                     )}
 
-                    <Image
-                        src={benefitImage}
-                        alt={benefit.title}
-                        borderRadius="20px"
-                        objectFit="cover"
-                        mb={5}
-                        width={"512px"}
-                    />
+                    {/* Изображение - только когда есть интернет */}
+                    {!isOfflineMode && (
+                        <Image
+                            src={benefitImage}
+                            alt={benefit.title}
+                            borderRadius="20px"
+                            objectFit="cover"
+                            mb={5}
+                            width={"512px"}
+                        />
+                    )}
 
                     {/* Секция "Кому положено" */}
                     {benefit.target_groups && benefit.target_groups.length > 0 && (
-                        <Box as="section" aria-labelledby="eligible-heading" bg={'gray.100'} borderRadius="20px" p={4} mb={5}>
+                        <Box as="section" aria-labelledby="eligible-heading" bg={'gray.100'} borderRadius="20px" p={4} mb={3}>
                             <Heading as="h2" id="eligible-heading" fontSize={{ base: "xl", md: "2xl" }} fontWeight="bold" mb={4} lineHeight={{ base: "30px", md: "38px" }}>
                                 Кому положено
                             </Heading>
@@ -286,7 +311,7 @@ export const BenefitDrawer = ({ isOpen, onClose, benefitId }: BenefitDrawerProps
 
                     {/* Секция "Какие документы нужны" */}
                     {benefit.requirement && (
-                        <Box as="section" aria-labelledby="documents-heading" bg={'gray.100'} borderRadius="20px" p={4} mb={5}>
+                        <Box as="section" aria-labelledby="documents-heading" bg={'gray.100'} borderRadius="20px" p={4} mb={3}>
                             <Heading as="h2" id="documents-heading" fontSize={{ base: "xl", md: "2xl" }} fontWeight="bold" mb={4} lineHeight={{ base: "30px", md: "38px" }}>
                                 Какие документы нужны
                             </Heading>
@@ -298,7 +323,7 @@ export const BenefitDrawer = ({ isOpen, onClose, benefitId }: BenefitDrawerProps
 
                     {/* Секция "Как получить" */}
                     {benefit.how_to_use && (
-                        <Box as="section" aria-labelledby="how-to-heading" bg={'gray.100'} borderRadius="20px" p={4} mb={5}>
+                        <Box as="section" aria-labelledby="how-to-heading" bg={'gray.100'} borderRadius="20px" p={4} mb={3}>
                             <Heading as="h2" id="how-to-heading" fontSize={{ base: "xl", md: "2xl" }} fontWeight="bold" mb={4} lineHeight={{ base: "30px", md: "38px" }}>
                                 Как получить
                             </Heading>
@@ -308,9 +333,9 @@ export const BenefitDrawer = ({ isOpen, onClose, benefitId }: BenefitDrawerProps
                         </Box>
                     )}
 
-                    {/* Секция "Где получить" */}
-                    {buildings.length > 0 && (
-                        <VStack as="section" aria-labelledby="where-heading" bg={'gray.100'} borderRadius="20px" p={4} mb={5} gap={4} align="stretch">
+                    {/* Секция "Где получить" - только если есть данные об организации */}
+                    {hasOrganizationData && buildings.length > 0 && (
+                        <VStack as="section" aria-labelledby="where-heading" bg={'gray.100'} borderRadius="20px" p={4} mb={3} gap={4} align="stretch">
                             <Heading as="h2" id="where-heading" fontSize="xl" fontWeight="bold" lineHeight="30px">
                                 Где получить
                             </Heading>
@@ -429,26 +454,29 @@ export const BenefitDrawer = ({ isOpen, onClose, benefitId }: BenefitDrawerProps
                         </VStack>
                     )}
 
-                    <Button
-                        w={{"base": "full", md: "218px"}}
-                        ml={{base: "auto", md: "auto"}}
-                        size="2xl"
-                        bg="blue.subtle"
-                        color="blue.fg"
-                        border="1px solid"
-                        borderColor="blue.muted"
-                        borderRadius="2xl"
-                        onClick={handleDownloadPDF}
-                        loading={isDownloading}
-                        _hover={{ bg: 'blue.subtleHover' }}
-                        fontSize="xl"
-                        lineHeight="30px"
-                        fontWeight="normal"
-                        mb={6}
-                    >
-                        <Download size={24} style={{ marginRight: '12px' }} />
-                        Скачать PDF
-                    </Button>
+                    {/* Кнопка скачивания PDF - только когда есть интернет */}
+                    {!isOfflineMode && (
+                        <Button
+                            w={{"base": "full", md: "218px"}}
+                            ml={{base: "auto", md: "auto"}}
+                            size="2xl"
+                            bg="blue.subtle"
+                            color="blue.fg"
+                            border="1px solid"
+                            borderColor="blue.muted"
+                            borderRadius="2xl"
+                            onClick={handleDownloadPDF}
+                            loading={isDownloading}
+                            _hover={{ bg: 'blue.subtleHover' }}
+                            fontSize="xl"
+                            lineHeight="30px"
+                            fontWeight="normal"
+                            mb={6}
+                        >
+                            <Download size={24} style={{ marginRight: '12px' }} />
+                            Скачать PDF
+                        </Button>
+                    )}
                 </VStack>
             )}
         </FullScreenDrawer>

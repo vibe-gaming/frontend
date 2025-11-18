@@ -46,3 +46,6 @@ yarn-error.log*
 **/generated
 !**/generated/.gitkeep
 **/*.generated.ts
+
+# TanStack Router temporary files
+.tanstack/
