@@ -29,6 +29,8 @@ interface Building {
     tags?: string[]
     latitude?: number
     longitude?: number
+    category?: string
+    type?: string // pharmacy, hospital, etc.
 }
 
 interface Organization {
@@ -297,6 +299,14 @@ export const BenefitDrawer = ({ isOpen, onClose, benefitId }: BenefitDrawerProps
                                 const hasLift = building.tags?.includes('lift')
                                 const showAccessibilityBadges = hasPandus || hasLift
                                 
+                                // Определяем название по типу здания
+                                const getBuildingName = () => {
+                                    if (building.category) return building.category
+                                    if (building.name) return building.name
+                                    if (building.type === 'pharmacy') return `Аптека ${index + 1}`
+                                    return `Место ${index + 1}`
+                                }
+                                
                                 return (
                                     <Box key={building.id || index} p={4} bg="white" borderRadius="xl">
                                         {/* Теги доступности */}
@@ -334,7 +344,7 @@ export const BenefitDrawer = ({ isOpen, onClose, benefitId }: BenefitDrawerProps
                                         )}
                                         
                                         <Heading as="h3" fontSize="xl" fontWeight="bold" mb={2} lineHeight="30px">
-                                            {building.name || `Аптека ${index + 1}`}
+                                            {getBuildingName()}
                                         </Heading>
                                         
                                         {building.address && (
@@ -376,7 +386,7 @@ export const BenefitDrawer = ({ isOpen, onClose, benefitId }: BenefitDrawerProps
                                             colorPalette="blue"
                                             size="2xl"
                                             rounded="xl"
-                                            aria-label={`Построить маршрут до ${building.name || `Аптеки ${index + 1}`}`}
+                                            aria-label={`Построить маршрут до ${getBuildingName()}`}
                                             mt={4}
                                             w="full"
                                             fontSize="xl"
