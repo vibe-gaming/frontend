@@ -21,15 +21,16 @@ export const AppHeader = () => {
         <Box
             position="sticky"
             top={0}
-            zIndex={10}
+            zIndex={1000}
             px={{ base: 4, md: 5 }}
             py={{ base: 0, md: 5 }}
             mt={{ base: 5, md: 0 }}
             mx="auto"
             maxW="1200px"
             w="100%"
+            bg={{ base: 'transparent', md: 'gray.50' }}
         >
-            <Box bg="white" borderRadius="16px" p={{ base: 2, md: 5 }}>
+            <Box bg="white" borderRadius="16px" p={{ base: 2, md: 5 }} boxShadow={{ base: 'none', md: 'sm' }}>
                 <Flex align="center" justify="space-between">
                     {/* Логотип слева */}
                     <HStack gap={2}>

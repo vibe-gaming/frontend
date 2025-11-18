@@ -1,5 +1,5 @@
-import { Box, Button, Heading, Text, VStack } from '@chakra-ui/react'
-import { Download } from 'lucide-react'
+import { Box, Button, Dialog, Heading, Text, VStack, useBreakpointValue } from '@chakra-ui/react'
+import { Download, X } from 'lucide-react'
 
 import { BaseDrawer } from '@/shared/ui/base-drawer'
 import type { V1GetProfileResponse, DomainUserDocument } from '@/shared/api/generated'
@@ -62,99 +62,167 @@ export const CertificateDrawer = ({
     // Генерируем номер удостоверения (для примера берем первые 9 цифр ID)
     const certificateNumber = profile?.id?.replace(/\D/g, '').slice(0, 9).padStart(9, '0') || '000000000'
 
+    // Определяем, использовать ли модальное окно или drawer
+    const useModal = useBreakpointValue({ base: false, md: true })
+
+    // Контент сертификата
+    const certificateContent = (
+        <VStack align="stretch" gap="0" pb="8px">
+            {/* Заголовок */}
+            <Box pt="8px" pb="16px">
+                <Heading
+                    as="h2"
+                    fontSize="24px"
+                    lineHeight="32px"
+                    fontWeight="bold"
+                    color="#27272A"
+                    textTransform="uppercase"
+                    letterSpacing="-0.2px"
+                >
+                    Свидетельство<br />пенсионера
+                </Heading>
+            </Box>
+
+            {/* Номер */}
+            <CertificateField 
+                label="Номер" 
+                value={certificateNumber}
+                isRed={true}
+            />
+
+            {/* Фамилия */}
+            {profile?.last_name && (
+                <CertificateField 
+                    label="Фамилия" 
+                    value={profile.last_name} 
+                />
+            )}
+
+            {/* Имя */}
+            {profile?.first_name && (
+                <CertificateField 
+                    label="Имя" 
+                    value={profile.first_name} 
+                />
+            )}
+
+            {/* Отчество */}
+            {profile?.middle_name && (
+                <CertificateField 
+                    label="Отчество" 
+                    value={profile.middle_name} 
+                />
+            )}
+
+            {/* СНИЛС */}
+            {snilsDoc?.document_number && (
+                <CertificateField 
+                    label="СНИЛС" 
+                    value={formatSnils(snilsDoc.document_number)} 
+                />
+            )}
+
+            {/* Вид пенсии */}
+            <CertificateField 
+                label="Вид пенсии" 
+                value="По старости" 
+            />
+
+            {/* Срок действия */}
+            <CertificateField 
+                label="Срок на который установлена пенсия" 
+                value="Бессрочно" 
+            />
+        </VStack>
+    )
+
+    const downloadButton = (
+        <Button
+            w="full"
+            size="2xl"
+            bg="blue.subtle"
+            color="blue.fg"
+            border="1px solid"
+            borderColor="blue.muted"
+            borderRadius="2xl"
+            onClick={onDownloadPDF}
+            loading={isDownloading}
+            _hover={{ bg: 'blue.subtleHover' }}
+            fontSize="xl"
+            lineHeight="30px"
+            fontWeight="normal"
+        >
+            <Download size={24} style={{ marginRight: '12px' }} />
+            Скачать PDF
+        </Button>
+    )
+
+    // Desktop: Modal
+    if (useModal) {
+        return (
+            <Dialog.Root 
+                open={isOpen} 
+                onOpenChange={(e) => onOpenChange(e.open)}
+                size="lg"
+            >
+                <Dialog.Backdrop />
+                <Dialog.Positioner>
+                    <Dialog.Content
+                        borderRadius="20px"
+                        maxW="540px"
+                        maxH="90vh"
+                        bg="white"
+                    >
+                        <Dialog.Header
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="space-between"
+                            pb={4}
+                            pt={6}
+                            px={6}
+                        >
+                            <Dialog.Title fontSize="2xl" fontWeight="bold">
+                                СВИДЕТЕЛЬСТВО ПЕНСИОНЕРА
+                            </Dialog.Title>
+                            <Dialog.CloseTrigger asChild>
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => onOpenChange(false)}
+                                    p={2}
+                                    minW="auto"
+                                    h="auto"
+                                >
+                                    <X size={20} />
+                                </Button>
+                            </Dialog.CloseTrigger>
+                        </Dialog.Header>
+                        <Dialog.Body 
+                            px={6} 
+                            py={0}
+                            overflowY="auto"
+                            maxH="calc(90vh - 200px)"
+                        >
+                            {certificateContent}
+                        </Dialog.Body>
+                        <Dialog.Footer px={6} pt={4} pb={6}>
+                            {downloadButton}
+                        </Dialog.Footer>
+                    </Dialog.Content>
+                </Dialog.Positioner>
+            </Dialog.Root>
+        )
+    }
+
+    // Mobile: Drawer
     return (
         <BaseDrawer
             isOpen={isOpen}
             onOpenChange={onOpenChange}
             title="Свидетельство пенсионера"
-            footer={
-                <Button
-                    w="full"
-                    size="2xl"
-                    bg="blue.subtle"
-                    color="blue.fg"
-                    border="1px solid"
-                    borderColor="blue.muted"
-                    borderRadius="2xl"
-                    onClick={onDownloadPDF}
-                    loading={isDownloading}
-                    _hover={{ bg: 'blue.subtleHover' }}
-                    fontSize="xl"
-                    lineHeight="30px"
-                    fontWeight="normal"
-                >
-                    <Download size={24} style={{ marginRight: '12px' }} />
-                    Скачать PDF
-                </Button>
-            }
+            footer={downloadButton}
         >
-            <VStack align="stretch" gap="0" pb="8px">
-                {/* Заголовок */}
-                <Box pt="8px" pb="16px">
-                    <Heading
-                        as="h2"
-                        fontSize="24px"
-                        lineHeight="32px"
-                        fontWeight="bold"
-                        color="#27272A"
-                        textTransform="uppercase"
-                        letterSpacing="-0.2px"
-                    >
-                        Свидетельство<br />пенсионера
-                    </Heading>
-                </Box>
-
-                {/* Номер */}
-                <CertificateField 
-                    label="Номер" 
-                    value={certificateNumber}
-                    isRed={true}
-                />
-
-                {/* Фамилия */}
-                {profile?.last_name && (
-                    <CertificateField 
-                        label="Фамилия" 
-                        value={profile.last_name} 
-                    />
-                )}
-
-                {/* Имя */}
-                {profile?.first_name && (
-                    <CertificateField 
-                        label="Имя" 
-                        value={profile.first_name} 
-                    />
-                )}
-
-                {/* Отчество */}
-                {profile?.middle_name && (
-                    <CertificateField 
-                        label="Отчество" 
-                        value={profile.middle_name} 
-                    />
-                )}
-
-                {/* СНИЛС */}
-                {snilsDoc?.document_number && (
-                    <CertificateField 
-                        label="СНИЛС" 
-                        value={formatSnils(snilsDoc.document_number)} 
-                    />
-                )}
-
-                {/* Вид пенсии */}
-                <CertificateField 
-                    label="Вид пенсии" 
-                    value="По старости" 
-                />
-
-                {/* Срок действия */}
-                <CertificateField 
-                    label="Срок на который установлена пенсия" 
-                    value="Бессрочно" 
-                />
-            </VStack>
+            {certificateContent}
         </BaseDrawer>
     )
 }
