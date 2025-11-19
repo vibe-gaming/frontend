@@ -10,6 +10,7 @@ export interface CertificateDrawerProps {
     profile?: V1GetProfileResponse
     onDownloadPDF: () => void
     isDownloading?: boolean
+    groupType?: string // Тип группы пользователя
 }
 
 const formatSnils = (snils?: string): string => {
@@ -56,11 +57,39 @@ export const CertificateDrawer = ({
     profile,
     onDownloadPDF,
     isDownloading,
+    groupType = 'pensioners', // По умолчанию пенсионеры
 }: CertificateDrawerProps) => {
     const snilsDoc = profile?.documents?.find((doc: DomainUserDocument) => doc.document_type === 'snils')
     
     // Генерируем номер удостоверения (для примера берем первые 9 цифр ID)
     const certificateNumber = profile?.id?.replace(/\D/g, '').slice(0, 9).padStart(9, '0') || '000000000'
+
+    // Определяем название документа в зависимости от типа группы
+    const getDocumentTitle = (type: string): string => {
+        switch (type) {
+            case 'pensioners':
+                return 'Свидетельство\nпенсионера'
+            case 'disabled':
+                return 'Справка\nинвалида'
+            case 'students':
+                return 'Студенческий\nбилет'
+            case 'young_families':
+                return 'Удостоверение\nмолодой семьи'
+            case 'large_families':
+                return 'Удостоверение\nмногодетной семьи'
+            case 'low_income':
+                return 'Справка\nмалоимущего'
+            case 'children':
+                return 'Свидетельство\nо рождении'
+            case 'veterans':
+                return 'Удостоверение\nветерана'
+            default:
+                return 'Удостоверение'
+        }
+    }
+
+    const documentTitle = getDocumentTitle(groupType)
+    const documentTitleUppercase = documentTitle.replace('\n', ' ').toUpperCase()
 
     // Определяем, использовать ли модальное окно или drawer
     const useModal = useBreakpointValue({ base: false, md: true })
@@ -78,9 +107,8 @@ export const CertificateDrawer = ({
                     color="#27272A"
                     textTransform="uppercase"
                     letterSpacing="-0.2px"
-                >
-                    Свидетельство<br />пенсионера
-                </Heading>
+                    dangerouslySetInnerHTML={{ __html: documentTitle.replace('\n', '<br />') }}
+                />
             </Box>
 
             {/* Номер */}
@@ -122,17 +150,22 @@ export const CertificateDrawer = ({
                 />
             )}
 
-            {/* Вид пенсии */}
-            <CertificateField 
-                label="Вид пенсии" 
-                value="По старости" 
-            />
+            {/* Поля только для пенсионеров */}
+            {groupType === 'pensioners' && (
+                <>
+                    {/* Вид пенсии */}
+                    <CertificateField 
+                        label="Вид пенсии" 
+                        value="По старости" 
+                    />
 
-            {/* Срок действия */}
-            <CertificateField 
-                label="Срок на который установлена пенсия" 
-                value="Бессрочно" 
-            />
+                    {/* Срок действия */}
+                    <CertificateField 
+                        label="Срок на который установлена пенсия" 
+                        value="Бессрочно" 
+                    />
+                </>
+            )}
         </VStack>
     )
 
@@ -182,7 +215,7 @@ export const CertificateDrawer = ({
                             px={6}
                         >
                             <Dialog.Title fontSize="2xl" fontWeight="bold">
-                                СВИДЕТЕЛЬСТВО ПЕНСИОНЕРА
+                                {documentTitleUppercase}
                             </Dialog.Title>
                             <Dialog.CloseTrigger asChild>
                                 <Button
@@ -219,7 +252,7 @@ export const CertificateDrawer = ({
         <BaseDrawer
             isOpen={isOpen}
             onOpenChange={onOpenChange}
-            title="Свидетельство пенсионера"
+            title={documentTitle.replace('\n', ' ')}
             footer={downloadButton}
         >
             {certificateContent}

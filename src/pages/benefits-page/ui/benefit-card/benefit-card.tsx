@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Badge, Box, Button, Heading, HStack, IconButton, Text, useMediaQuery, VStack } from '@chakra-ui/react'
 import { LuHeart } from 'react-icons/lu';
 import { FaHeart } from "react-icons/fa";
+import { useQueryClient } from '@tanstack/react-query'
 
 import { usePostBenefitsIdFavorite } from '@/shared/api/generated/hooks/usePostBenefitsIdFavorite'
 import { useOnlineStatus } from '@/shared/hooks/use-online-status'
@@ -16,16 +17,36 @@ interface BenefitCardProps {
     onClick?: (benefitId: string) => void
 }
 
-export const BenefitCard = ({ benefit, isFavorite = false, onFavoriteChange, onClick }: BenefitCardProps) => {
+export const BenefitCard = ({ benefit, isFavorite, onFavoriteChange, onClick }: BenefitCardProps) => {
     const [isDesktop] = useMediaQuery(["(min-width: 768px)"])
     const isOnline = useOnlineStatus()
-    const [localIsFavorite, setLocalIsFavorite] = useState(isFavorite)
+    const queryClient = useQueryClient()
+    
+    // Используем benefit.favorite из API, если не передан prop isFavorite
+    const [localIsFavorite, setLocalIsFavorite] = useState(isFavorite !== undefined ? isFavorite : (benefit.favorite || false))
+
+    // Синхронизируем локальное состояние с изменениями в benefit.favorite
+    useEffect(() => {
+        const newFavoriteValue = isFavorite !== undefined ? isFavorite : (benefit.favorite || false)
+        setLocalIsFavorite(newFavoriteValue)
+    }, [benefit.favorite, isFavorite])
 
     const favoriteMutation = usePostBenefitsIdFavorite({
         mutation: {
             onSuccess: () => {
                 const newFavoriteState = !localIsFavorite
                 setLocalIsFavorite(newFavoriteState)
+                
+                // Инвалидируем кэш для конкретной льготы и списка льгот
+                queryClient.invalidateQueries({ 
+                    queryKey: [{ url: '/benefits' }] 
+                })
+                if (benefit.id) {
+                    queryClient.invalidateQueries({ 
+                        queryKey: [{ url: `/benefits/${benefit.id}` }] 
+                    })
+                }
+                
                 onFavoriteChange?.(newFavoriteState)
             },
         },
