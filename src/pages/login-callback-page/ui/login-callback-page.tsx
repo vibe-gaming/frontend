@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { Center, Spinner, Text } from '@chakra-ui/react'
 import { useNavigate, useSearch } from '@tanstack/react-router'
+import { toast } from 'sonner'
 
 import { useAuth } from '@/entities/auth'
 import { postUsersAuthToken } from '@/shared/api/generated'
@@ -42,6 +43,7 @@ export const LoginCallbackPage = () => {
     useEffect(() => {
         if (isAuthenticated && !isLoading) {
             if (isUserRegistered) {
+                toast.success('Вы успешно авторизованы')
                 navigate({ to: '/benefits' })
             } else {
                 navigate({ to: '/register/check-info' })
