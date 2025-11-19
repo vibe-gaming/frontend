@@ -1,7 +1,9 @@
-import { useState } from 'react'
-import { Badge, Box, Button, Heading, HStack, Spinner, Text, Image, VStack, useMediaQuery } from '@chakra-ui/react'
+import { useState, useEffect } from 'react'
+import { Badge, Box, Button, Heading, HStack, Spinner, Text, Image, VStack, useMediaQuery, IconButton } from '@chakra-ui/react'
+import { useQueryClient } from '@tanstack/react-query'
 
 import { useGetBenefitsId } from '@/shared/api/generated/hooks/useGetBenefitsId'
+import { usePostBenefitsIdFavorite } from '@/shared/api/generated/hooks/usePostBenefitsIdFavorite'
 import { AXIOS_INSTANCE } from '@/shared/api/axios-client'
 import { FullScreenDrawer } from '@/shared/ui/full-screen-drawer'
 import { BENEFIT_TYPES, CATEGORIES, TAGS, TARGET_GROUPS } from '../benefits-page/constants'
@@ -11,11 +13,13 @@ import { getBenefitsFromStorage } from '@/shared/utils/benefits-storage'
 import benefitImage from '@/shared/assets/images/benefit.png'
 import { LuRoute } from 'react-icons/lu'
 import { Download } from 'lucide-react'
+import { FaHeart } from "react-icons/fa"
 
 interface BenefitDrawerProps {
     isOpen: boolean
     onClose: () => void
     benefitId: string | null
+    onFavoriteChange?: () => void
 }
 
 // Типы для зданий и организаций
@@ -47,11 +51,12 @@ interface BenefitResponseWithOrganization {
     [key: string]: any
 }
 
-export const BenefitDrawer = ({ isOpen, onClose, benefitId }: BenefitDrawerProps) => {
+export const BenefitDrawer = ({ isOpen, onClose, benefitId, onFavoriteChange }: BenefitDrawerProps) => {
     const [isDesktop] = useMediaQuery(["(min-width: 768px)"])
     const isMobile = !isDesktop
     const isOnline = useOnlineStatus()
     const isOfflineMode = isMobile && !isOnline
+    const queryClient = useQueryClient()
     
     // Пытаемся получить данные из localStorage в офлайне
     const getOfflineBenefit = () => {
@@ -65,11 +70,20 @@ export const BenefitDrawer = ({ isOpen, onClose, benefitId }: BenefitDrawerProps
     
     const offlineBenefit = isOfflineMode ? getOfflineBenefit() : null
     
-    const { data: benefitData, isLoading, isError, error } = useGetBenefitsId(benefitId || '', {
+    const { data: benefitData, isLoading, isError, error, refetch } = useGetBenefitsId(benefitId || '', {
         query: {
             enabled: Boolean(benefitId) && !isOfflineMode, // Не делаем запрос в офлайне на мобильных
+            refetchOnMount: true, // Всегда обновляем данные при открытии
+            refetchOnWindowFocus: false,
         },
     })
+    
+    // Обновляем данные при изменении benefitId (когда открывается drawer)
+    useEffect(() => {
+        if (isOpen && benefitId && !isOfflineMode) {
+            refetch()
+        }
+    }, [isOpen, benefitId, isOfflineMode, refetch])
     const [isDownloading, setIsDownloading] = useState(false)
     
     // Используем офлайн данные если они есть, иначе данные из API
@@ -77,10 +91,51 @@ export const BenefitDrawer = ({ isOpen, onClose, benefitId }: BenefitDrawerProps
         ? (offlineBenefit as BenefitResponseWithOrganization)
         : (benefitData as BenefitResponseWithOrganization | undefined)
     
+    // Локальное состояние для избранного
+    const [localIsFavorite, setLocalIsFavorite] = useState(false)
+    
+    // Обновляем локальное состояние при изменении данных
+    useEffect(() => {
+        if (benefit?.favorite !== undefined) {
+            setLocalIsFavorite(benefit.favorite)
+        }
+    }, [benefit?.favorite])
+    
+    // Мутация для изменения статуса избранного
+    const favoriteMutation = usePostBenefitsIdFavorite({
+        mutation: {
+            onSuccess: () => {
+                setLocalIsFavorite(!localIsFavorite)
+                
+                // Инвалидируем кэш для конкретной льготы и списка льгот
+                queryClient.invalidateQueries({ 
+                    queryKey: [{ url: '/benefits' }] 
+                })
+                if (benefitId) {
+                    queryClient.invalidateQueries({ 
+                        queryKey: [{ url: `/benefits/${benefitId}` }] 
+                    })
+                }
+                
+                // Обновляем данные после изменения
+                refetch()
+                // Вызываем callback для обновления списка
+                onFavoriteChange?.()
+            },
+        },
+    })
+    
     // Получаем список зданий (может отсутствовать в офлайн данных)
     const buildings = benefit?.organization?.buildings || []
     const hasOrganizationData = Boolean(benefit?.organization?.buildings?.length)
 
+    // Функция изменения статуса избранного
+    const handleFavoriteClick = () => {
+        if (benefitId) {
+            favoriteMutation.mutate({ id: benefitId })
+        }
+    }
+    
     // Функция скачивания PDF
     const handleDownloadPDF = async () => {
         if (!benefitId || !benefit) return
@@ -266,10 +321,31 @@ export const BenefitDrawer = ({ isOpen, onClose, benefitId }: BenefitDrawerProps
                         </Box>
                     )}
 
-                    {/* Заголовок */}
-                    <Heading as="h1" fontSize={{ base: "2xl", md: "3xl" }} lineHeight={{ base: "32px", md: "38px" }} fontWeight="bold" mb={2} id="benefit-title">
-                        {benefit.title || 'Без названия'}
-                    </Heading>
+                    {/* Заголовок с кнопкой избранного */}
+                    <HStack justify="space-between" align="flex-start" mb={2}>
+                        <Heading as="h1" fontSize={{ base: "2xl", md: "3xl" }} lineHeight={{ base: "32px", md: "38px" }} fontWeight="bold" id="benefit-title" flex={1}>
+                            {benefit.title || 'Без названия'}
+                        </Heading>
+                        {/* Кнопка избранного - скрыта в офлайне */}
+                        {!isOfflineMode && (
+                            <IconButton
+                                aria-label={localIsFavorite ? 'Удалить из избранного' : 'Добавить в избранное'}
+                                variant='solid'
+                                size='xl'
+                                rounded='xl'
+                                bg={localIsFavorite ? 'red.50' : 'blue.50'}
+                                color={localIsFavorite ? 'red.fg' : 'blue.fg'}
+                                onClick={handleFavoriteClick}
+                                loading={favoriteMutation.isPending}
+                                _hover={{
+                                    bg: localIsFavorite ? 'red.100' : 'blue.100',
+                                }}
+                                flexShrink={0}
+                            >
+                                <FaHeart size={20} />
+                            </IconButton>
+                        )}
+                    </HStack>
 
                     {/* Описание */}
                     {benefit.description && (

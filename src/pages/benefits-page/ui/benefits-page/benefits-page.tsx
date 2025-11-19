@@ -148,7 +148,7 @@ export const BenefitsPage = () => {
 
     // Используем офлайн данные если нет интернета на мобильных
     // Также используем офлайн данные если запрос упал с сетевой ошибкой
-    const { data, isLoading, isError, error } = useGetBenefits(
+    const { data, isLoading, isError, error, refetch } = useGetBenefits(
         queryParams,
         {
             query: {
@@ -170,6 +170,11 @@ export const BenefitsPage = () => {
             },
         }
     )
+    
+    // Функция для обновления списка после изменения favorite
+    const handleFavoriteChange = () => {
+        refetch()
+    }
 
     // Определяем, нужно ли использовать офлайн данные
     // Используем если: мобильный + (нет интернета ИЛИ запрос упал с сетевой ошибкой) + есть офлайн данные
@@ -521,6 +526,7 @@ export const BenefitsPage = () => {
                                                 key={benefit.id}
                                                 benefit={benefit}
                                                 onClick={openBenefitDrawer}
+                                                onFavoriteChange={handleFavoriteChange}
                                             />
                                         ))}
                                     </VStack>
@@ -610,6 +616,7 @@ export const BenefitsPage = () => {
                                                     key={benefit.id}
                                                     benefit={benefit}
                                                     onClick={openBenefitDrawer}
+                                                    onFavoriteChange={handleFavoriteChange}
                                                 />
                                             ))}
                                         </Grid>
@@ -662,6 +669,7 @@ export const BenefitsPage = () => {
                 isOpen={Boolean(selectedBenefitId)}
                 onClose={closeBenefitDrawer}
                 benefitId={selectedBenefitId}
+                onFavoriteChange={handleFavoriteChange}
             />
         </>
     )

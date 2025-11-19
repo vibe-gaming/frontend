@@ -149,6 +149,7 @@ export const ProfilePage = () => {
     const { data: statsData } = useGetBenefitsUserStats()
     const [isCertificateDrawerOpen, setIsCertificateDrawerOpen] = useState(false)
     const [isDownloadingPDF, setIsDownloadingPDF] = useState(false)
+    const [selectedGroupType, setSelectedGroupType] = useState<string>('pensioners')
 
     const fullName = [profile?.last_name, profile?.first_name, profile?.middle_name]
         .filter(Boolean)
@@ -164,13 +165,17 @@ export const ProfilePage = () => {
             setIsDownloadingPDF(true)
             const response = await AXIOS_INSTANCE.get('/users/pdfdownload', {
                 responseType: 'blob',
+                params: {
+                    group_type: selectedGroupType, // Отправляем тип группы на бэкенд
+                },
             })
 
             // Создаем ссылку для скачивания
             const url = globalThis.URL.createObjectURL(new Blob([response.data]))
             const link = document.createElement('a')
             link.href = url
-            link.setAttribute('download', `Удостоверение_${fullName || 'пенсионера'}.pdf`)
+            const documentName = getGroupTypeLabel(selectedGroupType) || 'Документ'
+            link.setAttribute('download', `${documentName}_${fullName || 'пользователя'}.pdf`)
             document.body.append(link)
             link.click()
             link.remove()
@@ -180,6 +185,11 @@ export const ProfilePage = () => {
         } finally {
             setIsDownloadingPDF(false)
         }
+    }
+
+    const handleOpenCertificate = (groupType: string) => {
+        setSelectedGroupType(groupType)
+        setIsCertificateDrawerOpen(true)
     }
 
     if (isLoading) {
@@ -232,7 +242,7 @@ export const ProfilePage = () => {
                                                     borderColor: 'blue.300',
                                                     boxShadow: 'sm',
                                                 }}
-                                                onClick={() => setIsCertificateDrawerOpen(true)}
+                                                onClick={() => handleOpenCertificate(group.type || 'pensioners')}
                                             >
                                                 <VStack align='stretch' gap='12px'>
                                                     {/* Название категории и статус */}
@@ -548,6 +558,7 @@ export const ProfilePage = () => {
                 profile={profile}
                 onDownloadPDF={handleDownloadPDF}
                 onOpenChange={setIsCertificateDrawerOpen}
+                groupType={selectedGroupType}
             />
         </Box>
     )
