@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useMediaQuery } from '@chakra-ui/react'
 
 import { useGetBenefits } from '@/shared/api/generated/hooks/useGetBenefits'
+import type { V1BenefitsListResponse } from '@/shared/api/generated'
 import { useOnlineStatus } from '@/shared/hooks/use-online-status'
 import { saveBenefitsToStorage } from '@/shared/utils/benefits-storage'
 
@@ -15,7 +16,7 @@ export const OfflineBenefitsPreloader = () => {
     const isOnline = useOnlineStatus()
 
     // Загрузка всех льгот в фоне для офлайн доступа (только на мобильных, только когда есть интернет)
-    const { data: allBenefitsData } = useGetBenefits(
+    const { data: allBenefitsData } = useGetBenefits<V1BenefitsListResponse>(
         { limit: 100 }, // Загружаем все льготы
         {
             query: {

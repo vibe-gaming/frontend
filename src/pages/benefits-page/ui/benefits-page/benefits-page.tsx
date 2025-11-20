@@ -7,6 +7,7 @@ import { LuChevronDown, LuSearch, LuMic } from 'react-icons/lu'
 
 import { useGetBenefits } from '@/shared/api/generated/hooks/useGetBenefits'
 import { usePostSpeechRecognize } from '@/shared/api/generated/hooks/usePostSpeechRecognize'
+import type { V1BenefitsListResponse } from '@/shared/api/generated'
 import { useDebounce } from '@/shared/hooks/use-debounce'
 import { useOnlineStatus } from '@/shared/hooks/use-online-status'
 import { useVoiceRecorder } from '@/shared/hooks/use-voice-recorder'
@@ -152,7 +153,7 @@ export const BenefitsPage = () => {
 
     // Используем офлайн данные если нет интернета на мобильных
     // Также используем офлайн данные если запрос упал с сетевой ошибкой
-    const { data, isLoading, isError, error, refetch } = useGetBenefits(
+    const { data, isLoading, isError, error, refetch } = useGetBenefits<V1BenefitsListResponse>(
         queryParams,
         {
             query: {
@@ -244,7 +245,7 @@ export const BenefitsPage = () => {
     const shouldUseOffline = isMobile && offlineData && (!isOnline || (isError && isNetworkError))
 
     // Обрабатываем офлайн данные
-    const displayData = useMemo(() => {
+    const displayData = useMemo((): V1BenefitsListResponse | null => {
         console.log('displayData вычисление:', {
             shouldUseOffline,
             hasOfflineData: !!offlineData,
@@ -270,7 +271,7 @@ export const BenefitsPage = () => {
             }
         }
         console.log('Онлайн режим - возвращаем data:', data?.benefits?.length)
-        return data
+        return data || null
     }, [shouldUseOffline, offlineData, appliedSearchQuery, data, isOnline, isMobile])
 
     const handleResetFilters = () => {
