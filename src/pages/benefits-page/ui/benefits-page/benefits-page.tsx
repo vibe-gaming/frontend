@@ -1,12 +1,14 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Box, Button, createListCollection, Grid, Heading, HStack, IconButton, Input, Select, Spinner, Stack, Text, useMediaQuery, VStack } from '@chakra-ui/react';
 import { Show } from "@chakra-ui/react";
 
-import { LuChevronDown, LuSearch } from 'react-icons/lu'
+import { LuChevronDown, LuSearch, LuMic } from 'react-icons/lu'
 
 import { useGetBenefits } from '@/shared/api/generated/hooks/useGetBenefits'
+import { usePostSpeechRecognize } from '@/shared/api/generated/hooks/usePostSpeechRecognize'
 import { useDebounce } from '@/shared/hooks/use-debounce'
 import { useOnlineStatus } from '@/shared/hooks/use-online-status'
+import { useVoiceRecorder } from '@/shared/hooks/use-voice-recorder'
 import { getBenefitsFromStorage, filterStoredBenefits, type StoredBenefits } from '@/shared/utils/benefits-storage'
 
 import { ITEMS_PER_PAGE, SORT_OPTIONS, TARGET_GROUPS } from './constants'
@@ -170,6 +172,59 @@ export const BenefitsPage = () => {
             },
         }
     )
+
+    // Голосовой поиск
+    const { isRecording, startRecording, stopRecording } = useVoiceRecorder()
+
+    const { mutate: recognizeSpeech, isPending: isRecognizing } = usePostSpeechRecognize({
+        mutation: {
+            onSuccess: (data) => {
+                console.log('✅ Распознавание речи успешно:', data)
+                if (data.text) {
+                    console.log('🔍 Установка поискового запроса:', data.text)
+                    setSearchQuery(data.text)
+                    setAppliedSearchQuery(data.text)
+                    setCurrentPage(1)
+                }
+            },
+            onError: (error) => {
+                console.error('❌ Ошибка распознавания речи:', error)
+            }
+        },
+        // Увеличенный таймаут для распознавания речи (120 секунд)
+        client: {
+            timeout: 120000
+        }
+    })
+
+    const handleMicClick = async () => {
+        if (isRecording) {
+            const audioBlob = await stopRecording()
+            if (audioBlob) {
+                // Определяем расширение файла на основе MIME типа
+                let extension = 'webm'
+                if (audioBlob.type.includes('mp4')) {
+                    extension = 'mp4'
+                } else if (audioBlob.type.includes('mpeg') || audioBlob.type.includes('mp3')) {
+                    extension = 'mp3'
+                } else if (audioBlob.type.includes('wav')) {
+                    extension = 'wav'
+                }
+                
+                // Создаем File объект с правильным именем
+                const audioFile = new File(
+                    [audioBlob], 
+                    `recording.${extension}`, 
+                    { type: audioBlob.type }
+                )
+                
+                console.log('Отправка аудио файла:', audioFile.name, audioFile.type, audioFile.size, 'байт')
+                recognizeSpeech({ data: { audio: audioFile } })
+            }
+        } else {
+            await startRecording()
+        }
+    }
     
     // Функция для обновления списка после изменения favorite
     const handleFavoriteChange = () => {
@@ -432,6 +487,17 @@ export const BenefitsPage = () => {
                             }}
                             onKeyDown={handleSearchKeyDown}
                         />
+                        <IconButton
+                            aria-label="Voice Search"
+                            size="2xl"
+                            variant={isRecording ? "solid" : "subtle"}
+                            colorPalette={isRecording ? "red" : "gray"}
+                            rounded="xl"
+                            onClick={handleMicClick}
+                            disabled={isRecognizing}
+                        >
+                            {isRecognizing ? <Spinner size="sm" /> : <LuMic size={24} />}
+                        </IconButton>
                         <IconButton aria-label="Search" size="2xl" variant="solid" rounded="xl" colorPalette="blue" onClick={handleApplySearch}>
                             <LuSearch size={24} />
                         </IconButton>

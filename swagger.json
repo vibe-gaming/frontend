@@ -116,13 +116,19 @@
                         "description": "Фильтровать льготы по группам пользователя (работает только при авторизации)",
                         "name": "filter_by_user_groups",
                         "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Формат ответа (json или pdf) - по умолчанию json",
+                        "name": "format",
+                        "in": "query"
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/v1.benefitsListResponse"
+                            "type": "file"
                         }
                     },
                     "400": {
@@ -471,6 +477,9 @@
                 "security": [
                     {
                         "UserAuth": []
+                    },
+                    {
+                        "UserAuth": []
                     }
                 ],
                 "description": "Распознает речь из аудиофайла и возвращает текст",
@@ -484,6 +493,15 @@
                     "Speech"
                 ],
                 "summary": "Распознавание речи",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "Аудиофайл (MP3 или WebM)",
+                        "name": "audio",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Распознанный текст",

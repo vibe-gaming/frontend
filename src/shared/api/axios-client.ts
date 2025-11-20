@@ -14,6 +14,7 @@ export type RequestConfig<TData = unknown> = {
     responseType?: 'arraybuffer' | 'blob' | 'document' | 'json' | 'text' | 'stream'
     signal?: AbortSignal
     headers?: AxiosRequestConfig['headers']
+    timeout?: number
 }
 /**
  * Subset of AxiosResponse
@@ -69,6 +70,8 @@ export const AXIOS_INSTANCE = axios.create({
     // withCredentials: false - используется JWT аутентификация (токены в заголовках, не cookies)
     // Если в будущем понадобятся cookies, установить true и настроить CORS на бэкенде
     withCredentials: false,
+    // Таймаут 60 секунд для всех запросов (особенно важно для распознавания речи)
+    timeout: 60000,
     headers: {
         'Content-Type': 'application/json',
     },
@@ -82,8 +85,44 @@ const UNKNOWN_ERROR = {
 export const axiosClient = async <TData, TError = unknown, TVariables = unknown>(
     config: RequestConfig<TVariables>
 ): Promise<ResponseConfig<TData>> => {
-    const promise = AXIOS_INSTANCE.request<TData, ResponseConfig<TData>>(config).catch(
+    const requestConfig = { ...config }
+
+    // При отправке FormData необходимо установить Content-Type в multipart/form-data.
+    // Axios автоматически удалит этот заголовок и позволит браузеру установить его с правильным boundary,
+    // но это переопределит дефолтный application/json из AXIOS_INSTANCE.
+    if (requestConfig.data instanceof FormData) {
+        requestConfig.headers = {
+            ...requestConfig.headers,
+            'Content-Type': 'multipart/form-data',
+        }
+    }
+
+    const promise = AXIOS_INSTANCE.request<TData, ResponseConfig<TData>>(requestConfig).catch(
         (error: AxiosError<TError>) => {
+            // Обработка ошибки таймаута
+            if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
+                console.error(
+                    'Request timeout:',
+                    config.url,
+                    'timeout:',
+                    config.timeout ?? 60000,
+                    'ms'
+                )
+                throw {
+                    error_code: 7_355_609,
+                    error_message: 'Request timeout. Please try again.',
+                }
+            }
+
+            // Обработка ошибки сети
+            if (!error.response) {
+                console.error('Network error:', error.message)
+                throw {
+                    error_code: 7_355_610,
+                    error_message: 'Network error. Please check your connection.',
+                }
+            }
+
             throw error.response?.data ?? UNKNOWN_ERROR
         }
     )
