@@ -5,6 +5,6 @@ import { BenefitsPage } from '@/pages/benefits-page'
 export const Route = createFileRoute('/_authenticated-layout/benefits/')({
     component: BenefitsPage,
     onEnter: () => {
-        document.title = 'Льготы'
+        // document.title = 'Льготы'
     },
 })
