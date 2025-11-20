@@ -207,11 +207,21 @@ export const ProfilePage = () => {
     }
 
     return (
-        <Box bg='gray.50' minH='100vh'>
+        <Box minH='100vh'>
             {/* Header */}
-            <AppHeader />
+            <Box
+                bg='white'
+                maxW='1280px'
+                mx='auto'
+                position='sticky'
+                top={0}
+                w='100%'
+                zIndex={1000}
+            >
+                <AppHeader />
+            </Box>
 
-            <Container maxW='640px' mx='auto' pb='16px' pt='16px' px='16px'>
+            <Container maxW='640px' mx='auto' pb='16px' px='16px'>
                 <VStack align='stretch' gap='16px'>
                     {/* Social Status Section */}
                     {profile?.groups && profile.groups.length > 0 && (

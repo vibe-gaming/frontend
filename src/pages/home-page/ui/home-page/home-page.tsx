@@ -69,7 +69,6 @@ export const HomePage = () => {
         <Box minH='100dvh'>
             <Box
                 bg='white'
-                h='88px'
                 maxW='1280px'
                 mx='auto'
                 position='sticky'
@@ -98,17 +97,17 @@ export const HomePage = () => {
                         bgImage={
                             isOnline
                                 ? {
-                                      base: `url(${mainBannerImage})`,
-                                      lg: `url(${bannerDesktopImage})`,
-                                  }
+                                    base: `url(${mainBannerImage})`,
+                                    lg: `url(${bannerDesktopImage})`,
+                                }
                                 : undefined
                         }
                         style={
                             isOnline
                                 ? {
-                                      backgroundPosition: 'center',
-                                      backgroundRepeat: 'no-repeat',
-                                  }
+                                    backgroundPosition: 'center',
+                                    backgroundRepeat: 'no-repeat',
+                                }
                                 : undefined
                         }
                     >
@@ -208,69 +207,66 @@ export const HomePage = () => {
                         </Grid>
                     </VStack>
 
-                    {/* Popular Benefits Section - только для неавторизованных */}
-                    {!isAuthenticated && (
-                        <VStack
-                            align='stretch'
-                            gap={{ base: 5, lg: 8 }}
-                            maxW='1020px'
-                            mx='auto'
-                            w='100%'
+                    <VStack
+                        align='stretch'
+                        gap={{ base: 5, lg: 8 }}
+                        maxW='1020px'
+                        mx='auto'
+                        w='100%'
+                    >
+                        <Heading
+                            as='h2'
+                            fontSize={{ base: '2xl', lg: '6xl' }}
+                            fontWeight='bold'
+                            lineHeight={{ base: '32px', lg: '72px' }}
+                            textAlign={isDesktop ? 'start' : 'center'}
                         >
-                            <Heading
-                                as='h2'
-                                fontSize={{ base: '2xl', lg: '6xl' }}
-                                fontWeight='bold'
-                                lineHeight={{ base: '32px', lg: '72px' }}
-                                textAlign={isDesktop ? 'start' : 'center'}
-                            >
-                                Популярные льготы
-                            </Heading>
-                            <Grid
-                                gap={{ base: 4, lg: 12 }}
-                                templateColumns={{ base: 'repeat(2, 1fr)', lg: 'repeat(4, 1fr)' }}
-                            >
-                                {popularBenefits.map((benefit, index) => (
-                                    <Box
-                                        key={index}
-                                        borderRadius={{ base: '16px', lg: '20px' }}
-                                        cursor='pointer'
-                                        transition='all 0.2s'
-                                        _hover={{
-                                            bg: 'gray.300',
-                                            transform: 'scale(1.02)',
-                                        }}
-                                        onClick={() => navigate({ to: '/login' })}
+                            Популярные льготы
+                        </Heading>
+                        <Grid
+                            gap={{ base: 4, lg: 12 }}
+                            templateColumns={{ base: 'repeat(2, 1fr)', lg: 'repeat(4, 1fr)' }}
+                        >
+                            {popularBenefits.map((benefit, index) => (
+                                <Box
+                                    key={index}
+                                    borderRadius={{ base: '16px', lg: '20px' }}
+                                    cursor='pointer'
+                                    transition='all 0.2s'
+                                    _hover={{
+                                        bg: 'gray.300',
+                                        transform: 'scale(1.02)',
+                                    }}
+                                    onClick={() => navigate({ to: isAuthenticated ? '/benefits' : '/login' })}
+                                >
+                                    <VStack
+                                        align='center'
+                                        gap={{ base: 2, lg: 3 }}
+                                        h='full'
+                                        justify='center'
                                     >
-                                        <VStack
-                                            align='center'
-                                            gap={{ base: 2, lg: 3 }}
-                                            h='full'
-                                            justify='center'
+                                        <Image
+                                            alt={benefit.title}
+                                            borderRadius={{ base: '16px', lg: '20px' }}
+                                            h={{ base: '140px', lg: '200px' }}
+                                            objectFit='cover'
+                                            src={benefit.image}
+                                            w={{ base: '140px', lg: '200px' }}
+                                        />
+                                        <Text
+                                            color='gray.800'
+                                            fontSize={{ base: 'xl', lg: '2xl' }}
+                                            fontWeight='bold'
+                                            lineHeight={{ base: '30px', lg: '32px' }}
+                                            textAlign='center'
                                         >
-                                            <Image
-                                                alt={benefit.title}
-                                                borderRadius={{ base: '16px', lg: '20px' }}
-                                                h={{ base: '140px', lg: '200px' }}
-                                                objectFit='cover'
-                                                src={benefit.image}
-                                                w={{ base: '140px', lg: '200px' }}
-                                            />
-                                            <Text
-                                                color='gray.800'
-                                                fontSize={{ base: 'xl', lg: '2xl' }}
-                                                fontWeight='bold'
-                                                lineHeight={{ base: '30px', lg: '32px' }}
-                                                textAlign='center'
-                                            >
-                                                {benefit.title}
-                                            </Text>
-                                        </VStack>
-                                    </Box>
-                                ))}
-                            </Grid>
-                        </VStack>
-                    )}
+                                            {benefit.title}
+                                        </Text>
+                                    </VStack>
+                                </Box>
+                            ))}
+                        </Grid>
+                    </VStack>
                 </VStack>
             </Box>
 
