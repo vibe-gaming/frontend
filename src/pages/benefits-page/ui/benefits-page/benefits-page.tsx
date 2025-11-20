@@ -665,7 +665,7 @@ export const BenefitsPage = () => {
                             {/* Sidebar с фильтрами */}
                             <Box
                                 position="sticky"
-                                top={20}
+                                top={"100px"}
                             >
                                 <FiltersSidebar
                                     tempBenefitTypes={benefitTypes}
