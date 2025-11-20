@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Box, Button, createListCollection, Grid, Heading, HStack, IconButton, Input, Select, Spinner, Stack, Text, useMediaQuery, VStack } from '@chakra-ui/react';
 import { Show } from "@chakra-ui/react";
+import { Download } from 'lucide-react'
 
 import { LuChevronDown, LuSearch, LuMic } from 'react-icons/lu'
 
@@ -49,6 +50,7 @@ export const BenefitsPage = () => {
     const [isSortOpen, setIsSortOpen] = useState(false)
     const [selectedBenefitId, setSelectedBenefitId] = useState<string | null>(null)
     const [appliedSearchQuery, setAppliedSearchQuery] = useState('')
+    const [isDownloadingPDF, setIsDownloadingPDF] = useState(false)
     // Офлайн данные - инициализируем из localStorage сразу
     const [offlineData, setOfflineData] = useState<StoredBenefits | null>(() => {
         if (typeof window !== 'undefined') {
@@ -461,6 +463,34 @@ export const BenefitsPage = () => {
         setCurrentPage(1)
     }
 
+    // Функция скачивания PDF
+    const handleDownloadPDF = async () => {
+        try {
+            setIsDownloadingPDF(true)
+            const response = await fetch('https://backend-production-10ec.up.railway.app/api/v1/benefits?format=pdf')
+            
+            if (!response.ok) {
+                throw new Error('Ошибка при скачивании PDF')
+            }
+
+            const blob = await response.blob()
+            
+            // Создаем ссылку для скачивания
+            const url = window.URL.createObjectURL(blob)
+            const link = document.createElement('a')
+            link.href = url
+            link.setAttribute('download', 'Льготы.pdf')
+            document.body.appendChild(link)
+            link.click()
+            link.remove()
+            window.URL.revokeObjectURL(url)
+        } catch (error) {
+            console.error('Ошибка при скачивании PDF:', error)
+        } finally {
+            setIsDownloadingPDF(false)
+        }
+    }
+
     return (
         <>
             <AppHeader />
@@ -469,20 +499,20 @@ export const BenefitsPage = () => {
                 <VStack align='stretch' gap={4} px={{ base: 4, md: 5 }} pt={{ base: 3, md: 6 }} pb={{ base: 6, md: 10 }} w='100%' maxW="1200px" mx="auto">
                     <Heading as='h1' fontWeight='bold' size='2xl'>Льготы</Heading>
                     <HStack gap={4}>
-                        <Input
-                            variant="subtle"
-                            type="default"
-                            size="2xl"
-                            placeholder='Поиск по льготам'
-                            value={searchQuery}
-                            bg='bg.muted'
-                            rounded={'2xl'}
-                            w='100%'
-                            onChange={(event) => {
-                                setSearchQuery(event.target.value)
+                    <Input
+                        variant="subtle"
+                        type="default"
+                        size="2xl"
+                        placeholder='Поиск по льготам'
+                        value={searchQuery}
+                        bg='bg.muted'
+                        rounded={'2xl'}
+                        w='100%'
+                        onChange={(event) => {
+                            setSearchQuery(event.target.value)
                                 // На мобильных сбрасываем страницу при изменении, на десктопе - только при применении
                                 if (!isDesktop) {
-                                    setCurrentPage(1)
+                            setCurrentPage(1)
                                 }
                             }}
                             onKeyDown={handleSearchKeyDown}
@@ -535,24 +565,24 @@ export const BenefitsPage = () => {
 
                     {/* Кнопки Фильтр и Сортировка - только на мобильных, только когда есть интернет */}
                     <Show when={!isDesktop && isOnline}>
-                        <HStack gap={2}>
-                            <Button
-                                size="xl"
-                                variant="outline"
-                                rounded="xl"
-                                onClick={() => setIsFiltersOpen(true)}
-                            >
-                                Фильтр <LuChevronDown />
-                            </Button>
-                            <Button
-                                size="xl"
-                                variant="outline"
-                                rounded="xl"
-                                onClick={() => setIsSortOpen(true)}
-                            >
+                    <HStack gap={2}>
+                        <Button
+                            size="xl"
+                            variant="outline"
+                            rounded="xl"
+                            onClick={() => setIsFiltersOpen(true)}
+                        >
+                            Фильтр <LuChevronDown />
+                        </Button>
+                        <Button
+                            size="xl"
+                            variant="outline"
+                            rounded="xl"
+                            onClick={() => setIsSortOpen(true)}
+                        >
                                 Сортировка по <LuChevronDown />
-                            </Button>
-                        </HStack>
+                        </Button>
+                    </HStack>
                     </Show>
 
                     <Show when={!isDesktop}>
@@ -571,22 +601,22 @@ export const BenefitsPage = () => {
                                     Нет подключения к интернету. Показаны сохраненные льготы.
                                 </Text>
                             ) : (
-                                <Text color='text.secondary' fontSize='sm' mt={2}>
-                                    Попробуйте изменить параметры поиска или фильтры
-                                </Text>
+                            <Text color='text.secondary' fontSize='sm' mt={2}>
+                                Попробуйте изменить параметры поиска или фильтры
+                            </Text>
                             )}
                         </Box>
                     ) : (
-                            <>
+                        <>
                                 {/* Layout для мобильных: карточки в один столбец */}
                                 <Show when={!isDesktop}>
-                                    <Text color='text.secondary' fontSize='md' mt={2}>
+                            <Text color='text.secondary' fontSize='md' mt={2}>
                                         Найдено:{' '}
                                         {displayData?.total ?? displayData?.benefits?.length ?? 0}
                                         {isOfflineMode && ' (офлайн)'}
-                                    </Text>
+                            </Text>
 
-                                    <VStack align='stretch' gap={4}>
+                            <VStack align='stretch' gap={4}>
                                         {displayData?.benefits?.map((benefit) => (
                                             <BenefitCard
                                                 key={benefit.id}
@@ -594,8 +624,25 @@ export const BenefitsPage = () => {
                                                 onClick={openBenefitDrawer}
                                                 onFavoriteChange={handleFavoriteChange}
                                             />
-                                        ))}
-                                    </VStack>
+                                ))}
+                            </VStack>
+
+                                    {/* Кнопка скачивания PDF - только когда есть интернет */}
+                                    {!isOfflineMode && (
+                                        <Button
+                                            w='full'
+                                            size="xl"
+                                            variant="solid"
+                                            colorPalette="blue"
+                                            rounded={'xl'}
+                                            onClick={handleDownloadPDF}
+                                            loading={isDownloadingPDF}
+                                            disabled={isDownloadingPDF}
+                                        >
+                                            <Download size={20} style={{ marginRight: '8px' }} />
+                                            Скачать PDF
+                                        </Button>
+                                    )}
 
                                     {/* Пагинация только когда есть интернет */}
                                     {!isOfflineMode && (
@@ -689,15 +736,15 @@ export const BenefitsPage = () => {
 
                                         {/* Пагинация только когда есть интернет */}
                                         {!isOfflineMode && (
-                                            <Pagination
-                                                currentPage={currentPage}
-                                                totalPages={totalPages}
-                                                onPageChange={setCurrentPage}
-                                            />
+                            <Pagination
+                                currentPage={currentPage}
+                                totalPages={totalPages}
+                                onPageChange={setCurrentPage}
+                            />
                                         )}
                                     </VStack>
-                                </>
-                            )}
+                        </>
+                    )}
                         </Grid>
                     </Show>
                 </VStack>

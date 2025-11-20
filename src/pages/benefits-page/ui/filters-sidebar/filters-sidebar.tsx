@@ -1,6 +1,7 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { createListCollection, Show, useMediaQuery } from '@chakra-ui/react'
 import { Box, Button, HStack, Select, Text, VStack } from '@chakra-ui/react'
+import { Download } from 'lucide-react'
 
 import { useGetCities } from '@/shared/api/generated/hooks/useGetCities'
 
@@ -40,6 +41,7 @@ export const FiltersSidebar = ({
     onApply,
 }: FiltersSidebarProps) => {
     const [isDesktop] = useMediaQuery(["(min-width: 768px)"]); // 768px is the breakpoint for desktop
+    const [isDownloading, setIsDownloading] = useState(false)
 
     // Запрос к городам
     const { data: citiesData } = useGetCities()
@@ -54,6 +56,34 @@ export const FiltersSidebar = ({
         ]
         return createListCollection({ items })
     }, [citiesData])
+
+    // Функция скачивания PDF
+    const handleDownloadPDF = async () => {
+        try {
+            setIsDownloading(true)
+            const response = await fetch('https://backend-production-10ec.up.railway.app/api/v1/benefits?format=pdf')
+            
+            if (!response.ok) {
+                throw new Error('Ошибка при скачивании PDF')
+            }
+
+            const blob = await response.blob()
+            
+            // Создаем ссылку для скачивания
+            const url = window.URL.createObjectURL(blob)
+            const link = document.createElement('a')
+            link.href = url
+            link.setAttribute('download', 'Льготы.pdf')
+            document.body.appendChild(link)
+            link.click()
+            link.remove()
+            window.URL.revokeObjectURL(url)
+        } catch (error) {
+            console.error('Ошибка при скачивании PDF:', error)
+        } finally {
+            setIsDownloading(false)
+        }
+    }
 
     return (
         <Box
@@ -164,6 +194,21 @@ export const FiltersSidebar = ({
                     mt={4}
                 >
                     Сбросить
+                </Button>
+
+                {/* Кнопка скачивания PDF */}
+                <Button
+                    w='full'
+                    size="lg"
+                    variant="solid"
+                    colorPalette="blue"
+                    rounded={'xl'}
+                    onClick={handleDownloadPDF}
+                    loading={isDownloading}
+                    disabled={isDownloading}
+                >
+                    <Download size={20} style={{ marginRight: '8px' }} />
+                    Скачать PDF
                 </Button>
             </VStack>
         </Box>
