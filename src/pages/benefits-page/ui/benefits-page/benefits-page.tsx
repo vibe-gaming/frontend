@@ -38,6 +38,8 @@ export const BenefitsPage = () => {
     const [dateTo, setDateTo] = useState('')
     const [sortBy, setSortBy] = useState<string>('created_at')
     const [sortOrder, setSortOrder] = useState<string>('desc')
+    const [favorites, setFavorites] = useState<boolean>(false)
+    const [filterByUserGroups, setFilterByUserGroups] = useState<boolean>(false)
     // Временные состояния для Drawer (применяются только при нажатии "Применить")
     const [tempBenefitTypes, setTempBenefitTypes] = useState<string[]>([])
     const [tempTargetGroups, setTempTargetGroups] = useState<string[]>([])
@@ -148,8 +150,17 @@ export const BenefitsPage = () => {
         params.sort_by = sortBy
         params.order = sortOrder
 
+        // Быстрые фильтры
+        if (favorites) {
+            params.favorites = true
+        }
+
+        if (filterByUserGroups) {
+            params.filter_by_user_groups = true
+        }
+
         return params
-    }, [isDesktop, appliedSearchQuery, benefitTypes, targetGroups, tags, categories, cityId, dateFrom, dateTo, sortBy, sortOrder, currentPage])
+    }, [isDesktop, appliedSearchQuery, benefitTypes, targetGroups, tags, categories, cityId, dateFrom, dateTo, sortBy, sortOrder, currentPage, favorites, filterByUserGroups])
 
     // Используем офлайн данные если нет интернета на мобильных
     // Также используем офлайн данные если запрос упал с сетевой ошибкой
@@ -213,14 +224,14 @@ export const BenefitsPage = () => {
                 } else if (audioBlob.type.includes('wav')) {
                     extension = 'wav'
                 }
-                
+
                 // Создаем File объект с правильным именем
                 const audioFile = new File(
-                    [audioBlob], 
-                    `recording.${extension}`, 
+                    [audioBlob],
+                    `recording.${extension}`,
                     { type: audioBlob.type }
                 )
-                
+
                 console.log('Отправка аудио файла:', audioFile.name, audioFile.type, audioFile.size, 'байт')
                 recognizeSpeech({ data: { audio: audioFile } })
             }
@@ -228,7 +239,7 @@ export const BenefitsPage = () => {
             await startRecording()
         }
     }
-    
+
     // Функция для обновления списка после изменения favorite
     const handleFavoriteChange = () => {
         refetch()
@@ -255,7 +266,7 @@ export const BenefitsPage = () => {
             isOnline,
             isMobile,
         })
-        
+
         if (shouldUseOffline && offlineData) {
             // Фильтруем по поисковому запросу
             const filtered = filterStoredBenefits(offlineData.benefits, appliedSearchQuery)
@@ -290,6 +301,8 @@ export const BenefitsPage = () => {
         setTags([])
         setCategories([])
         setCityId('')
+        setFavorites(false)
+        setFilterByUserGroups(false)
         setCurrentPage(1)
         // Также сбрасываем временные для синхронизации
         setTempBenefitTypes([])
@@ -423,6 +436,8 @@ export const BenefitsPage = () => {
 
     // Теги для отображения под поиском (пока только визуально)
     const quickFilterTags = [
+        { value: 'saved', label: 'Сохраненные' },
+        { value: 'available_to_me', label: 'Доступные мне' },
         { value: 'pensioners', label: 'Пенсионерам' },
         { value: 'disabled', label: 'Инвалидам' },
         { value: 'large_families', label: 'Многодетным' },
@@ -447,7 +462,20 @@ export const BenefitsPage = () => {
 
     // Обработчик быстрой фильтрации по тегам
     const handleQuickFilterClick = (tagValue: string) => {
-        // Проверяем, выбран ли уже этот тег
+        // Обработка специальных фильтров
+        if (tagValue === 'saved') {
+            setFavorites(!favorites)
+            setCurrentPage(1)
+            return
+        }
+
+        if (tagValue === 'available_to_me') {
+            setFilterByUserGroups(!filterByUserGroups)
+            setCurrentPage(1)
+            return
+        }
+
+        // Обработка обычных targetGroups фильтров
         const isSelected = targetGroups.includes(tagValue)
 
         if (isSelected) {
@@ -469,13 +497,13 @@ export const BenefitsPage = () => {
         try {
             setIsDownloadingPDF(true)
             const response = await fetch('https://backend-production-10ec.up.railway.app/api/v1/benefits?format=pdf')
-            
+
             if (!response.ok) {
                 throw new Error('Ошибка при скачивании PDF')
             }
 
             const blob = await response.blob()
-            
+
             // Создаем ссылку для скачивания
             const url = window.URL.createObjectURL(blob)
             const link = document.createElement('a')
@@ -539,7 +567,16 @@ export const BenefitsPage = () => {
                         {/* Теги под поиском */}
                         <HStack gap={2} wrap="wrap" mb={6}>
                             {quickFilterTags.map((tag) => {
-                                const isSelected = targetGroups.includes(tag.value)
+                                // Определяем, выбран ли фильтр
+                                let isSelected = false
+                                if (tag.value === 'saved') {
+                                    isSelected = favorites
+                                } else if (tag.value === 'available_to_me') {
+                                    isSelected = filterByUserGroups
+                                } else {
+                                    isSelected = targetGroups.includes(tag.value)
+                                }
+
                                 return (
                                     <Button
                                         key={tag.value}
