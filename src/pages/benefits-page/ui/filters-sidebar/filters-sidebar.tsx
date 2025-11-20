@@ -89,9 +89,11 @@ export const FiltersSidebar = ({
         <Box
             bg="white"
             borderRadius="2xl"
-            p={5}
+            py={5}
+            pl={5}
+            pr={1}
             w="100%"
-            h="calc(100vh - 338px)"
+            h="calc(100vh - 400px)"
             borderColor='border'
             borderWidth='1px'
             borderStyle='solid'
@@ -101,6 +103,7 @@ export const FiltersSidebar = ({
             <ScrollArea.Root
                 flex={1}
                 size="xs"
+                pr={4}
             >
                 <ScrollArea.Viewport>
                     <ScrollArea.Content>
