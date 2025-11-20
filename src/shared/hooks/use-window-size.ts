@@ -1,9 +1,30 @@
-import React, { useLayoutEffect, useState } from 'react'
-import { useDebouncedCallback } from 'use-debounce'
+import React, { useCallback, useLayoutEffect, useRef, useState } from 'react'
 
 export interface WindowSizeOptions {
     initialWidth?: number
     initialHeight?: number
+}
+
+// Локальная реализация useDebouncedCallback
+function useDebouncedCallback<T extends (...args: any[]) => any>(
+    callback: T,
+    delay: number
+): T {
+    const timeoutRef = useRef<NodeJS.Timeout>()
+
+    const debouncedCallback = useCallback(
+        ((...args: Parameters<T>) => {
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current)
+            }
+            timeoutRef.current = setTimeout(() => {
+                callback(...args)
+            }, delay)
+        }) as T,
+        [callback, delay]
+    )
+
+    return debouncedCallback
 }
 
 export const useWindowSize = ({
