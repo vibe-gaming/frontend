@@ -99,6 +99,34 @@ export const FiltersDrawer = ({
             footer={footer}
         >
             <VStack align='stretch' gap={6} pb={4}>
+                {/* Город */}
+                <Box>
+                    <Text fontSize='xl' fontWeight='bold' mb={4}>
+                        Город
+                    </Text>
+                    <Select.Root
+                        collection={citiesCollection}
+                        value={tempCityId ? [tempCityId] : []}
+                        position={'relative'}
+                        onValueChange={(details) => onCityIdChange(details.value[0] || '')}
+                        size="lg"
+                    >
+                        <Select.Trigger rounded={'xl'} borderRadius={'xl'}>
+                            <Select.ValueText fontSize={'lg'} placeholder="Выберите город" />
+                        </Select.Trigger>
+                        <Select.IndicatorGroup mr={4}>
+                            <Select.Indicator />
+                        </Select.IndicatorGroup>
+                        <Select.Content p={4} gap={4} rounded={'xl'}>
+                            {citiesCollection.items.map((item) => (
+                                <Select.Item key={item.value} item={item} fontSize={'lg'}>
+                                    {item.label}
+                                </Select.Item>
+                            ))}
+                        </Select.Content>
+                    </Select.Root>
+                </Box>
+
                 <MultiSelectFilter
                     title="Уровень льготы"
                     options={BENEFIT_TYPES}
@@ -127,33 +155,6 @@ export const FiltersDrawer = ({
                     onChange={onCategoriesChange}
                 />
 
-                {/* Город */}
-                <Box>
-                    <Text fontSize='xl' fontWeight='bold' mb={4}>
-                        Город
-                    </Text>
-                    <Select.Root
-                        collection={citiesCollection}
-                        value={tempCityId ? [tempCityId] : []}
-                        position={'relative'}
-                        onValueChange={(details) => onCityIdChange(details.value[0] || '')}
-                        size="lg"
-                    >
-                        <Select.Trigger rounded={'xl'} borderRadius={'xl'}>
-                            <Select.ValueText fontSize={'lg'} placeholder="Выберите город" />
-                        </Select.Trigger>
-                        <Select.IndicatorGroup mr={4}>
-                            <Select.Indicator />
-                        </Select.IndicatorGroup>
-                        <Select.Content p={4} gap={4} rounded={'xl'}>
-                            {citiesCollection.items.map((item) => (
-                                <Select.Item key={item.value} item={item} fontSize={'lg'}>
-                                    {item.label}
-                                </Select.Item>
-                            ))}
-                        </Select.Content>
-                    </Select.Root>
-                </Box>
             </VStack>
         </BaseDrawer>
     )

@@ -221,15 +221,15 @@ export const BenefitCard = ({ benefit, isFavorite, onFavoriteChange, onClick }: 
                             variant='solid'
                             size='2xl'
                             rounded='2xl'
-                            bg={localIsFavorite ? 'red.50' : 'blue.50'}
-                            color={localIsFavorite ? 'red.fg' : 'blue.fg'}
+                            bg='blue.50'
+                            color='blue.fg'
                             onClick={handleFavoriteClick}
                             loading={favoriteMutation.isPending}
                             _hover={{
                                 bg: localIsFavorite ? 'red.100' : 'blue.100',
                             }}
                         >
-                            <FaHeart size={24} />
+                            {localIsFavorite ? <FaHeart size={24} /> : <LuHeart size={24} />}
                         </IconButton>
                     )}
                 </HStack>

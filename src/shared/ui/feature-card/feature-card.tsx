@@ -37,7 +37,7 @@ export const FeatureCard = ({ icon, title, description }: FeatureCardProps) => {
                     >
                         {icon}
                     </Flex>
-                    <Text fontSize='xl' fontWeight='bold' lineHeight={'30px'} textWrap='nowrap'>
+                    <Text fontSize='xl' fontWeight='bold' lineHeight={'30px'}>
                         {title}
                     </Text>
                 </Flex>

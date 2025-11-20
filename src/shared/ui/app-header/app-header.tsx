@@ -9,7 +9,7 @@ import {
     Text,
     useMediaQuery,
 } from '@chakra-ui/react'
-import { useNavigate } from '@tanstack/react-router'
+import { useLocation, useNavigate } from '@tanstack/react-router'
 import { User } from 'lucide-react'
 
 import { useAuthState } from '@/entities/auth'
@@ -18,6 +18,7 @@ import { useOnlineStatus } from '@/shared/hooks/use-online-status'
 
 export const AppHeader = () => {
     const navigate = useNavigate()
+    const location = useLocation()
     const [isDesktop] = useMediaQuery(['(min-width: 768px)']) // 768px is the breakpoint for desktop
     const isOnline = useOnlineStatus()
 
@@ -25,20 +26,25 @@ export const AppHeader = () => {
     const onBenefitsClick = () => navigate({ to: '/benefits' })
     const onLoginClick = () => navigate({ to: '/login' })
     const onProfileClick = () => navigate({ to: '/profile' })
+    const onHomeClick = () => navigate({ to: '/' })
 
     const { isAuthenticated } = useAuthState()
+
+    // Определяем, находимся ли мы на главной странице
+    const isHomePage = location.pathname === '/'
 
     return (
         <Box
             maxW='1200px'
-            mt={{ base: 5, md: 0 }}
+            mt={{ base: 4, md: 0 }}
+            mb={{ base: 5, md: 0 }}
             mx='auto'
             position='sticky'
             top={0}
             w='100%'
             zIndex={1000}
         >
-            <Box bg='white' borderRadius='16px' p={{ base: 2, md: 5 }}>
+            <Box bg='white' py={{ base: 2, md: 5 }} px={{ base: 4, md: 6 }}>
                 <Flex align='center' justify='space-between'>
                     {/* Логотип слева */}
                     <HStack gap={2}>
@@ -82,23 +88,42 @@ export const AppHeader = () => {
                         </Show>
                     </HStack>
 
-                    {/* Кнопка "Льготы" и иконка профиля справа */}
+                    {/* Кнопка навигации и иконка профиля справа */}
                     <HStack gap='8px'>
-                        <Button
-                            _hover={{ bg: 'blue.50' }}
-                            bg='white'
-                            borderColor='blue.solid'
-                            borderRadius='16px'
-                            color='blue.solid'
-                            fontWeight='medium'
-                            h='48px'
-                            px='32px'
-                            size='md'
-                            variant='outline'
-                            onClick={onBenefitsClick}
-                        >
-                            Льготы
-                        </Button>
+                        {/* Если на главной странице - показываем кнопку "Льготы", иначе - "Главная" */}
+                        {isHomePage ? (
+                            <Button
+                                _hover={{ bg: 'blue.50' }}
+                                bg='white'
+                                borderColor='blue.solid'
+                                borderRadius='16px'
+                                color='blue.solid'
+                                fontWeight='medium'
+                                h='48px'
+                                px='32px'
+                                size='md'
+                                variant='outline'
+                                onClick={onBenefitsClick}
+                            >
+                                Льготы
+                            </Button>
+                        ) : (
+                            <Button
+                                _hover={{ bg: 'blue.50' }}
+                                bg='white'
+                                borderColor='blue.solid'
+                                borderRadius='16px'
+                                color='blue.solid'
+                                fontWeight='medium'
+                                h='48px'
+                                px='32px'
+                                size='md'
+                                variant='outline'
+                                onClick={onHomeClick}
+                            >
+                                Главная
+                            </Button>
+                        )}
 
                         {/* Кнопка профиля - скрыта в офлайне */}
                         {isOnline && (
