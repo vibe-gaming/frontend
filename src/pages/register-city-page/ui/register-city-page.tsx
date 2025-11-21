@@ -88,7 +88,7 @@ export const RegisterCityPage = () => {
                     <Combobox.Root
                         openOnClick
                         collection={collection}
-                        maxW='343px'
+                        maxW={{ base: "100%", md: '343px'}}
                         w='100%'
                         onInputValueChange={(event) => filter(event.inputValue)}
                         onValueChange={(event) => setSelectedCityId(event.value[0] ?? null)}
@@ -142,7 +142,7 @@ export const RegisterCityPage = () => {
                                             pr='1.5'
                                             pt='1'
                                         >
-                                            <Text color='fg' fontSize='md' fontWeight={500}>
+                                            <Text color='fg' fontSize='lg' fontWeight={500}>
                                                 {item.label}
                                             </Text>
                                             <Combobox.ItemIndicator />

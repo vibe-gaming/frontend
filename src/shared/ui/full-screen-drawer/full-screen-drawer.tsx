@@ -1,4 +1,4 @@
-import { Button, Dialog, Drawer, Text, useMediaQuery } from '@chakra-ui/react'
+import { Button, Dialog, Drawer, Text, useMediaQuery, Box, VStack } from '@chakra-ui/react'
 import type { ReactNode } from 'react'
 import { LuX } from 'react-icons/lu'
 
@@ -7,9 +7,11 @@ export interface FullScreenDrawerProps {
     onClose: () => void
     children: ReactNode
     headerContent?: ReactNode
+    title?: string
+    footer?: ReactNode
 }
 
-export const FullScreenDrawer = ({ isOpen, onClose, children, headerContent }: FullScreenDrawerProps) => {
+export const FullScreenDrawer = ({ isOpen, onClose, children, headerContent, title, footer }: FullScreenDrawerProps) => {
     const [isDesktop] = useMediaQuery(["(min-width: 768px)"])
 
     // На десктопе используем Dialog (модальное окно по центру)
@@ -58,8 +60,18 @@ export const FullScreenDrawer = ({ isOpen, onClose, children, headerContent }: F
                             px={6}
                             py={0}
                         >
+                            {title && (
+                                <Text fontSize="2xl" fontWeight="bold" mb={4}>
+                                    {title}
+                                </Text>
+                            )}
                             {children}
                         </Dialog.Body>
+                        {footer && (
+                            <Dialog.Footer px={6} pt={4} pb={6}>
+                                {footer}
+                            </Dialog.Footer>
+                        )}
                     </Dialog.Content>
                 </Dialog.Positioner>
             </Dialog.Root>
@@ -119,8 +131,18 @@ export const FullScreenDrawer = ({ isOpen, onClose, children, headerContent }: F
                             WebkitOverflowScrolling: 'touch',
                         }}
                     >
+                        {title && (
+                            <Text fontSize="2xl" fontWeight="bold" mb={4}>
+                                {title}
+                            </Text>
+                        )}
                         {children}
                     </Drawer.Body>
+                    {footer && (
+                        <Box px={4} pt={4} pb={6} borderTop="1px solid" borderColor="border">
+                            {footer}
+                        </Box>
+                    )}
                 </Drawer.Content>
             </Drawer.Positioner>
         </Drawer.Root>

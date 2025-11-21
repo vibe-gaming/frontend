@@ -16,7 +16,7 @@ import { useAuthState } from '@/entities/auth'
 import logoIcon from '@/shared/assets/icons/logo.svg'
 import { useOnlineStatus } from '@/shared/hooks/use-online-status'
 
-export const AppHeader = () => {
+export const AppHeader = ({ isAuthPages = false }) => {
     const navigate = useNavigate()
     const location = useLocation()
     const [isDesktop] = useMediaQuery(['(min-width: 768px)']) // 768px is the breakpoint for desktop
@@ -36,7 +36,7 @@ export const AppHeader = () => {
     return (
         <Box
             maxW='1200px'
-            mt={{ base: 4, md: 0 }}
+            mt={{ base: 4, md: 10 }}
             mb={{ base: 5, md: 0 }}
             mx='auto'
             position='sticky'
@@ -44,7 +44,7 @@ export const AppHeader = () => {
             w='100%'
             zIndex={1000}
         >
-            <Box bg='white' py={{ base: 2, md: 5 }} px={{ base: 4, md: 6 }}>
+            <Box bg='white' py={{ base: 2, md: 5 }} px={{ base: 4, md: 6 }} rounded={{ base: '0', md: '3xl' }}>
                 <Flex align='center' justify='space-between'>
                     {/* Логотип слева */}
                     <HStack gap={2}>
@@ -58,7 +58,9 @@ export const AppHeader = () => {
                             minW='48px'
                             p={0}
                             size='lg'
-                            onClick={onLogoClick}
+                            onClick={() => {
+                                if (!isAuthPages) onLogoClick()
+                            }}
                         >
                             <img
                                 alt='Логотип'
@@ -90,53 +92,40 @@ export const AppHeader = () => {
 
                     {/* Кнопка навигации и иконка профиля справа */}
                     <HStack gap='8px'>
-                        {/* Если на главной странице - показываем кнопку "Льготы", иначе - "Главная" */}
-                        {isHomePage ? (
-                            <Button
-                                _hover={{ bg: 'blue.50' }}
-                                bg='white'
-                                borderColor='blue.solid'
-                                borderRadius='16px'
-                                color='blue.solid'
-                                fontWeight='medium'
-                                h='48px'
-                                px='32px'
-                                size='md'
-                                variant='outline'
-                                onClick={onBenefitsClick}
-                            >
-                                Льготы
-                            </Button>
-                        ) : (
-                            <Button
-                                _hover={{ bg: 'blue.50' }}
-                                bg='white'
-                                borderColor='blue.solid'
-                                borderRadius='16px'
-                                color='blue.solid'
-                                fontWeight='medium'
-                                h='48px'
-                                px='32px'
-                                size='md'
-                                variant='outline'
-                                onClick={onHomeClick}
-                            >
-                                Главная
-                            </Button>
-                        )}
+                        {!isAuthPages && <Button
+                            _hover={{ bg: 'blue.50' }}
+                            bg='white'
+                            borderColor='blue.muted'
+                            borderRadius={{ base: 'xl', md: "2xl" }}
+                            color='blue.solid'
+                            fontSize={{ base: "lg", md: "xl" }}
+                            fontWeight='medium'
+                            px='32px'
+                            size={{ base: "xl", md: "2xl" }}
+                            variant='outline'
+                            onClick={() => {
+                                if (isHomePage) {
+                                    onBenefitsClick()
+                                } else {
+                                    onHomeClick()
+                                }
+                            }}
+                        >
+                            {isHomePage ? 'Льготы' : 'Главная'}
+                        </Button>}
 
                         {/* Кнопка профиля - скрыта в офлайне */}
-                        {isOnline && (
+                        {isOnline && !isAuthPages && (
                             <IconButton
                                 _hover={{ bg: 'blue.50' }}
                                 aria-label={isAuthenticated ? 'Профиль' : 'Войти'}
                                 bg='white'
-                                borderColor='blue.solid'
-                                borderRadius='16px'
+                                borderColor='blue.muted'
+                                borderRadius={{ base: 'xl', md: "2xl" }}
                                 color='blue.solid'
-                                h='48px'
-                                minW='48px'
-                                size='lg'
+                                fontSize={{ base: "lg", md: "xl" }}
+                                fontWeight='medium'
+                                size={{ base: "xl", md: "2xl" }}
                                 variant='outline'
                                 onClick={isAuthenticated ? onProfileClick : onLoginClick}
                             >

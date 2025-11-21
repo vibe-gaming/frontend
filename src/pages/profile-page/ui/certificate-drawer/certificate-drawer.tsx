@@ -1,8 +1,8 @@
-import { Box, Button, Dialog, Heading, Text, VStack, useBreakpointValue } from '@chakra-ui/react'
-import { Download, X } from 'lucide-react'
+import { Box, Button, Heading, Text, VStack } from '@chakra-ui/react'
+import { Download } from 'lucide-react'
 
-import { BaseDrawer } from '@/shared/ui/base-drawer'
 import type { V1GetProfileResponse, DomainUserDocument } from '@/shared/api/generated'
+import { FullScreenDrawer } from '@/shared/ui/full-screen-drawer'
 
 export interface CertificateDrawerProps {
     isOpen: boolean
@@ -90,9 +90,6 @@ export const CertificateDrawer = ({
 
     const documentTitle = getDocumentTitle(groupType)
     const documentTitleUppercase = documentTitle.replace('\n', ' ').toUpperCase()
-
-    // Определяем, использовать ли модальное окно или drawer
-    const useModal = useBreakpointValue({ base: false, md: true })
 
     // Контент сертификата
     const certificateContent = (
@@ -189,74 +186,16 @@ export const CertificateDrawer = ({
             Скачать PDF
         </Button>
     )
-
-    // Desktop: Modal
-    if (useModal) {
-        return (
-            <Dialog.Root 
-                open={isOpen} 
-                onOpenChange={(e) => onOpenChange(e.open)}
-                size="lg"
-            >
-                <Dialog.Backdrop />
-                <Dialog.Positioner>
-                    <Dialog.Content
-                        borderRadius="20px"
-                        maxW="540px"
-                        maxH="90vh"
-                        bg="white"
-                    >
-                        <Dialog.Header
-                            display="flex"
-                            alignItems="center"
-                            justifyContent="space-between"
-                            pb={4}
-                            pt={6}
-                            px={6}
-                        >
-                            <Dialog.Title fontSize="2xl" fontWeight="bold">
-                                {documentTitleUppercase}
-                            </Dialog.Title>
-                            <Dialog.CloseTrigger asChild>
-                                <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => onOpenChange(false)}
-                                    p={2}
-                                    minW="auto"
-                                    h="auto"
-                                >
-                                    <X size={20} />
-                                </Button>
-                            </Dialog.CloseTrigger>
-                        </Dialog.Header>
-                        <Dialog.Body 
-                            px={6} 
-                            py={0}
-                            overflowY="auto"
-                            maxH="calc(90vh - 200px)"
-                        >
-                            {certificateContent}
-                        </Dialog.Body>
-                        <Dialog.Footer px={6} pt={4} pb={6}>
-                            {downloadButton}
-                        </Dialog.Footer>
-                    </Dialog.Content>
-                </Dialog.Positioner>
-            </Dialog.Root>
-        )
-    }
-
-    // Mobile: Drawer
+    
     return (
-        <BaseDrawer
+        <FullScreenDrawer
             isOpen={isOpen}
-            onOpenChange={onOpenChange}
-            title={documentTitle.replace('\n', ' ')}
+            onClose={() => onOpenChange(false)}
+            title=""
             footer={downloadButton}
         >
             {certificateContent}
-        </BaseDrawer>
+        </FullScreenDrawer>
     )
 }
 

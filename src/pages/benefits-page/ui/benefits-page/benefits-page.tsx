@@ -405,9 +405,11 @@ export const BenefitsPage = () => {
         setCurrentPage(1)
     }
 
-    // Обработчик нажатия Enter в поле поиска (для десктопа)
+    // Обработчик нажатия Enter/Найти в поле поиска (работает на всех устройствах)
+    // На мобильных кнопка "Найти" на клавиатуре также генерирует событие с key === 'Enter'
     const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter' && isDesktop) {
+        if (e.key === 'Enter') {
+            e.preventDefault() // Предотвращаем стандартное поведение
             handleApplySearch()
         }
     }
@@ -525,18 +527,20 @@ export const BenefitsPage = () => {
             <AppHeader />
 
             <Box className={styles['benefits-page']} w='100%' >
-                <VStack align='stretch' gap={4} px={{ base: 4, md: 5 }} pt={{ base: 3, md: 6 }} pb={{ base: 6, md: 10 }} w='100%' maxW="1200px" mx="auto">
+                <VStack align='stretch' gap={4} px={{ base: 4, md: 5 }} pt={{ base: 0, md: 6 }} pb={{ base: 6, md: 10 }} w='100%' maxW="1200px" mx="auto">
                     <Heading as='h1' fontWeight='bold' size='2xl'>Льготы</Heading>
                     <HStack gap={4}>
                     <Input
                         variant="subtle"
-                        type="default"
+                        type="search"
                         size="2xl"
                         placeholder='Поиск по льготам'
                         value={searchQuery}
                         bg='bg.muted'
                         rounded={'2xl'}
                         w='100%'
+                        enterKeyHint="search"
+                        inputMode="search"
                         onChange={(event) => {
                             setSearchQuery(event.target.value)
                                 // На мобильных сбрасываем страницу при изменении, на десктопе - только при применении
@@ -557,9 +561,11 @@ export const BenefitsPage = () => {
                         >
                             {isRecognizing ? <Spinner size="sm" /> : <LuMic size={24} />}
                         </IconButton>
-                        <IconButton aria-label="Search" size="2xl" variant="solid" rounded="xl" colorPalette="blue" onClick={handleApplySearch}>
-                            <LuSearch size={24} />
-                        </IconButton>
+                        <Show when={isDesktop}>
+                            <IconButton aria-label="Search" size="2xl" variant="solid" rounded="xl" colorPalette="blue" onClick={handleApplySearch}>
+                                <LuSearch size={24} />
+                            </IconButton>
+                        </Show>
 
                     </HStack>
 
@@ -702,7 +708,7 @@ export const BenefitsPage = () => {
                             {/* Sidebar с фильтрами */}
                             <Box
                                 position="sticky"
-                                top={"100px"}
+                                top={"104px"}
                             >
                                 <FiltersSidebar
                                     tempBenefitTypes={benefitTypes}
