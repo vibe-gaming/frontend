@@ -11,7 +11,7 @@ import { useOnlineStatus } from '@/shared/hooks/use-online-status'
 import { getBenefitsFromStorage } from '@/shared/utils/benefits-storage'
 
 import benefitImage from '@/shared/assets/images/benefit.png'
-import { LuRoute } from 'react-icons/lu'
+import { LuHeart, LuRoute } from 'react-icons/lu'
 import { Download } from 'lucide-react'
 import { FaHeart } from "react-icons/fa"
 
@@ -333,16 +333,16 @@ export const BenefitDrawer = ({ isOpen, onClose, benefitId, onFavoriteChange }: 
                                 variant='solid'
                                 size='xl'
                                 rounded='xl'
-                                bg={localIsFavorite ? 'red.50' : 'blue.50'}
-                                color={localIsFavorite ? 'red.fg' : 'blue.fg'}
+                                bg={'blue.50'}
+                                color={'blue.fg'}
                                 onClick={handleFavoriteClick}
                                 loading={favoriteMutation.isPending}
                                 _hover={{
-                                    bg: localIsFavorite ? 'red.100' : 'blue.100',
+                                    bg: 'blue.100',
                                 }}
                                 flexShrink={0}
                             >
-                                <FaHeart size={20} />
+                                {localIsFavorite ? <FaHeart size={24} /> : <LuHeart size={24} />}
                             </IconButton>
                         )}
                     </HStack>

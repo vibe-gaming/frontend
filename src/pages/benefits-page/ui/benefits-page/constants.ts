@@ -16,6 +16,8 @@ export const TARGET_GROUPS = [
 ] as const
 
 export const TAGS = [
+    { value: 'saved', label: 'Сохраненные' },
+    { value: 'available_to_me', label: 'Доступные мне' },
     { value: 'new', label: 'Новые' },
     { value: 'recommended', label: 'Рекомендуемые' },
     { value: 'popular', label: 'Популярные' },
