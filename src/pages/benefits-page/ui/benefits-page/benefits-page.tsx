@@ -525,7 +525,7 @@ export const BenefitsPage = () => {
             <AppHeader />
 
             <Box className={styles['benefits-page']} w='100%' >
-                <VStack align='stretch' gap={4} px={{ base: 4, md: 5 }} pt={{ base: 3, md: 6 }} pb={{ base: 6, md: 10 }} w='100%' maxW="1200px" mx="auto">
+                <VStack align='stretch' gap={4} px={{ base: 4, md: 5 }} pt={{ base: 0, md: 6 }} pb={{ base: 6, md: 10 }} w='100%' maxW="1200px" mx="auto">
                     <Heading as='h1' fontWeight='bold' size='2xl'>Льготы</Heading>
                     <HStack gap={4}>
                     <Input

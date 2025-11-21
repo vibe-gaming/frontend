@@ -36,7 +36,7 @@ export const AppHeader = () => {
     return (
         <Box
             maxW='1200px'
-            mt={{ base: 4, md: 0 }}
+            mt={{ base: 4, md: 10 }}
             mb={{ base: 5, md: 0 }}
             mx='auto'
             position='sticky'
@@ -44,7 +44,7 @@ export const AppHeader = () => {
             w='100%'
             zIndex={1000}
         >
-            <Box bg='white' py={{ base: 2, md: 5 }} px={{ base: 4, md: 6 }}>
+            <Box bg='white' py={{ base: 2, md: 5 }} px={{ base: 4, md: 6 }} rounded={{ base: '0', md: '3xl'}}>
                 <Flex align='center' justify='space-between'>
                     {/* Логотип слева */}
                     <HStack gap={2}>

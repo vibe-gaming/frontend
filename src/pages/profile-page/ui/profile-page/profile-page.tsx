@@ -6,6 +6,7 @@ import {
     Container,
     Flex,
     Heading,
+    HStack,
     Icon,
     Spinner,
     Text,
@@ -13,12 +14,14 @@ import {
 } from '@chakra-ui/react'
 import { useNavigate } from '@tanstack/react-router'
 import { Eye } from 'lucide-react'
+import { LuChevronRight } from 'react-icons/lu'
 
 import { useAuth } from '@/entities/auth'
 import { AXIOS_INSTANCE } from '@/shared/api/axios-client'
 import { type DomainUserDocument } from '@/shared/api/generated'
 import { useGetBenefitsUserStats } from '@/shared/api/generated/hooks/useGetBenefitsUserStats'
 import { AppHeader } from '@/shared/ui/app-header'
+import { Footer } from '@/shared/ui/footer'
 
 import { CertificateDrawer } from '../certificate-drawer'
 
@@ -79,7 +82,7 @@ const getGroupTypeLabel = (type?: string): string => {
 const getStatusConfig = (status?: string): { label: string; bg: string; color: string } => {
     switch (status) {
         case VERIFICATION_STATUS.VERIFIED: {
-            return { label: 'Подтверждено', bg: '#D1FAE5', color: '#065F46' }
+            return { label: 'Подтверждено', bg: 'green.subtle', color: 'green.fg' }
         }
         case VERIFICATION_STATUS.PENDING: {
             return { label: 'На проверке', bg: '#FEF3C7', color: '#92400E' }
@@ -192,6 +195,8 @@ export const ProfilePage = () => {
         setIsCertificateDrawerOpen(true)
     }
 
+    console.log(profile)
+
     if (isLoading) {
         return (
             <Box
@@ -207,10 +212,9 @@ export const ProfilePage = () => {
     }
 
     return (
-        <Box minH='100vh'>
+        <Box minH='100vh' bg={{ base: 'white', md: 'gray.100' }}>
             {/* Header */}
             <Box
-                bg='white'
                 maxW='1280px'
                 mx='auto'
                 position='sticky'
@@ -221,17 +225,151 @@ export const ProfilePage = () => {
                 <AppHeader />
             </Box>
 
-            <Container maxW='640px' mx='auto' pb='16px' px='16px'>
-                <VStack align='stretch' gap='16px'>
+            <Container maxW='640px' mx='auto' pt={{ base: 0, md: 10 }} pb='16px' px='20px'>
+                <VStack align='stretch' gap='40px'>
+
+                    {/* Benefits Section */}
+                    <Box>
+                        <VStack align='stretch' gap={{ base: '16px', md: '20px' }}>
+                            <Heading as='h2' fontSize={{ base: '2xl', md: '4xl' }} fontWeight='bold'>
+                                Мои льготы
+                            </Heading>
+
+                            <Flex gap={{ base: '16px', md: '24px' }}>
+                                <Box
+                                    _hover={{ bg: { base: 'gray.100', md: 'gray.50' } }}
+                                    bg={{ base: 'gray.50', md: 'white' }}
+                                    height={{ base: '88px', md: 'auto' }}
+                                    borderRadius={{ base: '16px', md: '20px' }}
+                                    cursor='pointer'
+                                    flex='1'
+                                    p={{ base: '12px', md: '24px' }}
+                                    transition='all 0.2s'
+                                    onClick={() => navigate({ to: '/benefits' })} // TODO когда будет реализована страница с льготами (query url)
+                                >
+                                    <VStack align='flex-start' gap='4px'>
+                                        <HStack align='center' justify='space-between' gap='4px' width='full'>
+                                            <Text color='gray.600' fontSize={{ base: 'lg', md: 'xl' }} fontWeight='medium'>
+                                                Для вас
+                                            </Text>
+                                            <LuChevronRight size={24} />
+                                        </HStack>
+                                        <Heading
+                                            as='h3'
+                                            color='blue.solid'
+                                            fontSize={{ base: '2xl', md: '5xl' }}
+                                            fontWeight='bold'
+                                            lineHeight={{ base: '32px', md: '60px' }}
+                                        >
+                                            {statsData?.total_benefits ?? 0}
+                                        </Heading>
+                                    </VStack>
+                                </Box>
+
+                                <Box
+                                    _hover={{ bg: { base: 'gray.100', md: 'gray.50' } }}
+                                    bg={{ base: 'gray.50', md: 'white' }}
+                                    height={{ base: '88px', md: 'auto' }}
+                                    borderRadius={{ base: '16px', md: '20px' }}
+                                    cursor='pointer'
+                                    flex='1'
+                                    p={{ base: '12px', md: '24px' }}
+                                    transition='all 0.2s'
+                                    onClick={() => navigate({ to: '/benefits' })}  // TODO когда будет реализована страница с льготами (query url)
+                                >
+                                    <VStack align='flex-start' gap='4px'>
+                                        <HStack align='center' justify='space-between' gap='4px' width='full'>
+                                            <Text color='gray.600' fontSize={{ base: 'lg', md: 'xl' }} fontWeight='medium'>
+                                                Сохранено
+                                            </Text>
+                                            <LuChevronRight size={24} />
+                                        </HStack>
+                                        <Heading
+                                            as='h3'
+                                            color='blue.solid'
+                                            fontSize={{ base: '2xl', md: '5xl' }}
+                                            fontWeight='bold'
+                                            lineHeight={{ base: '32px', md: '60px' }}
+                                        >
+                                            {statsData?.total_favorites ?? 0}
+                                        </Heading>
+                                    </VStack>
+                                </Box>
+                            </Flex>
+                        </VStack>
+                    </Box>
+
+
+                    {/* Personal Information Section */}
+                    <Box>
+                        <VStack align='stretch' gap={{ base: '16px', md: '20px' }}>
+                            <Heading as='h2' fontSize={{ base: '2xl', md: '4xl' }} fontWeight='bold'>
+                                Личная информация
+                            </Heading>
+
+                            <Box bg='white' borderRadius={{ base: '16px', md: '20px' }} p={{ base: '16px', md: '24px' }} borderColor='border.default' borderWidth={{ base: '1px', md: '0' }}>
+                                <VStack align='stretch' gap='0'>
+                                    <Box borderBottom='1px solid' borderColor='#E4E4E7' pb='16px'>
+                                        <VStack align='stretch' gap='4px'>
+                                            <Text fontSize={{ base: 'lg', md: 'xl' }} fontWeight='bold' lineHeight={{ base: '24px', md: '30px' }}>
+                                                ФИО
+                                            </Text>
+                                            <Text
+                                                color='gray.600'
+                                                fontSize={{ base: 'lg', md: 'xl' }}
+                                                fontWeight='normal'
+                                                lineHeight={{ base: '28px', md: '30px' }}
+                                            >
+                                                {fullName || '—'}
+                                            </Text>
+                                        </VStack>
+                                    </Box>
+
+                                    <Box borderBottom='1px solid' borderColor='#E4E4E7' py='16px'>
+                                        <VStack align='stretch' gap='4px'>
+                                            <Text fontSize={{ base: 'lg', md: 'xl' }} fontWeight='bold' lineHeight={{ base: '24px', md: '30px' }}>
+                                                Телефон
+                                            </Text>
+                                            <Text
+                                                color='gray.600'
+                                                fontSize={{ base: 'lg', md: 'xl' }}
+                                                fontWeight='normal'
+                                                lineHeight={{ base: '28px', md: '30px' }}
+                                            >
+                                                {formatPhoneNumber(profile?.phone_number)}
+                                            </Text>
+                                        </VStack>
+                                    </Box>
+
+                                    <Box pt='16px'>
+                                        <VStack align='stretch' gap='4px'>
+                                            <Text fontSize={{ base: 'lg', md: 'xl' }} fontWeight='bold' lineHeight={{ base: '24px', md: '30px' }}>
+                                                Почта
+                                            </Text>
+                                            <Text
+                                                color='gray.600'
+                                                fontSize={{ base: 'lg', md: 'xl' }}
+                                                fontWeight='normal'
+                                                lineHeight={{ base: '28px', md: '30px' }}
+                                            >
+                                                {profile?.email || '—'}
+                                            </Text>
+                                        </VStack>
+                                    </Box>
+                                </VStack>
+                            </Box>
+                        </VStack>
+                    </Box>
+
                     {/* Social Status Section */}
                     {profile?.groups && profile.groups.length > 0 && (
                         <Box>
-                            <VStack align='stretch' gap='16px'>
-                                <Heading as='h2' color='gray.900' fontSize='xl' fontWeight='bold'>
+                            <VStack align='stretch' gap={{ base: '16px', md: '20px' }}>
+                                <Heading as='h2' fontSize={{ base: '2xl', md: '4xl' }} fontWeight='bold'>
                                     Социальный статус
                                 </Heading>
 
-                                <VStack align='stretch' gap='12px'>
+                                <VStack align='stretch' gap={{ base: '16px', md: '24px' }}>
                                     {profile.groups.map((group, index) => {
                                         const statusConfig = getStatusConfig(group.status)
                                         const displayDate = group.verified_at || group.rejected_at
@@ -241,40 +379,40 @@ export const ProfilePage = () => {
                                                 key={`${group.type}-${index}`}
                                                 aria-label={`Категория: ${getGroupTypeLabel(group.type)}`}
                                                 bg='white'
-                                                border='1px solid'
-                                                borderColor='gray.200'
-                                                borderRadius='16px'
+                                                borderWidth={{ base: '1px', md: '0' }}
+                                                borderColor={'blue.200'}
+                                                borderRadius={{ base: '16px', md: '20px' }}
                                                 cursor='pointer'
-                                                p='20px'
+                                                p={{ base: '16px', md: '24px' }}
                                                 role='article'
                                                 transition='all 0.2s'
                                                 _hover={{
-                                                    borderColor: 'blue.300',
+                                                    borderColor: { base: 'blue.200', md: 'transparent' },
                                                     boxShadow: 'sm',
                                                 }}
                                                 onClick={() => handleOpenCertificate(group.type || 'pensioners')}
                                             >
-                                                <VStack align='stretch' gap='12px'>
+                                                <VStack align='stretch' gap={{ base: '8px', md: '20px' }}>
                                                     {/* Название категории и статус */}
                                                     <Flex
                                                         align='flex-start'
-                                                        gap='12px'
+                                                        gap={{ base: '12px', md: '16px' }}
                                                         justify='space-between'
                                                     >
                                                         <Box flex='1' minW='0'>
                                                             <Heading
                                                                 as='h3'
-                                                                color='gray.900'
-                                                                fontSize='xl'
+                                                                fontSize={{ base: 'xl', md: '2xl' }}
                                                                 fontWeight='bold'
-                                                                mb='4px'
+                                                                lineHeight={{ base: '24px', md: '32px' }}
                                                             >
                                                                 {getGroupTypeLabel(group.type)}
                                                             </Heading>
                                                             {displayDate && (
                                                                 <Text
                                                                     color='gray.600'
-                                                                    fontSize='sm'
+                                                                    fontSize={{ base: 'md', md: 'xl' }}
+                                                                    lineHeight={{ base: '20px', md: '30px' }}
                                                                 >
                                                                     с {formatDate(displayDate)}
                                                                 </Text>
@@ -283,13 +421,14 @@ export const ProfilePage = () => {
                                                         <Badge
                                                             aria-label={`Статус: ${statusConfig.label}`}
                                                             bg={statusConfig.bg}
-                                                            borderRadius='12px'
+                                                            borderRadius='lg'
                                                             color={statusConfig.color}
                                                             flexShrink={0}
                                                             fontSize='sm'
-                                                            fontWeight='medium'
-                                                            px='12px'
-                                                            py='6px'
+                                                            fontWeight='regular'
+                                                            px={'10px'}
+                                                            py={'4px'}
+                                                            lineHeight={'20px'}
                                                             textTransform='none'
                                                         >
                                                             {statusConfig.label}
@@ -299,22 +438,21 @@ export const ProfilePage = () => {
                                                     {/* Кнопка удостоверения */}
                                                     {group.status ===
                                                         VERIFICATION_STATUS.VERIFIED && (
-                                                        <Button
-                                                            aria-label='Просмотреть удостоверение'
-                                                            borderRadius='12px'
-                                                            colorScheme='blue'
-                                                            fontSize='md'
-                                                            fontWeight='medium'
-                                                            h='48px'
-                                                            variant='outline'
-                                                            w='full'
-                                                        >
-                                                            <Flex align='center' gap='8px'>
-                                                                <Icon as={Eye} boxSize='20px' />
-                                                                <Text>Удостоверение</Text>
-                                                            </Flex>
-                                                        </Button>
-                                                    )}
+                                                            <Button
+                                                                aria-label='Просмотреть удостоверение'
+                                                                borderRadius={'2xl'}
+                                                                borderColor='blue.muted'
+                                                                colorScheme='blue'
+                                                                h={'64px'}
+                                                                variant='outline'
+                                                                w='full'
+                                                            >
+                                                                <Flex align='center' gap='12px'>
+                                                                    <Icon color='blue.fg' as={Eye} boxSize='24px' />
+                                                                    <Text color='blue.fg' fontSize={'xl'} fontWeight='medium' lineHeight={'30px'}>Удостоверение</Text>
+                                                                </Flex>
+                                                            </Button>
+                                                        )}
 
                                                     {/* Сообщение об ошибке */}
                                                     {group.error_message && (
@@ -341,176 +479,26 @@ export const ProfilePage = () => {
                         </Box>
                     )}
 
-                    {/* Benefits Section */}
-                    <Box>
-                        <VStack align='stretch' gap='16px'>
-                            <Heading as='h2' color='gray.900' fontSize='xl' fontWeight='bold'>
-                                Мои льготы
-                            </Heading>
-
-                            <Flex gap='12px'>
-                                <Box
-                                    _hover={{ bg: 'gray.50' }}
-                                    bg='white'
-                                    borderRadius='16px'
-                                    cursor='pointer'
-                                    flex='1'
-                                    p='16px'
-                                    transition='all 0.2s'
-                                    onClick={() => navigate({ to: '/benefits' })}
-                                >
-                                    <VStack align='flex-start' gap='4px'>
-                                        <Text color='gray.600' fontSize='lg' fontWeight='normal'>
-                                            Для вас
-                                        </Text>
-                                        <Flex align='center' justify='space-between' w='full'>
-                                            <Heading
-                                                as='h3'
-                                                color='blue.500'
-                                                fontSize='4xl'
-                                                fontWeight='bold'
-                                            >
-                                                {statsData?.total_benefits ?? 0}
-                                            </Heading>
-                                            <Icon
-                                                boxSize='20px'
-                                                color='#A1A1AA'
-                                                viewBox='0 0 24 24'
-                                            >
-                                                <path
-                                                    d='M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z'
-                                                    fill='currentColor'
-                                                />
-                                            </Icon>
-                                        </Flex>
-                                    </VStack>
-                                </Box>
-
-                                <Box
-                                    _hover={{ bg: 'gray.50' }}
-                                    bg='white'
-                                    borderRadius='16px'
-                                    cursor='pointer'
-                                    flex='1'
-                                    p='16px'
-                                    transition='all 0.2s'
-                                    onClick={() => navigate({ to: '/benefits' })}
-                                >
-                                    <VStack align='flex-start' gap='4px'>
-                                        <Text color='gray.600' fontSize='lg' fontWeight='normal'>
-                                            Сохранено
-                                        </Text>
-                                        <Flex align='center' justify='space-between' w='full'>
-                                            <Heading
-                                                as='h3'
-                                                color='blue.500'
-                                                fontSize='4xl'
-                                                fontWeight='bold'
-                                            >
-                                                {statsData?.total_favorites ?? 0}
-                                            </Heading>
-                                            <Icon
-                                                boxSize='20px'
-                                                color='#A1A1AA'
-                                                viewBox='0 0 24 24'
-                                            >
-                                                <path
-                                                    d='M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z'
-                                                    fill='currentColor'
-                                                />
-                                            </Icon>
-                                        </Flex>
-                                    </VStack>
-                                </Box>
-                            </Flex>
-                        </VStack>
-                    </Box>
-
-                    {/* Personal Information Section */}
-                    <Box>
-                        <VStack align='stretch' gap='16px'>
-                            <Heading as='h2' color='gray.900' fontSize='xl' fontWeight='bold'>
-                                Личная информация
-                            </Heading>
-
-                            <Box bg='white' borderRadius='16px' p='16px'>
-                                <VStack align='stretch' gap='0'>
-                                    <Box borderBottom='1px solid' borderColor='gray.100' py='16px'>
-                                        <VStack align='stretch' gap='4px'>
-                                            <Text color='gray.900' fontSize='md' fontWeight='bold'>
-                                                ФИО
-                                            </Text>
-                                            <Text
-                                                color='gray.600'
-                                                fontSize='md'
-                                                fontWeight='normal'
-                                            >
-                                                {fullName || '—'}
-                                            </Text>
-                                        </VStack>
-                                    </Box>
-
-                                    <Box borderBottom='1px solid' borderColor='gray.100' py='16px'>
-                                        <VStack align='stretch' gap='4px'>
-                                            <Text color='gray.900' fontSize='md' fontWeight='bold'>
-                                                Телефон
-                                            </Text>
-                                            <Text
-                                                color='gray.600'
-                                                fontSize='md'
-                                                fontWeight='normal'
-                                            >
-                                                {formatPhoneNumber(profile?.phone_number)}
-                                            </Text>
-                                        </VStack>
-                                    </Box>
-
-                                    <Box py='16px'>
-                                        <VStack align='stretch' gap='4px'>
-                                            <Text color='gray.900' fontSize='md' fontWeight='bold'>
-                                                Почта
-                                            </Text>
-                                            <Text
-                                                color='gray.600'
-                                                fontSize='md'
-                                                fontWeight='normal'
-                                            >
-                                                {profile?.email || '—'}
-                                            </Text>
-                                        </VStack>
-                                    </Box>
-                                </VStack>
-                            </Box>
-                        </VStack>
-                    </Box>
-
                     {/* Documents Section */}
                     <Box>
-                        <VStack align='stretch' gap='16px'>
-                            <Heading as='h2' color='gray.900' fontSize='xl' fontWeight='bold'>
+                        <VStack align='stretch' gap={{ base: '16px', md: '20px' }}>
+                            <Heading as='h2' fontSize={{ base: '2xl', md: '4xl' }} fontWeight='bold'>
                                 Документы
                             </Heading>
 
-                            <Box bg='white' borderRadius='16px' p='16px'>
+                            <Box bg='white' borderRadius={{ base: '16px', md: '20px' }} p={{ base: '16px', md: '24px' }} borderColor='border.default' borderWidth={{ base: '1px', md: '0' }}>
                                 <VStack align='stretch' gap='0'>
                                     {snilsDocument?.document_number && (
-                                        <Box
-                                            borderBottom='1px solid'
-                                            borderColor='gray.100'
-                                            py='16px'
-                                        >
+                                        <Box borderBottom='1px solid' borderColor='#E4E4E7' pb='16px'>
                                             <VStack align='stretch' gap='4px'>
-                                                <Text
-                                                    color='gray.900'
-                                                    fontSize='md'
-                                                    fontWeight='bold'
-                                                >
+                                                <Text fontSize={{ base: 'lg', md: 'xl' }} fontWeight='bold' lineHeight={{ base: '24px', md: '30px' }}>
                                                     СНИЛС
                                                 </Text>
                                                 <Text
                                                     color='gray.600'
-                                                    fontSize='md'
+                                                    fontSize={{ base: 'lg', md: 'xl' }}
                                                     fontWeight='normal'
+                                                    lineHeight={{ base: '28px', md: '30px' }}
                                                 >
                                                     {formatSnils(snilsDocument.document_number)}
                                                 </Text>
@@ -519,19 +507,16 @@ export const ProfilePage = () => {
                                     )}
 
                                     {passportDocument?.document_number && (
-                                        <Box py='16px'>
+                                        <Box pt='16px'>
                                             <VStack align='stretch' gap='4px'>
-                                                <Text
-                                                    color='gray.900'
-                                                    fontSize='md'
-                                                    fontWeight='bold'
-                                                >
+                                                <Text fontSize={{ base: 'lg', md: 'xl' }} fontWeight='bold' lineHeight={{ base: '24px', md: '30px' }}>
                                                     Паспорт
                                                 </Text>
                                                 <Text
                                                     color='gray.600'
-                                                    fontSize='md'
+                                                    fontSize={{ base: 'lg', md: 'xl' }}
                                                     fontWeight='normal'
+                                                    lineHeight={{ base: '28px', md: '30px' }}
                                                 >
                                                     {passportDocument.document_number}
                                                 </Text>
@@ -547,10 +532,11 @@ export const ProfilePage = () => {
                     <Button
                         borderRadius='16px'
                         colorScheme='blue'
-                        fontSize='md'
+                        fontSize='xl'
                         fontWeight='medium'
-                        h='56px'
+                        h='64px'
                         variant='ghost'
+                        _hover={{ bg: 'white' }}
                         onClick={() => {
                             onLogout()
                             navigate({ to: '/' })
@@ -570,6 +556,8 @@ export const ProfilePage = () => {
                 onOpenChange={setIsCertificateDrawerOpen}
                 groupType={selectedGroupType}
             />
+
+            <Footer />
         </Box>
     )
 }
