@@ -20,7 +20,7 @@ export const RegisterCheckInfoPage = () => {
 
     return (
         <AuthPageBox>
-            {isDesktop && <AppHeader />}
+            {isDesktop && <AppHeader isAuthPages />}
             <AuthContentBox>
                 <AuthHeading>Проверьте ваши данные</AuthHeading>
                 <Box display='flex' flexDirection='column' flexGrow={1} mt='6'>

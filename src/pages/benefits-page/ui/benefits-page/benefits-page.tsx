@@ -405,9 +405,11 @@ export const BenefitsPage = () => {
         setCurrentPage(1)
     }
 
-    // Обработчик нажатия Enter в поле поиска (для десктопа)
+    // Обработчик нажатия Enter/Найти в поле поиска (работает на всех устройствах)
+    // На мобильных кнопка "Найти" на клавиатуре также генерирует событие с key === 'Enter'
     const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter' && isDesktop) {
+        if (e.key === 'Enter') {
+            e.preventDefault() // Предотвращаем стандартное поведение
             handleApplySearch()
         }
     }
@@ -530,13 +532,15 @@ export const BenefitsPage = () => {
                     <HStack gap={4}>
                     <Input
                         variant="subtle"
-                        type="default"
+                        type="search"
                         size="2xl"
                         placeholder='Поиск по льготам'
                         value={searchQuery}
                         bg='bg.muted'
                         rounded={'2xl'}
                         w='100%'
+                        enterKeyHint="search"
+                        inputMode="search"
                         onChange={(event) => {
                             setSearchQuery(event.target.value)
                                 // На мобильных сбрасываем страницу при изменении, на десктопе - только при применении
@@ -557,9 +561,11 @@ export const BenefitsPage = () => {
                         >
                             {isRecognizing ? <Spinner size="sm" /> : <LuMic size={24} />}
                         </IconButton>
-                        <IconButton aria-label="Search" size="2xl" variant="solid" rounded="xl" colorPalette="blue" onClick={handleApplySearch}>
-                            <LuSearch size={24} />
-                        </IconButton>
+                        <Show when={isDesktop}>
+                            <IconButton aria-label="Search" size="2xl" variant="solid" rounded="xl" colorPalette="blue" onClick={handleApplySearch}>
+                                <LuSearch size={24} />
+                            </IconButton>
+                        </Show>
 
                     </HStack>
 
@@ -702,7 +708,7 @@ export const BenefitsPage = () => {
                             {/* Sidebar с фильтрами */}
                             <Box
                                 position="sticky"
-                                top={"100px"}
+                                top={"104px"}
                             >
                                 <FiltersSidebar
                                     tempBenefitTypes={benefitTypes}
