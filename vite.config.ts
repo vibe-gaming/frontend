@@ -66,9 +66,9 @@ const plugins = [
                     },
                 },
                 {
-                    // Стратегия для JS и CSS файлов, которая корректно обрабатывает 304 Not Modified
-                    // StaleWhileRevalidate отдает кэш сразу и обновляет в фоне, лучше работает с 304 на Honor
-                    urlPattern: /\.(?:js|css)$/,
+                    // Стратегия только для внешних JS и CSS файлов (не локальные, так как они в precache)
+                    // Корректно обрабатывает 304 Not Modified на Honor
+                    urlPattern: /^https:\/\/.*\.(?:js|css)$/,
                     handler: 'StaleWhileRevalidate',
                     options: {
                         cacheName: 'js-css-cache',
@@ -79,8 +79,9 @@ const plugins = [
                     },
                 },
                 {
-                    // Стратегия для шрифтов, корректно обрабатывает 304 Not Modified
-                    urlPattern: /\.(?:woff|woff2|ttf|otf|eot)$/,
+                    // Стратегия только для внешних шрифтов (не локальные, так как они в precache)
+                    // Корректно обрабатывает 304 Not Modified на Honor
+                    urlPattern: /^https:\/\/.*\.(?:woff|woff2|ttf|otf|eot)$/,
                     handler: 'StaleWhileRevalidate',
                     options: {
                         cacheName: 'fonts-cache',
@@ -91,8 +92,8 @@ const plugins = [
                     },
                 },
                 {
-                    // Стратегия для webmanifest и других манифестов
-                    urlPattern: /\.(?:webmanifest|manifest\.json)$/,
+                    // Стратегия только для внешних манифестов (не локальные, так как они в precache)
+                    urlPattern: /^https:\/\/.*\.(?:webmanifest|manifest\.json)$/,
                     handler: 'NetworkFirst',
                     options: {
                         cacheName: 'manifest-cache',
