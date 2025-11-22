@@ -19,6 +19,7 @@ const plugins = [
         babel: {
             plugins: [['babel-plugin-react-compiler']],
         },
+        exclude: /\.kubb\/.*/,
     }),
     tsconfigPaths(),
     VitePWA({
