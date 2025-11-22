@@ -3907,6 +3907,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tanstack/history@npm:1.139.0":
+  version: 1.139.0
+  resolution: "@tanstack/history@npm:1.139.0"
+  checksum: 10c0/000fe41d3c3d7f0384e74fcfb1ecda25800906220925d1ab715e4fad7dab081e81c738238a3c09bfb1203ffd4ab0e1f24da1384ded322a154b9eba58405e3e90
+  languageName: node
+  linkType: hard
+
 "@tanstack/query-core@npm:5.90.10":
   version: 5.90.10
   resolution: "@tanstack/query-core@npm:5.90.10"
@@ -4004,6 +4011,21 @@ __metadata:
     tiny-invariant: "npm:^1.3.3"
     tiny-warning: "npm:^1.0.3"
   checksum: 10c0/1ad0289aba453a80232e37f8f43a5436bf23a8ca981e7de9be91f80dfe9e640ff46f468862326241925c472faa5a6fc3f3b3037da2b1686906a559c88d6b0652
+  languageName: node
+  linkType: hard
+
+"@tanstack/router-core@npm:^1.139.0":
+  version: 1.139.0
+  resolution: "@tanstack/router-core@npm:1.139.0"
+  dependencies:
+    "@tanstack/history": "npm:1.139.0"
+    "@tanstack/store": "npm:^0.8.0"
+    cookie-es: "npm:^2.0.0"
+    seroval: "npm:^1.4.0"
+    seroval-plugins: "npm:^1.4.0"
+    tiny-invariant: "npm:^1.3.3"
+    tiny-warning: "npm:^1.0.3"
+  checksum: 10c0/9cb3234de5e72b655bbcef072ac9fe806428ea89988539fa916c38dad740b79743807a950f6505a2e75a34a4978d27fc117c8732ea6861631b99c5b5560b8853
   languageName: node
   linkType: hard
 
@@ -4214,7 +4236,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^24.10.0":
+"@types/node@npm:*, @types/node@npm:^24.10.1":
   version: 24.10.1
   resolution: "@types/node@npm:24.10.1"
   dependencies:
@@ -8072,6 +8094,7 @@ __metadata:
     "@cspell/dict-css": "npm:^4.0.18"
     "@cspell/dict-git": "npm:^3.0.7"
     "@cspell/dict-html": "npm:^4.0.12"
+    "@cspell/dict-html-symbol-entities": "npm:^4.0.4"
     "@cspell/dict-markdown": "npm:^2.0.12"
     "@cspell/dict-ru_ru": "npm:^2.3.2"
     "@cspell/dict-typescript": "npm:^3.2.3"
@@ -8092,9 +8115,10 @@ __metadata:
     "@tanstack/react-query-devtools": "npm:^5.90.2"
     "@tanstack/react-router": "npm:^1.136.1"
     "@tanstack/react-router-devtools": "npm:^1.136.1"
+    "@tanstack/router-core": "npm:^1.139.0"
     "@tanstack/router-plugin": "npm:^1.136.1"
     "@types/lodash.isequal": "npm:^4.5.8"
-    "@types/node": "npm:^24.10.0"
+    "@types/node": "npm:^24.10.1"
     "@types/react": "npm:^19.2.2"
     "@types/react-dom": "npm:^19.2.2"
     "@typescript-eslint/eslint-plugin": "npm:^8.46.4"
@@ -8133,9 +8157,10 @@ __metadata:
     lucide-react: "npm:^0.553.0"
     pinst: "npm:^3.0.0"
     postcss: "npm:^8.5.6"
+    prettier: "npm:^3.6.2"
     react: "npm:^19.2.0"
     react-dom: "npm:^19.2.0"
-    react-hook-form: "npm:^7.66.0"
+    react-hook-form: "npm:^7.66.1"
     react-icons: "npm:^5.5.0"
     sass: "npm:^1.94.0"
     sharp: "npm:^0.34.5"
@@ -8147,7 +8172,7 @@ __metadata:
     stylelint-order: "npm:^7.0.0"
     stylelint-prettier: "npm:^5.0.3"
     stylelint-scss: "npm:^6.12.1"
-    typescript: "npm:~5.9.3"
+    typescript: "npm:^5.9.3"
     typescript-eslint: "npm:^8.46.3"
     use-debounce: "npm:^10.0.6"
     vite: "npm:rolldown-vite@7.2.2"
@@ -10935,7 +10960,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:^3.5.0":
+"prettier@npm:^3.5.0, prettier@npm:^3.6.2":
   version: 3.6.2
   resolution: "prettier@npm:3.6.2"
   bin:
@@ -11109,7 +11134,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-hook-form@npm:^7.66.0":
+"react-hook-form@npm:^7.66.1":
   version: 7.66.1
   resolution: "react-hook-form@npm:7.66.1"
   peerDependencies:
@@ -11625,7 +11650,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"seroval-plugins@npm:^1.3.2":
+"seroval-plugins@npm:^1.3.2, seroval-plugins@npm:^1.4.0":
   version: 1.4.0
   resolution: "seroval-plugins@npm:1.4.0"
   peerDependencies:
@@ -11634,7 +11659,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"seroval@npm:^1.3.2":
+"seroval@npm:^1.3.2, seroval@npm:^1.4.0":
   version: 1.4.0
   resolution: "seroval@npm:1.4.0"
   checksum: 10c0/020262db5572c16ae5d22ecefa089112a0b1b9a9c78229dbc9c6059c172ed7f0b5005c7990b80714ff8638ac86274195c2084537e0c2a9178690acacff4b705f
@@ -12858,7 +12883,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:5.9.3, typescript@npm:~5.9.3":
+"typescript@npm:5.9.3, typescript@npm:^5.9.3":
   version: 5.9.3
   resolution: "typescript@npm:5.9.3"
   bin:
@@ -12868,7 +12893,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>, typescript@patch:typescript@npm%3A~5.9.3#optional!builtin<compat/typescript>":
+"typescript@patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>, typescript@patch:typescript@npm%3A^5.9.3#optional!builtin<compat/typescript>":
   version: 5.9.3
   resolution: "typescript@patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"
   bin:

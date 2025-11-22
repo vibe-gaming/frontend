@@ -1,9 +1,7 @@
-import { forwardRef, useEffect, useRef, useState } from 'react'
-import type { ReactNode } from 'react'
-import { Box, Button, Drawer, HStack } from '@chakra-ui/react'
-import { motion, useMotionValue, useTransform, useSpring, animate } from 'framer-motion'
+import { forwardRef, type ReactNode, useEffect, useRef, useState } from 'react'
+import { Box, Button, Drawer } from '@chakra-ui/react'
 import { useDrag } from '@use-gesture/react'
-
+import { animate, motion, useMotionValue, useSpring } from 'framer-motion'
 import { LuX } from 'react-icons/lu'
 
 export interface BaseDrawerProps {
@@ -11,7 +9,7 @@ export interface BaseDrawerProps {
     onOpenChange: (open: boolean) => void
     title: string
     children: ReactNode
-    footer: ReactNode
+    footer?: ReactNode
 }
 
 const DRAWER_HEIGHT = '90vh'
@@ -29,8 +27,7 @@ export const BaseDrawer = forwardRef<HTMLDivElement, BaseDrawerProps>(
             damping: 30,
             stiffness: 300,
         })
-        const backdropOpacityString = useTransform(backdropOpacity, (value) => String(value))
-        
+
         // Синхронизируем backdrop opacity с позицией drawer
         useEffect(() => {
             const unsubscribe = y.on('change', (latest) => {
@@ -38,6 +35,7 @@ export const BaseDrawer = forwardRef<HTMLDivElement, BaseDrawerProps>(
                 const opacity = Math.max(0, Math.min(1, 1 - latest / (maxHeight * 0.5)))
                 backdropOpacity.set(opacity)
             })
+
             return unsubscribe
         }, [y, backdropOpacity])
 
@@ -45,21 +43,25 @@ export const BaseDrawer = forwardRef<HTMLDivElement, BaseDrawerProps>(
             if (isOpen) {
                 y.set(0)
                 backdropOpacity.set(1)
-                setIsClosing(false)
+                setTimeout(() => {
+                    setIsClosing(false)
+                }, 0)
             } else {
                 y.set(0)
                 backdropOpacity.set(1)
-                setIsClosing(false)
+                setTimeout(() => {
+                    setIsClosing(false)
+                }, 0)
             }
         }, [isOpen, y, backdropOpacity])
 
         const handleClose = () => {
             if (isClosing) return
             setIsClosing(true)
-            
+
             // Получаем высоту drawer для анимации
             const drawerHeight = contentRef.current?.offsetHeight || window.innerHeight * 0.9
-            
+
             // Анимируем закрытие синхронно - backdrop opacity будет обновляться через y.on('change')
             animate(y, drawerHeight, {
                 type: 'spring',
@@ -85,11 +87,12 @@ export const BaseDrawer = forwardRef<HTMLDivElement, BaseDrawerProps>(
                 // Когда отпустили
                 if (last) {
                     // Вычисляем динамический порог закрытия на основе высоты drawer
-                    const drawerHeight = contentRef.current?.offsetHeight || window.innerHeight * 0.9
+                    const drawerHeight =
+                        contentRef.current?.offsetHeight || window.innerHeight * 0.9
                     const closeThreshold = drawerHeight * CLOSE_THRESHOLD_PERCENT
-                    
+
                     const shouldClose = my > closeThreshold || (dy > 0 && vy > VELOCITY_THRESHOLD)
-                    
+
                     if (shouldClose) {
                         handleClose()
                     } else {
@@ -113,17 +116,17 @@ export const BaseDrawer = forwardRef<HTMLDivElement, BaseDrawerProps>(
 
         return (
             <Drawer.Root
+                closeOnInteractOutside={false}
                 open={isOpen && !isClosing}
-                onOpenChange={(e) => {
-                    if (!e.open && !isClosing) {
+                placement='bottom'
+                onOpenChange={(event) => {
+                    if (!event.open && !isClosing) {
                         handleClose()
-                    } else if (e.open) {
+                    } else if (event.open) {
                         y.set(0)
                         setIsClosing(false)
                     }
                 }}
-                placement="bottom"
-                closeOnInteractOutside={false}
             >
                 <Drawer.Backdrop asChild>
                     <motion.div
@@ -141,14 +144,14 @@ export const BaseDrawer = forwardRef<HTMLDivElement, BaseDrawerProps>(
                             zIndex: 1000,
                             pointerEvents: 'auto',
                         }}
-                        onClick={(e) => {
-                            e.preventDefault()
-                            e.stopPropagation()
+                        onClick={(event) => {
+                            event.preventDefault()
+                            event.stopPropagation()
                             handleClose()
                         }}
-                        onPointerDown={(e) => {
+                        onPointerDown={(event) => {
                             // Для touch устройств используем onPointerDown
-                            if (e.target === e.currentTarget) {
+                            if (event.target === event.currentTarget) {
                                 handleClose()
                             }
                         }}
@@ -161,9 +164,9 @@ export const BaseDrawer = forwardRef<HTMLDivElement, BaseDrawerProps>(
                 >
                     <Drawer.Content
                         ref={ref}
-                        mt={4}
-                        borderTopRadius="2xl"
+                        borderTopRadius='2xl'
                         maxH={DRAWER_HEIGHT}
+                        mt={4}
                         style={{
                             borderTopLeftRadius: '24px',
                             borderTopRightRadius: '24px',
@@ -173,6 +176,8 @@ export const BaseDrawer = forwardRef<HTMLDivElement, BaseDrawerProps>(
                     >
                         <motion.div
                             ref={contentRef}
+                            animate={{ y: 0 }}
+                            initial={{ y: '100%' }}
                             style={{
                                 y: springY,
                                 height: '100%',
@@ -180,8 +185,6 @@ export const BaseDrawer = forwardRef<HTMLDivElement, BaseDrawerProps>(
                                 flexDirection: 'column',
                                 overflow: 'hidden',
                             }}
-                            initial={{ y: '100%' }}
-                            animate={{ y: 0 }}
                             transition={{
                                 type: 'spring',
                                 damping: 30,
@@ -190,54 +193,53 @@ export const BaseDrawer = forwardRef<HTMLDivElement, BaseDrawerProps>(
                         >
                             {/* Индикатор свайпа и Header - здесь можно свайпать вниз */}
                             <Box
-                                style={{ 
-                                    cursor: 'grab', 
+                                style={{
+                                    cursor: 'grab',
                                     touchAction: 'pan-y',
                                     userSelect: 'none',
                                 }}
                                 {...(bind() as any)}
                             >
                                 <Box
-                                    w="40px"
-                                    h="4px"
-                                    bg="gray.300"
-                                    borderRadius="full"
-                                    mx="auto"
-                                    mt={3}
+                                    bg='gray.300'
+                                    borderRadius='full'
+                                    h='4px'
                                     mb={2}
+                                    mt={3}
+                                    mx='auto'
+                                    w='40px'
                                 />
                                 <Drawer.Header
-                                    display="flex"
-                                    alignItems="center"
-                                    justifyContent="space-between"
-                                    pb={4}
-                                    pt={2}
+                                    alignItems='center'
+                                    display='flex'
+                                    justifyContent='space-between'
                                     style={{ flexShrink: 0 }}
                                 >
-                                <Box flex={1} />
-                                <Drawer.Title flex={1} textAlign="center" fontSize={'2xl'}>
-                                    {title}
-                                </Drawer.Title>
-                                <Box flex={1} display="flex" justifyContent="flex-end">
-                                    <Button
-                                        variant="ghost"
-                                        size="2xl"
-                                        onClick={handleClose}
-                                        p={4}
-                                        border={'none'}
-                                        minW="auto"
-                                        h="auto"
-                                    >
-                                        <LuX size={20} />
-                                    </Button>
-                                </Box>
-                            </Drawer.Header>
+                                    <Box flex={1} />
+                                    <Drawer.Title flex={1} fontSize={'2xl'} textAlign='center'>
+                                        {title}
+                                    </Drawer.Title>
+                                    <Box display='flex' flex={1} justifyContent='flex-end'>
+                                        <Button
+                                            border={'none'}
+                                            h='auto'
+                                            minW='auto'
+                                            p={4}
+                                            size='2xl'
+                                            variant='ghost'
+                                            onClick={handleClose}
+                                        >
+                                            <LuX size={20} />
+                                        </Button>
+                                    </Box>
+                                </Drawer.Header>
                             </Box>
-                            <Drawer.Body 
-                                px={6} 
-                                py={0} 
-                                style={{ 
-                                    flex: 1, 
+                            <Drawer.Body
+                                pb={6}
+                                pt={4}
+                                px={4}
+                                style={{
+                                    flex: 1,
                                     overflowY: 'auto',
                                     overflowX: 'hidden',
                                     WebkitOverflowScrolling: 'touch',
@@ -246,14 +248,11 @@ export const BaseDrawer = forwardRef<HTMLDivElement, BaseDrawerProps>(
                             >
                                 {children}
                             </Drawer.Body>
-                            <Drawer.Footer 
-                                px={4} 
-                                pt={2} 
-                                pb={4}
-                                style={{ flexShrink: 0 }}
-                            >
-                                {footer}
-                            </Drawer.Footer>
+                            {footer && (
+                                <Drawer.Footer p={4} style={{ flexShrink: 0 }}>
+                                    {footer}
+                                </Drawer.Footer>
+                            )}
                         </motion.div>
                     </Drawer.Content>
                 </Drawer.Positioner>
@@ -263,4 +262,3 @@ export const BaseDrawer = forwardRef<HTMLDivElement, BaseDrawerProps>(
 )
 
 BaseDrawer.displayName = 'BaseDrawer'
-

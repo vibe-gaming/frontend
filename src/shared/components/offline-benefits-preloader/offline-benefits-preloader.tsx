@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 import { useMediaQuery } from '@chakra-ui/react'
 
-import { useGetBenefits } from '@/shared/api/generated/hooks/useGetBenefits'
 import type { V1BenefitsListResponse } from '@/shared/api/generated'
+import { useGetBenefits } from '@/shared/api/generated/hooks/useGetBenefits'
 import { useOnlineStatus } from '@/shared/hooks/use-online-status'
 import { saveBenefitsToStorage } from '@/shared/utils/benefits-storage'
 
@@ -11,7 +11,7 @@ import { saveBenefitsToStorage } from '@/shared/utils/benefits-storage'
  * Работает только на мобильных устройствах
  */
 export const OfflineBenefitsPreloader = () => {
-    const [isDesktop] = useMediaQuery(["(min-width: 768px)"])
+    const [isDesktop] = useMediaQuery(['(min-width: 768px)'])
     const isMobile = !isDesktop
     const isOnline = useOnlineStatus()
 
@@ -31,12 +31,18 @@ export const OfflineBenefitsPreloader = () => {
     // Сохраняем все льготы в localStorage когда они загружены
     useEffect(() => {
         if (isOnline && isMobile && allBenefitsData?.benefits) {
-            console.log('Предзагрузка офлайн данных: сохранение', allBenefitsData.benefits.length, 'льгот')
-            saveBenefitsToStorage(allBenefitsData.benefits, allBenefitsData.total || allBenefitsData.benefits.length)
+            console.log(
+                'Предзагрузка офлайн данных: сохранение',
+                allBenefitsData.benefits.length,
+                'льгот'
+            )
+            saveBenefitsToStorage(
+                allBenefitsData.benefits,
+                allBenefitsData.total || allBenefitsData.benefits.length
+            )
         }
     }, [isOnline, isMobile, allBenefitsData])
 
     // Компонент не рендерит ничего визуального
     return null
 }
-
