@@ -6,32 +6,32 @@ RUN corepack enable && corepack prepare yarn@4.9.1 --activate
 
 WORKDIR /app
 
-# Принимаем все переменные окружения через ARG
-# Vite требует, чтобы переменные начинались с VITE_ для доступа через import.meta.env
+# Аргументы сборки
 ARG VITE_API_URL
 ARG VITE_API_TIMEOUT
 ARG VITE_APP_TAG_VERSION
 ARG NODE_ENV=production
 
-# Устанавливаем как ENV для использования во время сборки
-# Vite встраивает эти переменные в код во время сборки
+# Переменные окружения
 ENV VITE_API_URL=$VITE_API_URL
 ENV VITE_API_TIMEOUT=$VITE_API_TIMEOUT
 ENV VITE_APP_TAG_VERSION=$VITE_APP_TAG_VERSION
 ENV NODE_ENV=$NODE_ENV
 
-# Копирование файлов конфигурации
+# 1. Сначала копируем только файлы зависимостей
 COPY package.json yarn.lock .yarnrc.yml* ./
-COPY .yarn ./.yarn
 
-# Копирование исходного кода
-COPY . .
+# 2. Копируем папку .yarn, если она есть (для плагинов и конфигураций), но не обязательно для releases, так как corepack их скачает.
+# Однако, так как это вызывало ошибку, и corepack используется, мы убрали явное копирование .yarn
+# Если нужны специфичные плагины, убедитесь, что они не в .dockerignore
 
-# Установка зависимостей
+# 3. Устанавливаем зависимости (этот слой закэшируется, если package.json не менялся)
 RUN yarn install --immutable
 
-# Генерация API и сборка проекта
-# Переменные окружения будут доступны через import.meta.env во время сборки
+# 4. Только теперь копируем исходный код
+COPY . .
+
+# 5. Генерация API и сборка проекта
 RUN yarn generate:api && yarn build
 
 # Этап production
