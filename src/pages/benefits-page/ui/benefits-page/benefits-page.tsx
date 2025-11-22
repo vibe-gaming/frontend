@@ -126,8 +126,10 @@ export const BenefitsPage = () => {
             params.target_groups = targetGroups.join(',')
         }
 
-        if (tags.length > 0) {
-            params.tags = tags.join(',')
+        // Исключаем 'saved' и 'available_to_me' из тегов, так как они обрабатываются через favorites и filter_by_user_groups
+        const filteredTags = tags.filter(tag => tag !== 'saved' && tag !== 'available_to_me')
+        if (filteredTags.length > 0) {
+            params.tags = filteredTags.join(',')
         }
 
         if (categories.length > 0) {
@@ -292,6 +294,8 @@ export const BenefitsPage = () => {
         setTempTags([])
         setTempCategories([])
         setTempCityId('')
+        // Также сбрасываем флаги favorites и filterByUserGroups в временных состояниях
+        // (они будут применены при handleApplyFilters, если пользователь нажмет "Применить")
     }
 
     // Сброс фильтров для sidebar (сразу применяется)
@@ -326,8 +330,22 @@ export const BenefitsPage = () => {
     }
 
     const handleSidebarTagsChange = (values: string[]) => {
-        setTags(values)
-        setTempTags(values)
+        // Обрабатываем специальные теги 'saved' и 'available_to_me'
+        const hasSaved = values.includes('saved')
+        const hasAvailableToMe = values.includes('available_to_me')
+        
+        // Устанавливаем соответствующие флаги
+        if (hasSaved !== favorites) {
+            setFavorites(hasSaved)
+        }
+        if (hasAvailableToMe !== filterByUserGroups) {
+            setFilterByUserGroups(hasAvailableToMe)
+        }
+        
+        // Удаляем специальные теги из массива
+        const filteredValues = values.filter(tag => tag !== 'saved' && tag !== 'available_to_me')
+        setTags(filteredValues)
+        setTempTags(filteredValues)
         setCurrentPage(1)
     }
 
@@ -344,14 +362,40 @@ export const BenefitsPage = () => {
     }
 
     const handleApplyFilters = () => {
+        // Обрабатываем специальные теги 'saved' и 'available_to_me' из tempTags
+        const hasSaved = tempTags.includes('saved')
+        const hasAvailableToMe = tempTags.includes('available_to_me')
+        
+        // Устанавливаем соответствующие флаги
+        if (hasSaved !== favorites) {
+            setFavorites(hasSaved)
+        }
+        if (hasAvailableToMe !== filterByUserGroups) {
+            setFilterByUserGroups(hasAvailableToMe)
+        }
+        
         // Применяем временные состояния к основным
         setBenefitTypes(tempBenefitTypes)
         setTargetGroups(tempTargetGroups)
-        setTags(tempTags)
+        // Удаляем специальные теги из массива
+        const filteredTags = tempTags.filter(tag => tag !== 'saved' && tag !== 'available_to_me')
+        setTags(filteredTags)
         setCategories(tempCategories)
         setCityId(tempCityId)
         setCurrentPage(1)
         setIsFiltersOpen(false)
+    }
+
+    // Обработчик изменения тегов в drawer
+    const handleDrawerTagsChange = (values: string[]) => {
+        // Обрабатываем специальные теги 'saved' и 'available_to_me'
+        const hasSaved = values.includes('saved')
+        const hasAvailableToMe = values.includes('available_to_me')
+        
+        // Устанавливаем соответствующие флаги (но не применяем их сразу, только при нажатии "Применить")
+        // Просто сохраняем в tempTags, обработка будет в handleApplyFilters
+        
+        setTempTags(values)
     }
 
     // При открытии Drawer фильтров инициализируем временные состояния из основных
@@ -361,7 +405,15 @@ export const BenefitsPage = () => {
             // При открытии копируем текущие значения в временные
             setTempBenefitTypes(benefitTypes)
             setTempTargetGroups(targetGroups)
-            setTempTags(tags)
+            // Добавляем 'saved' и 'available_to_me' в tempTags, если соответствующие флаги установлены
+            let tempTagsWithSpecial = [...tags]
+            if (favorites && !tempTagsWithSpecial.includes('saved')) {
+                tempTagsWithSpecial.push('saved')
+            }
+            if (filterByUserGroups && !tempTagsWithSpecial.includes('available_to_me')) {
+                tempTagsWithSpecial.push('available_to_me')
+            }
+            setTempTags(tempTagsWithSpecial)
             setTempCategories(categories)
             setTempCityId(cityId)
         }
@@ -466,13 +518,27 @@ export const BenefitsPage = () => {
     const handleQuickFilterClick = (tagValue: string) => {
         // Обработка специальных фильтров
         if (tagValue === 'saved') {
-            setFavorites(!favorites)
+            const newFavorites = !favorites
+            setFavorites(newFavorites)
+            // Удаляем 'saved' из массива tags, если он там есть
+            if (tags.includes('saved')) {
+                const newTags = tags.filter(tag => tag !== 'saved')
+                setTags(newTags)
+                setTempTags(newTags)
+            }
             setCurrentPage(1)
             return
         }
 
         if (tagValue === 'available_to_me') {
-            setFilterByUserGroups(!filterByUserGroups)
+            const newFilterByUserGroups = !filterByUserGroups
+            setFilterByUserGroups(newFilterByUserGroups)
+            // Удаляем 'available_to_me' из массива tags, если он там есть
+            if (tags.includes('available_to_me')) {
+                const newTags = tags.filter(tag => tag !== 'available_to_me')
+                setTags(newTags)
+                setTempTags(newTags)
+            }
             setCurrentPage(1)
             return
         }
@@ -498,7 +564,61 @@ export const BenefitsPage = () => {
     const handleDownloadPDF = async () => {
         try {
             setIsDownloadingPDF(true)
-            const response = await fetch('https://backend-production-10ec.up.railway.app/api/v1/benefits?format=pdf')
+            
+            // Строим URL с теми же фильтрами, что используются для списка
+            const urlParams = new URLSearchParams()
+            urlParams.append('format', 'pdf')
+            
+            // Добавляем все параметры фильтрации
+            if (appliedSearchQuery) {
+                urlParams.append('search', appliedSearchQuery)
+            }
+            
+            if (benefitTypes.length > 0) {
+                urlParams.append('type', benefitTypes.join(','))
+            }
+            
+            if (targetGroups.length > 0) {
+                urlParams.append('target_groups', targetGroups.join(','))
+            }
+            
+            // Исключаем 'saved' и 'available_to_me' из тегов, так как они обрабатываются через favorites и filter_by_user_groups
+            const filteredTags = tags.filter(tag => tag !== 'saved' && tag !== 'available_to_me')
+            if (filteredTags.length > 0) {
+                urlParams.append('tags', filteredTags.join(','))
+            }
+            
+            if (categories.length > 0) {
+                urlParams.append('categories', categories.join(','))
+            }
+            
+            if (cityId) {
+                urlParams.append('city_id', cityId)
+            }
+            
+            if (dateFrom) {
+                urlParams.append('date_from', dateFrom)
+            }
+            
+            if (dateTo) {
+                urlParams.append('date_to', dateTo)
+            }
+            
+            // Сортировка
+            urlParams.append('sort_by', sortBy)
+            urlParams.append('order', sortOrder)
+            
+            // Быстрые фильтры
+            if (favorites) {
+                urlParams.append('favorites', 'true')
+            }
+            
+            if (filterByUserGroups) {
+                urlParams.append('filter_by_user_groups', 'true')
+            }
+            
+            const url = `https://backend-production-10ec.up.railway.app/api/v1/benefits?${urlParams.toString()}`
+            const response = await fetch(url)
 
             if (!response.ok) {
                 throw new Error('Ошибка при скачивании PDF')
@@ -507,14 +627,14 @@ export const BenefitsPage = () => {
             const blob = await response.blob()
 
             // Создаем ссылку для скачивания
-            const url = window.URL.createObjectURL(blob)
+            const downloadUrl = window.URL.createObjectURL(blob)
             const link = document.createElement('a')
-            link.href = url
+            link.href = downloadUrl
             link.setAttribute('download', 'Льготы.pdf')
             document.body.appendChild(link)
             link.click()
             link.remove()
-            window.URL.revokeObjectURL(url)
+            window.URL.revokeObjectURL(downloadUrl)
         } catch (error) {
             console.error('Ошибка при скачивании PDF:', error)
         } finally {
@@ -804,7 +924,7 @@ export const BenefitsPage = () => {
                 tempCityId={tempCityId}
                 onBenefitTypesChange={setTempBenefitTypes}
                 onTargetGroupsChange={setTempTargetGroups}
-                onTagsChange={setTempTags}
+                onTagsChange={handleDrawerTagsChange}
                 onCategoriesChange={setTempCategories}
                 onCityIdChange={setTempCityId}
                 onReset={handleResetFilters}
