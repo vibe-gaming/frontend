@@ -17,7 +17,7 @@ import { AppHeader } from '@/shared/ui/app-header'
 
 export const LoginPage = () => {
     const handleLoginClick = useCallback(async () => {
-        let keycloakEndpoint = new URL(`${import.meta.env.VITE_API_URL}/users/auth/login`)
+        let keycloakEndpoint = new URL(`https://backend-production-10ec.up.railway.app/api/v1/users/auth/login`)
 
         window.open(keycloakEndpoint, '_self')
     }, [])
