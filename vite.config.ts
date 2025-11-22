@@ -64,6 +64,44 @@ const plugins = [
                         },
                     },
                 },
+                {
+                    // Стратегия для JS и CSS файлов, которая корректно обрабатывает 304 Not Modified
+                    // StaleWhileRevalidate отдает кэш сразу и обновляет в фоне, лучше работает с 304 на Honor
+                    urlPattern: /\.(?:js|css)$/,
+                    handler: 'StaleWhileRevalidate',
+                    options: {
+                        cacheName: 'js-css-cache',
+                        expiration: {
+                            maxEntries: 100,
+                            maxAgeSeconds: 60 * 60 * 24 * 7, // 7 days
+                        },
+                    },
+                },
+                {
+                    // Стратегия для шрифтов, корректно обрабатывает 304 Not Modified
+                    urlPattern: /\.(?:woff|woff2|ttf|otf|eot)$/,
+                    handler: 'StaleWhileRevalidate',
+                    options: {
+                        cacheName: 'fonts-cache',
+                        expiration: {
+                            maxEntries: 30,
+                            maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+                        },
+                    },
+                },
+                {
+                    // Стратегия для webmanifest и других манифестов
+                    urlPattern: /\.(?:webmanifest|manifest\.json)$/,
+                    handler: 'NetworkFirst',
+                    options: {
+                        cacheName: 'manifest-cache',
+                        expiration: {
+                            maxEntries: 10,
+                            maxAgeSeconds: 60 * 60 * 24, // 1 day
+                        },
+                        networkTimeoutSeconds: 3,
+                    },
+                },
             ],
         },
     }),
