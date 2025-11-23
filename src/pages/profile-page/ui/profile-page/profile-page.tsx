@@ -220,7 +220,9 @@ export const ProfilePage = () => {
                                     height={{ base: '88px', md: 'auto' }}
                                     p={{ base: '12px', md: '24px' }}
                                     transition='all 0.2s'
-                                    onClick={() => navigate({ to: '/benefits' })} // TODO когда будет реализована страница с льготами (query url)
+                                    onClick={() =>
+                                        navigate({ to: '/benefits', search: { favorites: true } })
+                                    }
                                 >
                                     <VStack align='flex-start' gap='4px'>
                                         <HStack

@@ -3,7 +3,7 @@
 Это репозиторий для frontend-приложения проекта команды VibeGaming для хакатона Hack-the-ICE v7.0.
 
 ## Деплой
-https://lgoty.netlify.app
+https://frontend-production-9c0b.up.railway.app/
 
 ## Разработка
 Перед началом разработки нужно установить node > 18.1, можно воспользоваться [nvm](https://github.com/nvm-sh/nvm), далее:

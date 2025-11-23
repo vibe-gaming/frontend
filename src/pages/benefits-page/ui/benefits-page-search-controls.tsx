@@ -91,7 +91,7 @@ export const BenefitsPageSearchControls = () => {
 
     return (
         <>
-            <Flex gap={2} justifyContent='space-between'>
+            <Flex gap={2}>
                 <Button
                     color={isFilterChanged ? 'blue.fg' : undefined}
                     colorPalette={isFilterChanged ? 'blue' : undefined}
@@ -100,7 +100,8 @@ export const BenefitsPageSearchControls = () => {
                     variant={isFilterChanged ? 'subtle' : 'outline'}
                     onClick={() => setIsFiltersOpen(true)}
                 >
-                    Фильтр <LuChevronDown />
+                    Фильтр
+                    <LuChevronDown />
                 </Button>
                 <Button
                     color={isSortChanged ? 'blue.fg' : undefined}
@@ -110,7 +111,8 @@ export const BenefitsPageSearchControls = () => {
                     variant={isSortChanged ? 'subtle' : 'outline'}
                     onClick={() => setIsSortOpen(true)}
                 >
-                    Сортировка по <LuChevronDown />
+                    Сортировка
+                    <LuChevronDown />
                 </Button>
             </Flex>
 

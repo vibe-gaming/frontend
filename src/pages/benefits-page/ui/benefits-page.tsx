@@ -17,6 +17,7 @@ import {
 
 import { ITEMS_PER_PAGE } from '../model/constants'
 import { BenefitsCards } from './benefits-cards'
+import { BenefitsDownloadButton } from './benefits-download-button'
 import { BenefitsPagePagination } from './benefits-page-pagination'
 import { BenefitsPageSearchControls } from './benefits-page-search-controls'
 import { BenefitsPageSidebar } from './benefits-page-sidebar'
@@ -195,6 +196,10 @@ export const BenefitsPage = () => {
                                 benefits={displayData?.benefits ?? []}
                                 isLoading={isLoading}
                             />
+
+                            <Show when={!isOfflineMode && !isLoading && isMobile}>
+                                <BenefitsDownloadButton />
+                            </Show>
                         </GridItem>
 
                         <GridItem area='pagination'>

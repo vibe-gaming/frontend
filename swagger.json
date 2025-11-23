@@ -16,15 +16,9 @@
                     }
                 ],
                 "description": "Получить список всех льгот с пагинацией, фильтрацией и умным поиском\n\nПоиск использует Full-Text Search MySQL с автоматическим поиском по частичному совпадению:\n- Поиск \"транс\" найдет \"транспорт\", \"транспортный\" и т.д.\n- Поиск \"пенсион\" найдет \"пенсионер\", \"пенсионный\" и т.д.\n- Каждое слово ищется с начала (prefix matching)\n\nМожно использовать Boolean операторы для сложных запросов:\n+ обязательное слово: \"+пенсионер +транспорт\"\n- исключить слово: \"льгота -студент\"\n* явный wildcard: \"транс*\"\n\"\" точная фраза: \"общественный транспорт\"",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Benefits"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Benefits"],
                 "summary": "Get Benefits List",
                 "parameters": [
                     {
@@ -126,7 +120,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "PDF файл",
+                        "description": "OK",
                         "schema": {
                             "type": "file"
                         }
@@ -147,15 +141,9 @@
             },
             "post": {
                 "description": "Создать новую льготу",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Benefits"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Benefits"],
                 "summary": "Create Benefit",
                 "parameters": [
                     {
@@ -193,15 +181,9 @@
         "/benefits/stats": {
             "get": {
                 "description": "Получить статистику по фильтрам - количество льгот по категориям и уровням\n\nПоддерживает те же параметры фильтрации что и GET /benefits (кроме category, так как мы его считаем)\nТипы можно указать для фильтрации статистики по конкретным типам льгот\nЭто позволяет показывать актуальные счетчики в форме фильтров при изменении других параметров",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Benefits"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Benefits"],
                 "summary": "Get Benefits Filter Statistics",
                 "parameters": [
                     {
@@ -295,15 +277,9 @@
                     }
                 ],
                 "description": "Получить статистику по льготам пользователя",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Benefits"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Benefits"],
                 "summary": "Get User Benefits Stats",
                 "responses": {
                     "200": {
@@ -329,15 +305,9 @@
                     }
                 ],
                 "description": "Получить льготу по ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Benefits"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Benefits"],
                 "summary": "Get Benefit By ID",
                 "parameters": [
                     {
@@ -377,15 +347,9 @@
             },
             "put": {
                 "description": "Обновить существующую льготу",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Benefits"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Benefits"],
                 "summary": "Update Benefit",
                 "parameters": [
                     {
@@ -434,15 +398,9 @@
             },
             "delete": {
                 "description": "Удалить льготу (soft delete)",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Benefits"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Benefits"],
                 "summary": "Delete Benefit",
                 "parameters": [
                     {
@@ -492,15 +450,9 @@
                     }
                 ],
                 "description": "Переключить статус избранной льготы (toggle). Если льгота в избранном - удалит из избранного, если нет - добавит в избранное",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Benefits"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Benefits"],
                 "summary": "Toggle Benefit Favorite Status",
                 "parameters": [
                     {
@@ -539,15 +491,9 @@
         "/benefits/{id}/pdfdownload": {
             "get": {
                 "description": "Скачать льготу в формате PDF",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/pdf"
-                ],
-                "tags": [
-                    "Benefits"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/pdf"],
+                "tags": ["Benefits"],
                 "summary": "Get Benefit PDF Download",
                 "parameters": [
                     {
@@ -589,15 +535,9 @@
         "/cities": {
             "get": {
                 "description": "Get all cities",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Cities"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Cities"],
                 "summary": "Get Cities",
                 "responses": {
                     "200": {
@@ -627,15 +567,9 @@
         "/organizations": {
             "get": {
                 "description": "Get all organizations, optionally filtered by city_id",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Organizations"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Organizations"],
                 "summary": "Get Organizations",
                 "parameters": [
                     {
@@ -671,15 +605,9 @@
             },
             "post": {
                 "description": "Создать новую организацию",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Organizations"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Organizations"],
                 "summary": "Create Organization",
                 "parameters": [
                     {
@@ -717,15 +645,9 @@
         "/organizations/{id}": {
             "get": {
                 "description": "Получить организацию по ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Organizations"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Organizations"],
                 "summary": "Get Organization By ID",
                 "parameters": [
                     {
@@ -765,15 +687,9 @@
             },
             "put": {
                 "description": "Обновить существующую организацию",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Organizations"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Organizations"],
                 "summary": "Update Organization",
                 "parameters": [
                     {
@@ -822,15 +738,9 @@
             },
             "delete": {
                 "description": "Удалить организацию (soft delete)",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Organizations"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Organizations"],
                 "summary": "Delete Organization",
                 "parameters": [
                     {
@@ -883,15 +793,9 @@
                     }
                 ],
                 "description": "Распознает речь из аудиофайла и возвращает текст",
-                "consumes": [
-                    "multipart/form-data"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Speech"
-                ],
+                "consumes": ["multipart/form-data"],
+                "produces": ["application/json"],
+                "tags": ["Speech"],
                 "summary": "Распознавание речи",
                 "parameters": [
                     {
@@ -942,15 +846,9 @@
         "/users/auth/callback": {
             "get": {
                 "description": "Callback endpoint для Auth - получает code от ESIA и редиректит на фронтенд",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Auth"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Auth"],
                 "summary": "OAuth Callback",
                 "parameters": [
                     {
@@ -984,15 +882,9 @@
         "/users/auth/login": {
             "get": {
                 "description": "Перенаправление на ESIA для авторизации",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Auth"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Auth"],
                 "summary": "OAuth Login",
                 "responses": {
                     "302": {
@@ -1004,15 +896,9 @@
         "/users/auth/token": {
             "post": {
                 "description": "Обмен authorization code на access и refresh токены (как в Keycloak)",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Auth"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Auth"],
                 "summary": "Exchange Code for Tokens",
                 "parameters": [
                     {
@@ -1049,15 +935,9 @@
                     }
                 ],
                 "description": "Скачать удостоверение/справку социальной группы в формате PDF. По умолчанию генерируется удостоверение пенсионера.\n\nДоступные типы групп:\n- pensioners (пенсионеры) - по умолчанию\n- disabled (инвалиды)\n- students (студенты)\n- young_families (молодые семьи)\n- large_families (многодетные семьи)\n- low_income (малоимущие)\n- children (дети)\n- veterans (ветераны)\n\nЕсли у пользователя нет реальных данных для указанной группы, будут использованы моковые данные.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/pdf"
-                ],
-                "tags": [
-                    "Users"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/pdf"],
+                "tags": ["Users"],
                 "summary": "Get User Certificate PDF",
                 "parameters": [
                     {
@@ -1097,15 +977,9 @@
                     }
                 ],
                 "description": "Pong",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Pong"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Pong"],
                 "summary": "Pong",
                 "responses": {
                     "200": {
@@ -1131,15 +1005,9 @@
                     }
                 ],
                 "description": "Get user profile",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Users"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Users"],
                 "summary": "Get Profile",
                 "responses": {
                     "200": {
@@ -1171,15 +1039,9 @@
                     }
                 ],
                 "description": "Register user",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Users"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Users"],
                 "summary": "User Update Info",
                 "parameters": [
                     {
@@ -1208,15 +1070,9 @@
         "/users/{id}/add-mock-documents": {
             "post": {
                 "description": "Add mock documents to user",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Users"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Users"],
                 "summary": "Add Mock Documents",
                 "parameters": [
                     {
@@ -1245,10 +1101,10 @@
         "ErrorStruct": {
             "type": "object",
             "properties": {
-                "ErrorCode": {
+                "error_code": {
                     "type": "integer"
                 },
-                "ErrorMessage": {
+                "error_message": {
                     "type": "string"
                 }
             }
@@ -1275,6 +1131,29 @@
                     "type": "string"
                 }
             }
+        },
+        "domain.GroupType": {
+            "type": "string",
+            "enum": [
+                "pensioners",
+                "disabled",
+                "young_families",
+                "low_income",
+                "students",
+                "large_families",
+                "children",
+                "veterans"
+            ],
+            "x-enum-varnames": [
+                "UserGroupPensioners",
+                "UserGroupDisabled",
+                "UserGroupYoungFamilies",
+                "UserGroupLowIncome",
+                "UserGroupStudents",
+                "UserGroupLargeFamilies",
+                "UserGroupChildren",
+                "UserGroupVeterans"
+            ]
         },
         "domain.Organization": {
             "type": "object",
@@ -1368,7 +1247,7 @@
                     "type": "string"
                 },
                 "document_type": {
-                    "type": "string"
+                    "$ref": "#/definitions/domain.UserDocumentType"
                 },
                 "id": {
                     "type": "string"
@@ -1380,6 +1259,15 @@
                     "type": "string"
                 }
             }
+        },
+        "domain.UserDocumentType": {
+            "type": "string",
+            "enum": ["passport", "snils", "registration"],
+            "x-enum-varnames": [
+                "UserDocumentTypePassport",
+                "UserDocumentTypeSNILS",
+                "UserDocumentTypeRegistration"
+            ]
         },
         "domain.UserGroup": {
             "type": "object",
@@ -1401,16 +1289,32 @@
                     "type": "string"
                 },
                 "status": {
-                    "type": "string"
+                    "$ref": "#/definitions/domain.VerificationStatus"
                 },
                 "type": {
-                    "type": "string"
+                    "$ref": "#/definitions/domain.GroupType"
                 },
                 "verified_at": {
                     "description": "Когда подтверждена",
                     "type": "string"
                 }
             }
+        },
+        "domain.VerificationStatus": {
+            "type": "string",
+            "enum": ["pending", "verified", "rejected", "expired"],
+            "x-enum-comments": {
+                "VerificationStatusExpired": "Истекла",
+                "VerificationStatusPending": "Ожидает подтверждения",
+                "VerificationStatusRejected": "Отклонена",
+                "VerificationStatusVerified": "Подтверждена"
+            },
+            "x-enum-varnames": [
+                "VerificationStatusPending",
+                "VerificationStatusVerified",
+                "VerificationStatusRejected",
+                "VerificationStatusExpired"
+            ]
         },
         "repository.UserBenefitsStats": {
             "type": "object",
@@ -1606,10 +1510,7 @@
         },
         "v1.createOrganizationRequest": {
             "type": "object",
-            "required": [
-                "description",
-                "name"
-            ],
+            "required": ["description", "name"],
             "properties": {
                 "description": {
                     "type": "string"
@@ -1632,10 +1533,7 @@
         },
         "v1.exchangeTokenRequest": {
             "type": "object",
-            "required": [
-                "code",
-                "state"
-            ],
+            "required": ["code", "state"],
             "properties": {
                 "code": {
                     "type": "string"
@@ -1771,10 +1669,7 @@
         },
         "v1.userUpdateInfoRequest": {
             "type": "object",
-            "required": [
-                "city_id",
-                "groups"
-            ],
+            "required": ["city_id", "groups"],
             "properties": {
                 "city_id": {
                     "type": "string"
@@ -1782,7 +1677,7 @@
                 "groups": {
                     "type": "array",
                     "items": {
-                        "type": "string"
+                        "$ref": "#/definitions/domain.GroupType"
                     }
                 }
             }
