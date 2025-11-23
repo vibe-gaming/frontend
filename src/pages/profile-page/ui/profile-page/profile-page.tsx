@@ -268,7 +268,7 @@ export const ProfilePage = () => {
                                     onClick={() =>
                                         navigate({
                                             to: '/benefits',
-                                            search: { tags: [TAGS_ENUMS.SAVED] },
+                                            search: { favorites: true },
                                         })
                                     }
                                 >
