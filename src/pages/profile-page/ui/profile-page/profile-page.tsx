@@ -20,6 +20,7 @@ import { useAuth } from '@/entities/auth'
 import { AXIOS_INSTANCE } from '@/shared/api/axios-client'
 import { type DomainUserDocument } from '@/shared/api/generated'
 import { useGetBenefitsUserStats } from '@/shared/api/generated/hooks/useGetBenefitsUserStats'
+import { TAGS_ENUMS } from '@/shared/model/constants'
 import { AppHeader } from '@/shared/ui/app-header'
 import { Footer } from '@/shared/ui/footer'
 import { formatPhoneNumber } from '@/shared/utils/format-phone-number'
@@ -221,7 +222,10 @@ export const ProfilePage = () => {
                                     p={{ base: '12px', md: '24px' }}
                                     transition='all 0.2s'
                                     onClick={() =>
-                                        navigate({ to: '/benefits', search: { favorites: true } })
+                                        navigate({
+                                            to: '/benefits',
+                                            search: { tags: [TAGS_ENUMS.AVAILABLE_TO_ME] },
+                                        })
                                     }
                                 >
                                     <VStack align='flex-start' gap='4px'>
@@ -261,7 +265,12 @@ export const ProfilePage = () => {
                                     height={{ base: '88px', md: 'auto' }}
                                     p={{ base: '12px', md: '24px' }}
                                     transition='all 0.2s'
-                                    onClick={() => navigate({ to: '/benefits' })} // TODO когда будет реализована страница с льготами (query url)
+                                    onClick={() =>
+                                        navigate({
+                                            to: '/benefits',
+                                            search: { tags: [TAGS_ENUMS.SAVED] },
+                                        })
+                                    }
                                 >
                                     <VStack align='flex-start' gap='4px'>
                                         <HStack
