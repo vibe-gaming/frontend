@@ -2,7 +2,6 @@ import { useCallback, useMemo, useState } from 'react'
 import { Box, Grid, GridItem, Heading, Show, useMediaQuery, VStack } from '@chakra-ui/react'
 import { useNavigate, useSearch } from '@tanstack/react-router'
 
-import { useAuth } from '@/entities/auth'
 import {
     type GetBenefitsQueryParams,
     useGetBenefits,
@@ -30,13 +29,8 @@ export const BenefitsPage = () => {
     const [isDesktop] = useMediaQuery(['(min-width: 768px)']) // 768px is the breakpoint for desktop
     const isOnline = useOnlineStatus()
     const isMobile = !isDesktop
-    const { profile } = useAuth()
 
-    const {
-        page,
-        favorites: _favorites,
-        ...searchValues
-    } = useSearch({
+    const { page, ...searchValues } = useSearch({
         from: '/_authenticated-layout/benefits/',
         select: (search) => {
             return {
@@ -90,7 +84,6 @@ export const BenefitsPage = () => {
             target_groups: searchValues.target_groups?.join(','),
             tags: searchValues.tags?.join(','),
             categories: searchValues.categories?.join(','),
-            city_id: searchValues.city_id ?? profile?.city_id,
         } as GetBenefitsQueryParams,
         {
             query: {
