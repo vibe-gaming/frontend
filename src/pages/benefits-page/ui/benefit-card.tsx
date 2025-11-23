@@ -13,7 +13,6 @@ import {
 import { useQueryClient } from '@tanstack/react-query'
 import { FaHeart } from 'react-icons/fa'
 import { LuHeart } from 'react-icons/lu'
-import { toast } from 'sonner'
 
 import { getUsersProfileQueryKey } from '@/shared/api/generated'
 import type { V1BenefitResponse } from '@/shared/api/generated/entities/v1/BenefitResponse'
@@ -73,8 +72,6 @@ export const BenefitCard = ({
                 })
 
                 onFavoriteChange?.(newFavoriteState)
-
-                toast.success('Льгота успешно добавлена в избранное')
             },
         },
     })

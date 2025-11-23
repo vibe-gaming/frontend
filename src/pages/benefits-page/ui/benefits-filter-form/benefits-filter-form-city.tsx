@@ -1,5 +1,13 @@
 import { useMemo } from 'react'
-import { createListCollection, Fieldset, Portal, Select, Spinner, VStack } from '@chakra-ui/react'
+import {
+    createListCollection,
+    Fieldset,
+    Portal,
+    Select,
+    Spinner,
+    useMediaQuery,
+    VStack,
+} from '@chakra-ui/react'
 import { Controller, useFormContext } from 'react-hook-form'
 
 import { useGetCities } from '@/shared/api/generated'
@@ -10,6 +18,8 @@ export const BenefitsFilterFormCity = () => {
     const { control } = useFormContext<BenefitsFilterFormValues>()
 
     const { data: cities, isLoading } = useGetCities()
+
+    const [isDesktop] = useMediaQuery(['(min-width: 768px)'])
 
     const citiesCollection = useMemo(() => {
         return createListCollection({
@@ -47,7 +57,7 @@ export const BenefitsFilterFormCity = () => {
                                     <Select.Indicator />
                                 </Select.IndicatorGroup>
                             </Select.Control>
-                            <Portal>
+                            <Portal disabled={!isDesktop}>
                                 <Select.Positioner>
                                     <Select.Content gap={4} p={4} rounded={'xl'}>
                                         {citiesCollection.items.length === 0 ? (
