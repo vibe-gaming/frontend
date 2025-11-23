@@ -9,6 +9,7 @@ import {
 } from '@/shared/api/generated'
 import { useOnlineStatus } from '@/shared/hooks/use-online-status'
 import { AppHeader } from '@/shared/ui/app-header'
+import { Footer } from '@/shared/ui/footer'
 import {
     filterStoredBenefits,
     getBenefitsFromStorage,
@@ -213,6 +214,8 @@ export const BenefitsPage = () => {
                         </GridItem>
                     </Grid>
                 </VStack>
+
+                <Footer />
             </Box>
         </>
     )
