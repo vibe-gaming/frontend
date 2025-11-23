@@ -15,8 +15,18 @@ dayjs.extend(relativeTime)
 export const App = () => {
     if (!globalThis.location.hostname.includes('localhost')) {
         return (
-            <div style={{ minHeight: '100dvh', minWidth: '100dvw' }}>
-                <p>Ведутся технические работы</p>
+            <div
+                style={{
+                    minHeight: '100dvh',
+                    minWidth: '100dvw',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}
+            >
+                <div style={{ fontSize: '24px', fontWeight: 'bold' }}>
+                    Ведутся технические работы
+                </div>
             </div>
         )
     }
