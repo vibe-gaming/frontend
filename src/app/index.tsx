@@ -1,4 +1,3 @@
-import { Center, Text } from '@chakra-ui/react'
 import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 import duration from 'dayjs/plugin/duration'
@@ -16,9 +15,9 @@ dayjs.extend(relativeTime)
 export const App = () => {
     if (!globalThis.location.hostname.includes('localhost')) {
         return (
-            <Center minH='100dvh' minW='100dvw'>
-                <Text>Ведутся технические работы</Text>
-            </Center>
+            <div style={{ minHeight: '100dvh', minWidth: '100dvw' }}>
+                <p>Ведутся технические работы</p>
+            </div>
         )
     }
 
