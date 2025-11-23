@@ -13,7 +13,7 @@ import {
     AuthHeading,
     AuthPageBox,
 } from '@/entities/auth'
-import { useGetCities, usePostUsersUpdateInfo } from '@/shared/api/generated'
+import { DomainGroupTypeEnum, useGetCities, usePostUsersUpdateInfo } from '@/shared/api/generated'
 import { useDeviceDetect } from '@/shared/hooks/use-device-detect'
 import { AppHeader } from '@/shared/ui/app-header'
 
@@ -43,7 +43,7 @@ export const RegisterCityPage = () => {
                 {
                     data: {
                         city_id: selectedCityId,
-                        groups: search.group_type as string[],
+                        groups: search.group_type as DomainGroupTypeEnum[],
                     },
                 },
                 {
