@@ -13,7 +13,9 @@ import {
 import { useQueryClient } from '@tanstack/react-query'
 import { FaHeart } from 'react-icons/fa'
 import { LuHeart } from 'react-icons/lu'
+import { toast } from 'sonner'
 
+import { getUsersProfileQueryKey } from '@/shared/api/generated'
 import type { V1BenefitResponse } from '@/shared/api/generated/entities/v1/BenefitResponse'
 import { usePostBenefitsIdFavorite } from '@/shared/api/generated/hooks/usePostBenefitsIdFavorite'
 import { useOnlineStatus } from '@/shared/hooks/use-online-status'
@@ -52,21 +54,27 @@ export const BenefitCard = ({
 
     const favoriteMutation = usePostBenefitsIdFavorite({
         mutation: {
-            onSuccess: () => {
+            onSuccess: async () => {
                 const newFavoriteState = !localIsFavorite
                 setLocalIsFavorite(newFavoriteState)
 
                 // Инвалидируем кэш для конкретной льготы и списка льгот
-                queryClient.invalidateQueries({
+                await queryClient.invalidateQueries({
                     queryKey: [{ url: '/benefits' }],
                 })
                 if (benefit.id) {
-                    queryClient.invalidateQueries({
+                    await queryClient.invalidateQueries({
                         queryKey: [{ url: `/benefits/${benefit.id}` }],
                     })
                 }
 
+                await queryClient.refetchQueries({
+                    queryKey: getUsersProfileQueryKey(),
+                })
+
                 onFavoriteChange?.(newFavoriteState)
+
+                toast.success('Льгота успешно добавлена в избранное')
             },
         },
     })

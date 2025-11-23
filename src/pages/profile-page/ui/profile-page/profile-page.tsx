@@ -175,8 +175,6 @@ export const ProfilePage = () => {
         setIsCertificateDrawerOpen(true)
     }
 
-    console.log(profile)
-
     if (isLoading) {
         return (
             <Box
