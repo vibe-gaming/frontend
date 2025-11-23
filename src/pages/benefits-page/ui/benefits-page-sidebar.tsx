@@ -26,7 +26,6 @@ export const BenefitsPageSidebar = () => {
 
     const handleSubmit = React.useCallback(
         (data: BenefitsFilterFormValues) => {
-            console.log(searchParams)
             navigate({
                 to: '/benefits',
                 search: {
