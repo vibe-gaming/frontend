@@ -32,7 +32,11 @@ export const BenefitsPage = () => {
     const isMobile = !isDesktop
     const { profile } = useAuth()
 
-    const { page, ...searchValues } = useSearch({
+    const {
+        page,
+        favorites: _favorites,
+        ...searchValues
+    } = useSearch({
         from: '/_authenticated-layout/benefits/',
         select: (search) => {
             return {
@@ -79,6 +83,7 @@ export const BenefitsPage = () => {
     // Также используем офлайн данные если запрос упал с сетевой ошибкой
     const { data, isLoading, isError, error } = useGetBenefits<V1BenefitsListResponse>(
         {
+            ...searchValues,
             page,
             limit: ITEMS_PER_PAGE,
             type: searchValues.benefit_types?.join(','),
@@ -86,7 +91,6 @@ export const BenefitsPage = () => {
             tags: searchValues.tags?.join(','),
             categories: searchValues.categories?.join(','),
             city_id: searchValues.city_id ?? profile?.city_id,
-            ...searchValues,
         } as GetBenefitsQueryParams,
         {
             query: {
