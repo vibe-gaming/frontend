@@ -485,11 +485,12 @@ export const ProfilePage = () => {
                                                     {group.status ===
                                                         VERIFICATION_STATUS.VERIFIED && (
                                                         <Button
+                                                            _active={{ bg: 'blue.50', borderColor: 'blue.300' }}    
                                                             aria-label='Просмотреть удостоверение'
-                                                            borderColor='blue.muted'
                                                             borderRadius={'2xl'}
-                                                            colorScheme='blue'
+                                                            colorPalette='blue'
                                                             h={'64px'}
+                                                            transition='all 0.2s'
                                                             variant='outline'
                                                             w='full'
                                                         >
@@ -609,12 +610,13 @@ export const ProfilePage = () => {
 
                     {/* Logout Button */}
                     <Button
-                        _hover={{ bg: 'white' }}
+                        _active={{ bg: 'blue.50' }}
                         borderRadius='16px'
-                        colorScheme='blue'
+                        colorPalette='blue'
                         fontSize='xl'
                         fontWeight='medium'
                         h='64px'
+                        transition='all 0.2s'
                         variant='ghost'
                         onClick={() => {
                             onLogout()

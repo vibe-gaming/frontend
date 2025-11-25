@@ -139,8 +139,7 @@ export const HomePage = () => {
 
                             {/* CTA Button - внутри баннера только на desktop */}
                             <Button
-                                _hover={{ bg: 'blue.600' }}
-                                bg='blue.solid'
+                                _active={{ bg: 'blue.700' }}
                                 borderRadius='20px'
                                 display={{ base: 'none', md: 'flex' }}
                                 fontSize='xl'
@@ -148,7 +147,10 @@ export const HomePage = () => {
                                 h='64px'
                                 lineHeight='36px'
                                 size='2xl'
+                                transition='all 0.2s'
                                 w='280px'
+                                colorPalette='blue'
+                                variant='solid'
                                 onClick={() => navigate({ to: '/benefits' })}
                             >
                                 Смотреть льготы
@@ -158,15 +160,17 @@ export const HomePage = () => {
 
                     {/* CTA Button - вне баннера только на mobile */}
                     <Button
-                        _hover={{ bg: 'blue.600' }}
-                        bg='blue.solid'
+                        _active={{ bg: 'blue.700' }}
                         borderRadius='16px'
                         display={{ base: 'flex', md: 'none' }}
                         fontSize='xl'
                         fontWeight='semibold'
                         lineHeight='30px'
                         size='2xl'
+                        transition='all 0.2s'
                         w='full'
+                        colorPalette='blue'
+                        variant='solid'
                         onClick={() => navigate({ to: '/benefits' })}
                     >
                         Смотреть льготы

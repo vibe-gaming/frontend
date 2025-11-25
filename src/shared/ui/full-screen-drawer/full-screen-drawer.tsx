@@ -44,11 +44,13 @@ export const FullScreenDrawer = ({ isOpen, onClose, children, headerContent, tit
                             {headerContent || (
                                 <Dialog.CloseTrigger asChild top={"24px"} right={"24px"} >
                                     <Button
-                                        variant="outline"
-                                        size="xl"
-                                        color={"gray.fg"}
+                                        _active={{ bg: 'gray.50' }}
                                         aria-label="Закрыть"
+                                        colorPalette='gray'
                                         rounded="xl"
+                                        size="xl"
+                                        transition='all 0.2s'
+                                        variant="outline"
                                     >
                                         <LuX size={20} /> <Text fontSize="lg" color={"gray.fg"} lineHeight="28px" fontWeight="normal">Закрыть</Text>
                                     </Button>
@@ -108,14 +110,15 @@ export const FullScreenDrawer = ({ isOpen, onClose, children, headerContent, tit
                     >
                         {headerContent || (
                             <Button
-                                variant="ghost"
-                                size="2xl"
-                                onClick={onClose}
-                                p={4}
-                                border={'none'}
-                                minW="auto"
-                                h="auto"
                                 aria-label="Закрыть"
+                                border={'none'}
+                                colorPalette='gray'
+                                h="auto"
+                                minW="auto"
+                                p={4}
+                                size="2xl"
+                                variant="ghost"
+                                onClick={onClose}
                             >
                                 <LuX size={20} />
                             </Button>

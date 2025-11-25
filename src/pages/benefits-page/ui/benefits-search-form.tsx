@@ -144,13 +144,14 @@ export const BenefitsSearchForm: React.FC<BenefitsSearchFormProps> = ({
                     )}
                 />
                 <IconButton
+                    _active={{ bg: isRecording ? 'red.700' : 'blue.700' }}
                     aria-label='Voice Search'
-                    bg='blue.solid'
                     colorPalette={isRecording ? 'red' : 'blue'}
                     disabled={isRecognizing}
                     rounded='xl'
                     size='2xl'
-                    variant={isRecording ? 'solid' : 'subtle'}
+                    transition='all 0.2s'
+                    variant='solid'
                     onClick={handleMicClick}
                 >
                     {isRecognizing ? <Spinner size='sm' /> : <LuMic color='#fff' size={24} />}

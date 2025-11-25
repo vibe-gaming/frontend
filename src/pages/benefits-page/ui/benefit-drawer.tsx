@@ -343,7 +343,7 @@ export const BenefitDrawer = ({
                         </Box>
                     )}
 
-                    {/* Заголовок с кнопкой избранного */}
+                    {/* Заголовок */}
                     <HStack align='flex-start' justify='space-between' mb={2}>
                         <Heading
                             as='h1'
@@ -355,29 +355,6 @@ export const BenefitDrawer = ({
                         >
                             {benefit.title || 'Без названия'}
                         </Heading>
-                        {/* Кнопка избранного - скрыта в офлайне */}
-                        {!isOfflineMode && (
-                            <IconButton
-                                bg={'blue.50'}
-                                color={'blue.fg'}
-                                flexShrink={0}
-                                loading={favoriteMutation.isPending}
-                                rounded='xl'
-                                size='xl'
-                                variant='solid'
-                                _hover={{
-                                    bg: 'blue.100',
-                                }}
-                                aria-label={
-                                    localIsFavorite
-                                        ? 'Удалить из избранного'
-                                        : 'Добавить в избранное'
-                                }
-                                onClick={handleFavoriteClick}
-                            >
-                                {localIsFavorite ? <FaHeart size={24} /> : <LuHeart size={24} />}
-                            </IconButton>
-                        )}
                     </HStack>
 
                     {/* Описание */}
@@ -638,6 +615,7 @@ export const BenefitDrawer = ({
                                         )}
 
                                         <Button
+                                            _active={{ bg: 'blue.50', borderColor: 'blue.300' }}
                                             aria-label={`Построить маршрут до ${getBuildingName()}`}
                                             borderColor='blue.muted'
                                             color='blue.fg'
@@ -648,6 +626,7 @@ export const BenefitDrawer = ({
                                             mt={4}
                                             rounded='xl'
                                             size='2xl'
+                                            transition='all 0.2s'
                                             variant='outline'
                                             w='full'
                                             onClick={(event) => {
@@ -667,12 +646,14 @@ export const BenefitDrawer = ({
                     {/* Кнопка скачивания PDF - только когда есть интернет */}
                     {!isOfflineMode && (
                         <Button
-                            _hover={{ bg: 'blue.subtleHover' }}
-                            bg='blue.subtle'
+                            _active={{ bg: 'blue.100' }}
+                            // _hover={{ bg: 'blue.subtleHover' }}
+                            // bg='blue.subtle'
                             border='1px solid'
                             borderColor='blue.muted'
                             borderRadius='2xl'
                             color='blue.fg'
+                            colorPalette='blue'
                             fontSize='xl'
                             fontWeight='normal'
                             lineHeight='30px'
@@ -680,6 +661,8 @@ export const BenefitDrawer = ({
                             mb={6}
                             ml={{ base: 'auto', md: 'auto' }}
                             size='2xl'
+                            transition='all 0.2s'
+                            variant='surface'
                             w={{ base: 'full', md: '218px' }}
                             onClick={handleDownloadPDF}
                         >

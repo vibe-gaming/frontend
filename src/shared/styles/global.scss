@@ -4,15 +4,6 @@
 * {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-
-    &:focus {
-        outline: none;
-    }
-
-    &:not(input, textarea):focus-visible {
-        box-shadow: 0 0 0 2px var(--extensions-background-light-brand);
-        outline: none;
-    }
 }
 
 html {
@@ -57,6 +48,12 @@ body,
     min-height: 100vh;
     flex-direction: column;
     margin: 0;
+}
+
+// Улучшение отзывчивости кнопок на мобильных устройствах
+button {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
 }
 
 

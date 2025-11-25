@@ -40,9 +40,13 @@ export const LoginPage = () => {
                 <AuthHeaderMobile
                     postfixElement={
                         <IconButton
+                            _active={{ bg: 'gray.100' }}
                             aria-label='Закрыть'
                             background='transparent'
+                            colorPalette='gray'
                             size='2xl'
+                            transition='all 0.2s'
+                            variant='ghost'
                             onClick={() => navigate({ to: '/' })}
                         >
                             <XIcon color='#27272A' size={24} />
