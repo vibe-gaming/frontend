@@ -1,12 +1,14 @@
 import { Box, Button, Heading, Spinner, Stack, Text, VStack } from '@chakra-ui/react'
 import { useNavigate } from '@tanstack/react-router'
 
-import { useGetBenefits } from '@/shared/api/generated/hooks/useGetBenefits'
 import type { V1BenefitsListResponse } from '@/shared/api/generated'
+import { useGetBenefits } from '@/shared/api/generated/hooks/useGetBenefits'
 
 export const PopularBenefits = () => {
     const navigate = useNavigate()
-    const { data, isLoading, isError, error } = useGetBenefits<V1BenefitsListResponse>({ limit: 10 })
+    const { data, isLoading, isError, error } = useGetBenefits<V1BenefitsListResponse>({
+        limit: 10,
+    })
 
     const handleShowMore = () => {
         navigate({ to: '/benefits' })
@@ -26,10 +28,11 @@ export const PopularBenefits = () => {
     }
 
     if (isError) {
-        const errorMessage = error && typeof error === 'object' && 'error_message' in error 
-            ? String(error.error_message) 
-            : null;
-        
+        const errorMessage =
+            error && typeof error === 'object' && 'error_message' in error
+                ? String(error.error_message)
+                : null
+
         return (
             <Box p={8}>
                 <Text color='error.DEFAULT'>Не удалось загрузить льготы</Text>

@@ -1,1 +1,1 @@
-export { BenefitsPage } from './ui/benefits-page/benefits-page'
+export { BenefitsPage } from './ui/benefits-page'

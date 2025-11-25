@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      # Передаем все переменные из .env файла как build args
+      # Docker Compose автоматически читает .env файл из той же директории
+      args:
+        - VITE_API_URL=${VITE_API_URL}
+        - VITE_API_TIMEOUT=${VITE_API_TIMEOUT}
+        - VITE_APP_TAG_VERSION=${VITE_APP_TAG_VERSION}
+        - NODE_ENV=${NODE_ENV:-production}
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=${NODE_ENV:-production}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - frontend-network
+
+networks:
+  frontend-network:
+    driver: bridge
+

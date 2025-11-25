@@ -13,7 +13,7 @@ import {
     AuthHeading,
     AuthPageBox,
 } from '@/entities/auth'
-import { useGetCities, usePostUsersUpdateInfo } from '@/shared/api/generated'
+import { DomainGroupTypeEnum, useGetCities, usePostUsersUpdateInfo } from '@/shared/api/generated'
 import { useDeviceDetect } from '@/shared/hooks/use-device-detect'
 import { AppHeader } from '@/shared/ui/app-header'
 
@@ -43,7 +43,7 @@ export const RegisterCityPage = () => {
                 {
                     data: {
                         city_id: selectedCityId,
-                        groups: search.group_type as string[],
+                        groups: search.group_type as DomainGroupTypeEnum[],
                     },
                 },
                 {
@@ -88,7 +88,7 @@ export const RegisterCityPage = () => {
                     <Combobox.Root
                         openOnClick
                         collection={collection}
-                        maxW={{ base: "100%", md: '343px'}}
+                        maxW={{ base: '100%', md: '343px' }}
                         w='100%'
                         onInputValueChange={(event) => filter(event.inputValue)}
                         onValueChange={(event) => setSelectedCityId(event.value[0] ?? null)}

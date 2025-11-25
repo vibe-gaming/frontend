@@ -38,10 +38,14 @@ export const SORT_OPTIONS = [
     { value: 'views', label: 'По популярности' },
 ] as const
 
+export const SORT_BY_OPTIONS = [
+    { value: 'created_at', label: 'По дате создания' },
+    { value: 'views', label: 'По популярности' },
+] as const
+
 export const SORT_ORDER_OPTIONS = [
     { value: 'desc', label: 'По убыванию' },
     { value: 'asc', label: 'По возрастанию' },
 ] as const
 
 export const ITEMS_PER_PAGE = 20
-

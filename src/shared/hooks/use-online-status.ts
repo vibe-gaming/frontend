@@ -5,7 +5,8 @@ import { useEffect, useState } from 'react'
  */
 export const useOnlineStatus = () => {
     const [isOnline, setIsOnline] = useState(() => {
-        if (typeof window === 'undefined') return true
+        if (globalThis.window === undefined) return true
+
         return navigator.onLine
     })
 
@@ -13,15 +14,14 @@ export const useOnlineStatus = () => {
         const handleOnline = () => setIsOnline(true)
         const handleOffline = () => setIsOnline(false)
 
-        window.addEventListener('online', handleOnline)
-        window.addEventListener('offline', handleOffline)
+        globalThis.addEventListener('online', handleOnline)
+        globalThis.addEventListener('offline', handleOffline)
 
         return () => {
-            window.removeEventListener('online', handleOnline)
-            window.removeEventListener('offline', handleOffline)
+            globalThis.removeEventListener('online', handleOnline)
+            globalThis.removeEventListener('offline', handleOffline)
         }
     }, [])
 
     return isOnline
 }
-

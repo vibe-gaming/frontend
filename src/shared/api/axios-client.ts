@@ -50,7 +50,7 @@ export type ResponseErrorConfig<TError = ErrorStructWithValidationErrors> = TErr
 // В development и production используем прокси (/api) для обхода CORS
 const getApiBaseURL = () => {
     // В Vite переменные окружения доступны через import.meta.env
-    const apiUrl = import.meta.env.VITE_API_URL
+    const apiUrl = 'https://backend-production-10ec.up.railway.app/api/v1'
 
     // Если VITE_API_URL установлен, используем его (для кастомных конфигураций)
     if (apiUrl) {

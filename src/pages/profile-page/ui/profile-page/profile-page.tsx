@@ -20,8 +20,11 @@ import { useAuth } from '@/entities/auth'
 import { AXIOS_INSTANCE } from '@/shared/api/axios-client'
 import { type DomainUserDocument } from '@/shared/api/generated'
 import { useGetBenefitsUserStats } from '@/shared/api/generated/hooks/useGetBenefitsUserStats'
+import { TAGS_ENUMS } from '@/shared/model/constants'
 import { AppHeader } from '@/shared/ui/app-header'
 import { Footer } from '@/shared/ui/footer'
+import { formatPhoneNumber } from '@/shared/utils/format-phone-number'
+import { formatSnils } from '@/shared/utils/format-snils'
 
 import { CertificateDrawer } from '../certificate-drawer'
 
@@ -123,29 +126,6 @@ const getDocumentByType = (
     return documents?.find((document_) => document_.document_type === type)
 }
 
-// Форматирование номера телефона
-const formatPhoneNumber = (phone?: string): string => {
-    if (!phone) return '—'
-    // Форматируем телефон в вид +7 (XXX)-XXX-XX-XX
-    const cleaned = phone.replaceAll(/\D/g, '')
-    if (cleaned.length === 11 && cleaned.startsWith('7')) {
-        return `+7 (${cleaned.slice(1, 4)})-${cleaned.slice(4, 7)}-${cleaned.slice(7, 9)}-${cleaned.slice(9)}`
-    }
-
-    return phone
-}
-
-// Форматирование СНИЛС
-const formatSnils = (snils?: string): string => {
-    if (!snils) return '—'
-    const cleaned = snils.replaceAll(/\D/g, '')
-    if (cleaned.length === 11) {
-        return `${cleaned.slice(0, 3)}-${cleaned.slice(3, 6)}-${cleaned.slice(6, 9)}-${cleaned.slice(9)}`
-    }
-
-    return snils
-}
-
 export const ProfilePage = () => {
     const { profile, isLoading, onLogout } = useAuth()
     const navigate = useNavigate()
@@ -195,8 +175,6 @@ export const ProfilePage = () => {
         setIsCertificateDrawerOpen(true)
     }
 
-    console.log(profile)
-
     if (isLoading) {
         return (
             <Box
@@ -212,26 +190,22 @@ export const ProfilePage = () => {
     }
 
     return (
-        <Box minH='100vh' bg={{ base: 'white', md: 'gray.100' }}>
+        <Box bg={{ base: 'white', md: 'gray.100' }} minH='100vh'>
             {/* Header */}
-            <Box
-                maxW='1280px'
-                mx='auto'
-                position='sticky'
-                top={0}
-                w='100%'
-                zIndex={1000}
-            >
+            <Box maxW='1280px' mx='auto' position='sticky' top={0} w='100%' zIndex={1000}>
                 <AppHeader />
             </Box>
 
-            <Container maxW='640px' mx='auto' pt={{ base: 0, md: 10 }} pb='16px' px='20px'>
+            <Container maxW='640px' mx='auto' pb='16px' pt={{ base: 0, md: 10 }} px='20px'>
                 <VStack align='stretch' gap='40px'>
-
                     {/* Benefits Section */}
                     <Box>
                         <VStack align='stretch' gap={{ base: '16px', md: '20px' }}>
-                            <Heading as='h2' fontSize={{ base: '2xl', md: '4xl' }} fontWeight='bold'>
+                            <Heading
+                                as='h2'
+                                fontSize={{ base: '2xl', md: '4xl' }}
+                                fontWeight='bold'
+                            >
                                 Мои льготы
                             </Heading>
 
@@ -239,17 +213,31 @@ export const ProfilePage = () => {
                                 <Box
                                     _hover={{ bg: { base: 'gray.100', md: 'gray.50' } }}
                                     bg={{ base: 'gray.50', md: 'white' }}
-                                    height={{ base: '88px', md: 'auto' }}
                                     borderRadius={{ base: '16px', md: '20px' }}
                                     cursor='pointer'
                                     flex='1'
+                                    height={{ base: '88px', md: 'auto' }}
                                     p={{ base: '12px', md: '24px' }}
                                     transition='all 0.2s'
-                                    onClick={() => navigate({ to: '/benefits' })} // TODO когда будет реализована страница с льготами (query url)
+                                    onClick={() =>
+                                        navigate({
+                                            to: '/benefits',
+                                            search: { tags: [TAGS_ENUMS.AVAILABLE_TO_ME] },
+                                        })
+                                    }
                                 >
                                     <VStack align='flex-start' gap='4px'>
-                                        <HStack align='center' justify='space-between' gap='4px' width='full'>
-                                            <Text color='gray.600' fontSize={{ base: 'lg', md: 'xl' }} fontWeight='medium'>
+                                        <HStack
+                                            align='center'
+                                            gap='4px'
+                                            justify='space-between'
+                                            width='full'
+                                        >
+                                            <Text
+                                                color='gray.600'
+                                                fontSize={{ base: 'lg', md: 'xl' }}
+                                                fontWeight='medium'
+                                            >
                                                 Для вас
                                             </Text>
                                             <LuChevronRight size={24} />
@@ -269,17 +257,31 @@ export const ProfilePage = () => {
                                 <Box
                                     _hover={{ bg: { base: 'gray.100', md: 'gray.50' } }}
                                     bg={{ base: 'gray.50', md: 'white' }}
-                                    height={{ base: '88px', md: 'auto' }}
                                     borderRadius={{ base: '16px', md: '20px' }}
                                     cursor='pointer'
                                     flex='1'
+                                    height={{ base: '88px', md: 'auto' }}
                                     p={{ base: '12px', md: '24px' }}
                                     transition='all 0.2s'
-                                    onClick={() => navigate({ to: '/benefits' })}  // TODO когда будет реализована страница с льготами (query url)
+                                    onClick={() =>
+                                        navigate({
+                                            to: '/benefits',
+                                            search: { favorites: true },
+                                        })
+                                    }
                                 >
                                     <VStack align='flex-start' gap='4px'>
-                                        <HStack align='center' justify='space-between' gap='4px' width='full'>
-                                            <Text color='gray.600' fontSize={{ base: 'lg', md: 'xl' }} fontWeight='medium'>
+                                        <HStack
+                                            align='center'
+                                            gap='4px'
+                                            justify='space-between'
+                                            width='full'
+                                        >
+                                            <Text
+                                                color='gray.600'
+                                                fontSize={{ base: 'lg', md: 'xl' }}
+                                                fontWeight='medium'
+                                            >
                                                 Сохранено
                                             </Text>
                                             <LuChevronRight size={24} />
@@ -299,19 +301,32 @@ export const ProfilePage = () => {
                         </VStack>
                     </Box>
 
-
                     {/* Personal Information Section */}
                     <Box>
                         <VStack align='stretch' gap={{ base: '16px', md: '20px' }}>
-                            <Heading as='h2' fontSize={{ base: '2xl', md: '4xl' }} fontWeight='bold'>
+                            <Heading
+                                as='h2'
+                                fontSize={{ base: '2xl', md: '4xl' }}
+                                fontWeight='bold'
+                            >
                                 Личная информация
                             </Heading>
 
-                            <Box bg='white' borderRadius={{ base: '16px', md: '20px' }} p={{ base: '16px', md: '24px' }} borderColor='border.default' borderWidth={{ base: '1px', md: '0' }}>
+                            <Box
+                                bg='white'
+                                borderColor='border.default'
+                                borderRadius={{ base: '16px', md: '20px' }}
+                                borderWidth={{ base: '1px', md: '0' }}
+                                p={{ base: '16px', md: '24px' }}
+                            >
                                 <VStack align='stretch' gap='0'>
                                     <Box borderBottom='1px solid' borderColor='#E4E4E7' pb='16px'>
                                         <VStack align='stretch' gap='4px'>
-                                            <Text fontSize={{ base: 'lg', md: 'xl' }} fontWeight='bold' lineHeight={{ base: '24px', md: '30px' }}>
+                                            <Text
+                                                fontSize={{ base: 'lg', md: 'xl' }}
+                                                fontWeight='bold'
+                                                lineHeight={{ base: '24px', md: '30px' }}
+                                            >
                                                 ФИО
                                             </Text>
                                             <Text
@@ -327,7 +342,11 @@ export const ProfilePage = () => {
 
                                     <Box borderBottom='1px solid' borderColor='#E4E4E7' py='16px'>
                                         <VStack align='stretch' gap='4px'>
-                                            <Text fontSize={{ base: 'lg', md: 'xl' }} fontWeight='bold' lineHeight={{ base: '24px', md: '30px' }}>
+                                            <Text
+                                                fontSize={{ base: 'lg', md: 'xl' }}
+                                                fontWeight='bold'
+                                                lineHeight={{ base: '24px', md: '30px' }}
+                                            >
                                                 Телефон
                                             </Text>
                                             <Text
@@ -343,7 +362,11 @@ export const ProfilePage = () => {
 
                                     <Box pt='16px'>
                                         <VStack align='stretch' gap='4px'>
-                                            <Text fontSize={{ base: 'lg', md: 'xl' }} fontWeight='bold' lineHeight={{ base: '24px', md: '30px' }}>
+                                            <Text
+                                                fontSize={{ base: 'lg', md: 'xl' }}
+                                                fontWeight='bold'
+                                                lineHeight={{ base: '24px', md: '30px' }}
+                                            >
                                                 Почта
                                             </Text>
                                             <Text
@@ -365,7 +388,11 @@ export const ProfilePage = () => {
                     {profile?.groups && profile.groups.length > 0 && (
                         <Box>
                             <VStack align='stretch' gap={{ base: '16px', md: '20px' }}>
-                                <Heading as='h2' fontSize={{ base: '2xl', md: '4xl' }} fontWeight='bold'>
+                                <Heading
+                                    as='h2'
+                                    fontSize={{ base: '2xl', md: '4xl' }}
+                                    fontWeight='bold'
+                                >
                                     Социальный статус
                                 </Heading>
 
@@ -379,20 +406,30 @@ export const ProfilePage = () => {
                                                 key={`${group.type}-${index}`}
                                                 aria-label={`Категория: ${getGroupTypeLabel(group.type)}`}
                                                 bg='white'
-                                                borderWidth={{ base: '1px', md: '0' }}
                                                 borderColor={'blue.200'}
                                                 borderRadius={{ base: '16px', md: '20px' }}
+                                                borderWidth={{ base: '1px', md: '0' }}
                                                 cursor='pointer'
                                                 p={{ base: '16px', md: '24px' }}
                                                 role='article'
                                                 transition='all 0.2s'
                                                 _hover={{
-                                                    borderColor: { base: 'blue.200', md: 'transparent' },
+                                                    borderColor: {
+                                                        base: 'blue.200',
+                                                        md: 'transparent',
+                                                    },
                                                     boxShadow: 'sm',
                                                 }}
-                                                onClick={() => handleOpenCertificate(group.type || 'pensioners')}
+                                                onClick={() =>
+                                                    handleOpenCertificate(
+                                                        group.type || 'pensioners'
+                                                    )
+                                                }
                                             >
-                                                <VStack align='stretch' gap={{ base: '8px', md: '20px' }}>
+                                                <VStack
+                                                    align='stretch'
+                                                    gap={{ base: '8px', md: '20px' }}
+                                                >
                                                     {/* Название категории и статус */}
                                                     <Flex
                                                         align='flex-start'
@@ -404,15 +441,24 @@ export const ProfilePage = () => {
                                                                 as='h3'
                                                                 fontSize={{ base: 'xl', md: '2xl' }}
                                                                 fontWeight='bold'
-                                                                lineHeight={{ base: '24px', md: '32px' }}
+                                                                lineHeight={{
+                                                                    base: '24px',
+                                                                    md: '32px',
+                                                                }}
                                                             >
                                                                 {getGroupTypeLabel(group.type)}
                                                             </Heading>
                                                             {displayDate && (
                                                                 <Text
                                                                     color='gray.600'
-                                                                    fontSize={{ base: 'md', md: 'xl' }}
-                                                                    lineHeight={{ base: '20px', md: '30px' }}
+                                                                    fontSize={{
+                                                                        base: 'md',
+                                                                        md: 'xl',
+                                                                    }}
+                                                                    lineHeight={{
+                                                                        base: '20px',
+                                                                        md: '30px',
+                                                                    }}
                                                                 >
                                                                     с {formatDate(displayDate)}
                                                                 </Text>
@@ -426,9 +472,9 @@ export const ProfilePage = () => {
                                                             flexShrink={0}
                                                             fontSize='sm'
                                                             fontWeight='regular'
+                                                            lineHeight={'20px'}
                                                             px={'10px'}
                                                             py={'4px'}
-                                                            lineHeight={'20px'}
                                                             textTransform='none'
                                                         >
                                                             {statusConfig.label}
@@ -438,21 +484,32 @@ export const ProfilePage = () => {
                                                     {/* Кнопка удостоверения */}
                                                     {group.status ===
                                                         VERIFICATION_STATUS.VERIFIED && (
-                                                            <Button
-                                                                aria-label='Просмотреть удостоверение'
-                                                                borderRadius={'2xl'}
-                                                                borderColor='blue.muted'
-                                                                colorScheme='blue'
-                                                                h={'64px'}
-                                                                variant='outline'
-                                                                w='full'
-                                                            >
-                                                                <Flex align='center' gap='12px'>
-                                                                    <Icon color='blue.fg' as={Eye} boxSize='24px' />
-                                                                    <Text color='blue.fg' fontSize={'xl'} fontWeight='medium' lineHeight={'30px'}>Удостоверение</Text>
-                                                                </Flex>
-                                                            </Button>
-                                                        )}
+                                                        <Button
+                                                            aria-label='Просмотреть удостоверение'
+                                                            borderColor='blue.muted'
+                                                            borderRadius={'2xl'}
+                                                            colorScheme='blue'
+                                                            h={'64px'}
+                                                            variant='outline'
+                                                            w='full'
+                                                        >
+                                                            <Flex align='center' gap='12px'>
+                                                                <Icon
+                                                                    as={Eye}
+                                                                    boxSize='24px'
+                                                                    color='blue.fg'
+                                                                />
+                                                                <Text
+                                                                    color='blue.fg'
+                                                                    fontSize={'xl'}
+                                                                    fontWeight='medium'
+                                                                    lineHeight={'30px'}
+                                                                >
+                                                                    Удостоверение
+                                                                </Text>
+                                                            </Flex>
+                                                        </Button>
+                                                    )}
 
                                                     {/* Сообщение об ошибке */}
                                                     {group.error_message && (
@@ -482,16 +539,34 @@ export const ProfilePage = () => {
                     {/* Documents Section */}
                     <Box>
                         <VStack align='stretch' gap={{ base: '16px', md: '20px' }}>
-                            <Heading as='h2' fontSize={{ base: '2xl', md: '4xl' }} fontWeight='bold'>
+                            <Heading
+                                as='h2'
+                                fontSize={{ base: '2xl', md: '4xl' }}
+                                fontWeight='bold'
+                            >
                                 Документы
                             </Heading>
 
-                            <Box bg='white' borderRadius={{ base: '16px', md: '20px' }} p={{ base: '16px', md: '24px' }} borderColor='border.default' borderWidth={{ base: '1px', md: '0' }}>
+                            <Box
+                                bg='white'
+                                borderColor='border.default'
+                                borderRadius={{ base: '16px', md: '20px' }}
+                                borderWidth={{ base: '1px', md: '0' }}
+                                p={{ base: '16px', md: '24px' }}
+                            >
                                 <VStack align='stretch' gap='0'>
                                     {snilsDocument?.document_number && (
-                                        <Box borderBottom='1px solid' borderColor='#E4E4E7' pb='16px'>
+                                        <Box
+                                            borderBottom='1px solid'
+                                            borderColor='#E4E4E7'
+                                            pb='16px'
+                                        >
                                             <VStack align='stretch' gap='4px'>
-                                                <Text fontSize={{ base: 'lg', md: 'xl' }} fontWeight='bold' lineHeight={{ base: '24px', md: '30px' }}>
+                                                <Text
+                                                    fontSize={{ base: 'lg', md: 'xl' }}
+                                                    fontWeight='bold'
+                                                    lineHeight={{ base: '24px', md: '30px' }}
+                                                >
                                                     СНИЛС
                                                 </Text>
                                                 <Text
@@ -509,7 +584,11 @@ export const ProfilePage = () => {
                                     {passportDocument?.document_number && (
                                         <Box pt='16px'>
                                             <VStack align='stretch' gap='4px'>
-                                                <Text fontSize={{ base: 'lg', md: 'xl' }} fontWeight='bold' lineHeight={{ base: '24px', md: '30px' }}>
+                                                <Text
+                                                    fontSize={{ base: 'lg', md: 'xl' }}
+                                                    fontWeight='bold'
+                                                    lineHeight={{ base: '24px', md: '30px' }}
+                                                >
                                                     Паспорт
                                                 </Text>
                                                 <Text
@@ -530,13 +609,13 @@ export const ProfilePage = () => {
 
                     {/* Logout Button */}
                     <Button
+                        _hover={{ bg: 'white' }}
                         borderRadius='16px'
                         colorScheme='blue'
                         fontSize='xl'
                         fontWeight='medium'
                         h='64px'
                         variant='ghost'
-                        _hover={{ bg: 'white' }}
                         onClick={() => {
                             onLogout()
                             navigate({ to: '/' })
@@ -549,12 +628,12 @@ export const ProfilePage = () => {
 
             {/* Certificate Drawer */}
             <CertificateDrawer
+                groupType={selectedGroupType}
                 isDownloading={isDownloadingPDF}
                 isOpen={isCertificateDrawerOpen}
                 profile={profile}
                 onDownloadPDF={handleDownloadPDF}
                 onOpenChange={setIsCertificateDrawerOpen}
-                groupType={selectedGroupType}
             />
 
             <Footer />

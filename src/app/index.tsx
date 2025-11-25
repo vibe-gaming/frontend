@@ -13,5 +13,26 @@ dayjs.locale('ru')
 dayjs.extend(relativeTime)
 
 export const App = () => {
+    if (
+        !globalThis.location.hostname.includes('localhost') &&
+        !globalThis.location.hostname.includes('netlify')
+    ) {
+        return (
+            <div
+                style={{
+                    minHeight: '100dvh',
+                    minWidth: '100dvw',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}
+            >
+                <div style={{ fontSize: '24px', fontWeight: 'bold' }}>
+                    Ведутся технические работы
+                </div>
+            </div>
+        )
+    }
+
     return <WithProviders />
 }

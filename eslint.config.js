@@ -95,6 +95,7 @@ export default defineConfig([
         },
 
         rules: {
+            'react/prop-types': 'off',
             'no-unused-vars': 'off',
             'no-redeclare': 'off',
             'no-irregular-whitespace': 'off',

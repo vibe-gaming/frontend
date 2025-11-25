@@ -7,6 +7,8 @@ import { AuthButton } from '@/entities/auth/ui/auth-button'
 import { AuthContentBox } from '@/entities/auth/ui/auth-content-box'
 import { useDeviceDetect } from '@/shared/hooks/use-device-detect'
 import { AppHeader } from '@/shared/ui/app-header/app-header'
+import { formatPhoneNumber } from '@/shared/utils/format-phone-number'
+import { formatSnils } from '@/shared/utils/format-snils'
 
 export const RegisterCheckInfoPage = () => {
     const { profile, isLoading } = useAuth()
@@ -69,7 +71,7 @@ export const RegisterCheckInfoPage = () => {
                                                 fontWeight='normal'
                                                 lineHeight='28px'
                                             >
-                                                {profile?.phone_number || '—'}
+                                                {formatPhoneNumber(profile?.phone_number) || '—'}
                                             </Text>
                                         </Box>
 
@@ -83,7 +85,7 @@ export const RegisterCheckInfoPage = () => {
                                                 fontWeight='normal'
                                                 lineHeight='28px'
                                             >
-                                                {profile?.snils || '—'}
+                                                {formatSnils(profile?.snils) || '—'}
                                             </Text>
                                         </Box>
 
