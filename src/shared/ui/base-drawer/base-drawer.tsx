@@ -10,6 +10,7 @@ export interface BaseDrawerProps {
     title: string
     children: ReactNode
     footer?: ReactNode
+    isPaddingBottom?: boolean
 }
 
 const DRAWER_HEIGHT = '90vh'
@@ -17,7 +18,7 @@ const CLOSE_THRESHOLD_PERCENT = 0.25 // 25% от высоты drawer для за
 const VELOCITY_THRESHOLD = 0.3 // минимальная скорость для закрытия
 
 export const BaseDrawer = forwardRef<HTMLDivElement, BaseDrawerProps>(
-    ({ isOpen, onOpenChange, title, children, footer }, ref) => {
+    ({ isOpen, onOpenChange, title, children, footer, isPaddingBottom = true }, ref) => {
         const contentRef = useRef<HTMLDivElement>(null)
         const backdropRef = useRef<HTMLDivElement>(null)
         const [isClosing, setIsClosing] = useState(false)
@@ -113,6 +114,22 @@ export const BaseDrawer = forwardRef<HTMLDivElement, BaseDrawerProps>(
                 filterTaps: true,
             }
         )
+
+        // Обработка Escape для закрытия drawer
+        useEffect(() => {
+            if (!isOpen) return
+
+            const handleEscape = (event: KeyboardEvent) => {
+                if (event.key === 'Escape' && !isClosing) {
+                    handleClose()
+                }
+            }
+
+            document.addEventListener('keydown', handleEscape)
+            return () => {
+                document.removeEventListener('keydown', handleEscape)
+            }
+        }, [isOpen, isClosing])
 
         return (
             <Drawer.Root
@@ -222,6 +239,7 @@ export const BaseDrawer = forwardRef<HTMLDivElement, BaseDrawerProps>(
                                     <Box display='flex' flex={1} justifyContent='flex-end'>
                                         <Button
                                             border={'none'}
+                                            colorPalette='gray'
                                             h='auto'
                                             minW='auto'
                                             p={4}
@@ -235,7 +253,7 @@ export const BaseDrawer = forwardRef<HTMLDivElement, BaseDrawerProps>(
                                 </Drawer.Header>
                             </Box>
                             <Drawer.Body
-                                pb={6}
+                                pb={isPaddingBottom ? 6 : 0}
                                 pt={4}
                                 px={4}
                                 style={{

@@ -8,10 +8,13 @@ export const AuthButton: React.FC<ButtonProps> = ({ children, ...props }) => {
 
     return (
         <Button
-            bg='#2563EB'
+            _active={{ bg: '#1e40af' }}
             borderRadius='2xl'
+            colorPalette='blue'
             fontSize='xl'
             size='2xl'
+            transition='all 0.2s'
+            variant='solid'
             w={isDesktop ? 'auto' : '100%'}
             {...props}
         >

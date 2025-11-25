@@ -47,7 +47,7 @@ export const BenefitsPageSidebar = () => {
             borderWidth='1px'
             display='flex'
             flexDirection='column'
-            h='calc(100dvh - 250px)'
+            h='calc(100dvh - 340px)'
             pl={5}
             pr={1}
             py={5}
@@ -73,8 +73,6 @@ export const BenefitsPageSidebar = () => {
                                 onSubmit={handleSubmit}
                             />
 
-                            {/* Кнопка скачивания PDF */}
-                            <BenefitsDownloadButton />
                         </VStack>
                     </ScrollArea.Content>
                 </ScrollArea.Viewport>

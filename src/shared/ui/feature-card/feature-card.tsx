@@ -19,7 +19,7 @@ export const FeatureCard = ({ icon, title, description }: FeatureCardProps) => {
             borderRadius={'2xl'}
             borderStyle='solid'
             borderWidth='1px'
-            p={4}
+            p={{ base: 4, md: 5 }}
         >
             <VStack align='start' gap={2}>
                 <Flex
@@ -30,18 +30,17 @@ export const FeatureCard = ({ icon, title, description }: FeatureCardProps) => {
                     <Flex
                         align='center'
                         color='blue.solid'
-                        fontSize='32px'
-                        height='32px'
+                        height={{ base: '32px', md: '40px' }}
                         justify='center'
-                        width='32px'
+                        width={{ base: '32px', md: '40px' }}
                     >
                         {icon}
                     </Flex>
-                    <Text fontSize='xl' fontWeight='bold' lineHeight={'30px'}>
+                    <Text fontSize={{ base: 'xl', md: '2xl' }} fontWeight='bold' lineHeight={{ base: '30px', md: '40px' }}>
                         {title}
                     </Text>
                 </Flex>
-                <Text color='gray.600' fontSize='lg' lineHeight='28px'>
+                <Text color='gray.600' fontSize={{ base: 'lg', md: 'xl' }} lineHeight={{ base: '28px', md: '30px' }}>
                     {description}
                 </Text>
             </VStack>

@@ -21,6 +21,10 @@ export const LoginPage = () => {
             `https://backend-production-10ec.up.railway.app/api/v1/users/auth/login`
         )
 
+        // let keycloakEndpoint = new URL(
+        //     `http://localhost:8080/api/v1/users/auth/login`
+        // )
+
         window.open(keycloakEndpoint, '_self')
     }, [])
 
@@ -36,9 +40,13 @@ export const LoginPage = () => {
                 <AuthHeaderMobile
                     postfixElement={
                         <IconButton
+                            _active={{ bg: 'gray.100' }}
                             aria-label='Закрыть'
                             background='transparent'
+                            colorPalette='gray'
                             size='2xl'
+                            transition='all 0.2s'
+                            variant='ghost'
                             onClick={() => navigate({ to: '/' })}
                         >
                             <XIcon color='#27272A' size={24} />
@@ -52,7 +60,7 @@ export const LoginPage = () => {
 
                 <AuthContent>
                     <Box maxW='500px' w='100%'>
-                        <Text color='#27272A' fontSize='md' lineHeight='24px'>
+                        <Text color='gray.800' fontSize={'lg'} lineHeight={'28px'}>
                             Авторизуйтесь через Госуслуги, чтобы увидеть льготы, которые подходят
                             именно вам
                         </Text>

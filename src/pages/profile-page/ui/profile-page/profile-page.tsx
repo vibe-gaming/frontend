@@ -320,7 +320,7 @@ export const ProfilePage = () => {
                                 p={{ base: '16px', md: '24px' }}
                             >
                                 <VStack align='stretch' gap='0'>
-                                    <Box borderBottom='1px solid' borderColor='#E4E4E7' pb='16px'>
+                                    <Box borderBottom='1px solid' borderColor='border' pb='16px'>
                                         <VStack align='stretch' gap='4px'>
                                             <Text
                                                 fontSize={{ base: 'lg', md: 'xl' }}
@@ -340,7 +340,7 @@ export const ProfilePage = () => {
                                         </VStack>
                                     </Box>
 
-                                    <Box borderBottom='1px solid' borderColor='#E4E4E7' py='16px'>
+                                    <Box borderBottom='1px solid' borderColor='border' py='16px'>
                                         <VStack align='stretch' gap='4px'>
                                             <Text
                                                 fontSize={{ base: 'lg', md: 'xl' }}
@@ -485,11 +485,12 @@ export const ProfilePage = () => {
                                                     {group.status ===
                                                         VERIFICATION_STATUS.VERIFIED && (
                                                         <Button
+                                                            _active={{ bg: 'blue.50', borderColor: 'blue.300' }}    
                                                             aria-label='Просмотреть удостоверение'
-                                                            borderColor='blue.muted'
                                                             borderRadius={'2xl'}
-                                                            colorScheme='blue'
+                                                            colorPalette='blue'
                                                             h={'64px'}
+                                                            transition='all 0.2s'
                                                             variant='outline'
                                                             w='full'
                                                         >
@@ -549,7 +550,7 @@ export const ProfilePage = () => {
 
                             <Box
                                 bg='white'
-                                borderColor='border.default'
+                                borderColor='border'
                                 borderRadius={{ base: '16px', md: '20px' }}
                                 borderWidth={{ base: '1px', md: '0' }}
                                 p={{ base: '16px', md: '24px' }}
@@ -558,7 +559,7 @@ export const ProfilePage = () => {
                                     {snilsDocument?.document_number && (
                                         <Box
                                             borderBottom='1px solid'
-                                            borderColor='#E4E4E7'
+                                            borderColor='border'
                                             pb='16px'
                                         >
                                             <VStack align='stretch' gap='4px'>
@@ -609,12 +610,13 @@ export const ProfilePage = () => {
 
                     {/* Logout Button */}
                     <Button
-                        _hover={{ bg: 'white' }}
+                        _active={{ bg: 'blue.50' }}
                         borderRadius='16px'
-                        colorScheme='blue'
+                        colorPalette='blue'
                         fontSize='xl'
                         fontWeight='medium'
                         h='64px'
+                        transition='all 0.2s'
                         variant='ghost'
                         onClick={() => {
                             onLogout()

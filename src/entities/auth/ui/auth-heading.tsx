@@ -4,10 +4,8 @@ import { Heading } from '@chakra-ui/react'
 import { useDeviceDetect } from '@/shared/hooks/use-device-detect'
 
 export const AuthHeading: React.FC<PropsWithChildren> = ({ children }) => {
-    const { isDesktop } = useDeviceDetect()
-
     return (
-        <Heading as='h1' color='#27272A' fontSize={isDesktop ? '4xl' : '2xl'} fontWeight={700}>
+        <Heading as='h1' color='gray.800' fontSize={{ base: '2xl', md: '4xl' }} fontWeight={700}>
             {children}
         </Heading>
     )

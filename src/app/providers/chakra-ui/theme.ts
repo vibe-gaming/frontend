@@ -40,6 +40,14 @@ const customConfig = defineConfig({
             },
         },
     },
+    globalCss: {
+        '*': {
+            // Глобальная настройка focus ring - более заметное синее кольцо
+            focusRingColor: 'blue.800 !important',
+            focusRingWidth: '3px !important',
+            focusVisibleRing: 'outside !important',
+        },
+    },
 })
 
 export const customSystem = createSystem(defaultConfig, customConfig)

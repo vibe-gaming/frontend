@@ -94,10 +94,12 @@ export const PopularBenefits = () => {
                 </Stack>
 
                 <Button
-                    _hover={{ bg: 'brand.600' }}
-                    bg='brand.500'
+                    _active={{ bg: 'brand.700' }}
                     color='white'
+                    colorPalette='brand'
                     size='lg'
+                    transition='all 0.2s'
+                    variant='solid'
                     onClick={handleShowMore}
                 >
                     Посмотреть больше

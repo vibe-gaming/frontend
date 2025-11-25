@@ -38,7 +38,7 @@ export const BenefitsPageSortBySelect = () => {
         >
             <Select.HiddenSelect />
             <Select.Control>
-                <Select.Trigger borderRadius={'xl'} rounded={'xl'}>
+                <Select.Trigger borderRadius={'xl'} rounded={'xl'} cursor='pointer'>
                     <Select.ValueText fontSize='lg' placeholder='Сортировка по' />
                 </Select.Trigger>
                 <Select.IndicatorGroup mr={4}>
@@ -47,9 +47,9 @@ export const BenefitsPageSortBySelect = () => {
             </Select.Control>
             <Portal>
                 <Select.Positioner>
-                    <Select.Content gap={4} p={4} rounded={'xl'}>
+                    <Select.Content py={2} rounded={'xl'}>
                         {sortByCollection.items.map((item) => (
-                            <Select.Item key={item.value} fontSize='lg' item={item}>
+                            <Select.Item key={item.value} fontSize='lg' px={4} py={2} item={item} cursor='pointer'>
                                 {item.label}
                                 <Select.ItemIndicator />
                             </Select.Item>
