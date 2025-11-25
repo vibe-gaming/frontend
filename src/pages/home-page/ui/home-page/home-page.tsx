@@ -85,20 +85,20 @@ export const HomePage = () => {
                 {...(isDesktop && { pt: '22px' })}
                 {...(!isDesktop && { px: '16px' })}
             >
-                <VStack align='stretch' gap={{ base: 6, lg: 12 }}>
+                <VStack align='stretch' gap={{ base: 6, md: 12 }}>
                     {/* Hero Section */}
                     <Box
                         bg={isOnline ? undefined : 'blue.50'}
                         bgSize='cover'
-                        borderRadius={{ base: '20px', lg: '32px' }}
-                        h={{ base: '500px', lg: '480px' }}
-                        p={{ base: '20px', lg: '48px' }}
+                        borderRadius={{ base: '20px', md: '32px' }}
+                        h={{ base: '500px', md: '480px' }}
+                        p={{ base: '20px', md: '48px' }}
                         position='relative'
                         bgImage={
                             isOnline
                                 ? {
                                     base: `url(${mainBannerImage})`,
-                                    lg: `url(${bannerDesktopImage})`,
+                                    md: `url(${bannerDesktopImage})`,
                                 }
                                 : undefined
                         }
@@ -113,24 +113,24 @@ export const HomePage = () => {
                     >
                         <VStack
                             align='start'
-                            gap={{ base: '10px', lg: '20px' }}
-                            h={{ base: 'auto', lg: 'full' }}
-                            justify={{ base: 'flex-start', lg: 'space-between' }}
-                            maxW={{ base: '100%', lg: '580px' }}
+                            gap={{ base: '10px', md: '20px' }}
+                            h={{ base: 'auto', md: 'full' }}
+                            justify={{ base: 'flex-start', md: 'space-between' }}
+                            maxW={{ base: '100%', md: '580px' }}
                         >
-                            <VStack align='start' gap={{ base: '10px', lg: '16px' }}>
+                            <VStack align='start' gap={{ base: '10px', md: '16px' }}>
                                 <Heading
                                     as='h1'
-                                    fontSize={{ base: '3xl', lg: '56px' }}
+                                    fontSize={{ base: '3xl', md: '7xl' }}
                                     fontWeight='bold'
-                                    lineHeight={{ base: '38px', lg: '64px' }}
+                                    lineHeight={{ base: '38px', md: '92px' }}
                                 >
                                     Все льготы —<br />в одном месте
                                 </Heading>
                                 <Text
                                     color='gray.800'
-                                    fontSize={{ base: 'lg', lg: '24px' }}
-                                    lineHeight={{ base: '28px', lg: '36px' }}
+                                    fontSize={{ base: 'lg', md: '3xl' }}
+                                    lineHeight={{ base: '28px', md: '38px' }}
                                 >
                                     Найдите все положенные льготы и экономьте на аптечных покупках,
                                     транспорте, ЖКУ и других услугах
@@ -142,8 +142,8 @@ export const HomePage = () => {
                                 _hover={{ bg: 'blue.600' }}
                                 bg='blue.solid'
                                 borderRadius='20px'
-                                display={{ base: 'none', lg: 'flex' }}
-                                fontSize='24px'
+                                display={{ base: 'none', md: 'flex' }}
+                                fontSize='xl'
                                 fontWeight='semibold'
                                 h='64px'
                                 lineHeight='36px'
@@ -161,7 +161,7 @@ export const HomePage = () => {
                         _hover={{ bg: 'blue.600' }}
                         bg='blue.solid'
                         borderRadius='16px'
-                        display={{ base: 'flex', lg: 'none' }}
+                        display={{ base: 'flex', md: 'none' }}
                         fontSize='xl'
                         fontWeight='semibold'
                         lineHeight='30px'
@@ -175,17 +175,17 @@ export const HomePage = () => {
                     {/* Features Section */}
                     <VStack
                         align='stretch'
-                        gap={{ base: 5, lg: 8 }}
+                        gap={{ base: 5, md: 8 }}
                         maxW='1020px'
-                        mt={{ base: 0, lg: 4 }}
+                        mt={{ base: 0, md: 4 }}
                         mx='auto'
                         w='100%'
                     >
                         <Heading
                             as='h2'
-                            fontSize={{ base: '2xl', lg: '6xl' }}
+                            fontSize={{ base: '2xl', md: '6xl' }}
                             fontWeight='bold'
-                            lineHeight={{ base: '32px', lg: '72px' }}
+                            lineHeight={{ base: '32px', md: '72px' }}
                             textAlign={isDesktop ? 'start' : 'center'}
                         >
                             Быстрый и понятный <br />
@@ -193,8 +193,8 @@ export const HomePage = () => {
                         </Heading>
 
                         <Grid
-                            gap={{ base: 5, lg: 7 }}
-                            templateColumns={{ base: '1fr', lg: 'repeat(2, 1fr)' }}
+                            gap={{ base: 5, md: 7 }}
+                            templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)' }}
                         >
                             {features.map((feature, index) => (
                                 <FeatureCard
@@ -209,28 +209,28 @@ export const HomePage = () => {
 
                     <VStack
                         align='stretch'
-                        gap={{ base: 5, lg: 8 }}
+                        gap={{ base: 5, md: 8 }}
                         maxW='1020px'
                         mx='auto'
                         w='100%'
                     >
                         <Heading
                             as='h2'
-                            fontSize={{ base: '2xl', lg: '6xl' }}
+                            fontSize={{ base: '2xl', md: '6xl' }}
                             fontWeight='bold'
-                            lineHeight={{ base: '32px', lg: '72px' }}
+                            lineHeight={{ base: '32px', md: '72px' }}
                             textAlign={isDesktop ? 'start' : 'center'}
                         >
                             Популярные льготы
                         </Heading>
                         <Grid
-                            gap={{ base: 4, lg: 12 }}
-                            templateColumns={{ base: 'repeat(2, 1fr)', lg: 'repeat(4, 1fr)' }}
+                            gap={{ base: 4, md: 12 }}
+                            templateColumns={{ base: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }}
                         >
                             {popularBenefits.map((benefit, index) => (
                                 <Box
                                     key={index}
-                                    borderRadius={{ base: '16px', lg: '20px' }}
+                                    borderRadius={{ base: '16px', md: '20px' }}
                                     cursor='pointer'
                                     transition='all 0.2s'
                                     _hover={{
@@ -241,23 +241,23 @@ export const HomePage = () => {
                                 >
                                     <VStack
                                         align='center'
-                                        gap={{ base: 2, lg: 3 }}
+                                        gap={{ base: 2, md: 3 }}
                                         h='full'
                                         justify='center'
                                     >
                                         <Image
                                             alt={benefit.title}
-                                            borderRadius={{ base: '16px', lg: '20px' }}
-                                            h={{ base: '140px', lg: '200px' }}
+                                            borderRadius={{ base: '16px', md: '20px' }}
+                                            h={{ base: '140px', md: '200px' }}
                                             objectFit='cover'
                                             src={benefit.image}
-                                            w={{ base: '140px', lg: '200px' }}
+                                            w={{ base: '140px', md: '200px' }}
                                         />
                                         <Text
                                             color='gray.800'
-                                            fontSize={{ base: 'xl', lg: '2xl' }}
+                                            fontSize={{ base: 'xl', md: '2xl' }}
                                             fontWeight='bold'
-                                            lineHeight={{ base: '30px', lg: '32px' }}
+                                            lineHeight={{ base: '30px', md: '32px' }}
                                             textAlign='center'
                                         >
                                             {benefit.title}

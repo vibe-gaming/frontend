@@ -320,7 +320,7 @@ export const ProfilePage = () => {
                                 p={{ base: '16px', md: '24px' }}
                             >
                                 <VStack align='stretch' gap='0'>
-                                    <Box borderBottom='1px solid' borderColor='#E4E4E7' pb='16px'>
+                                    <Box borderBottom='1px solid' borderColor='border' pb='16px'>
                                         <VStack align='stretch' gap='4px'>
                                             <Text
                                                 fontSize={{ base: 'lg', md: 'xl' }}
@@ -340,7 +340,7 @@ export const ProfilePage = () => {
                                         </VStack>
                                     </Box>
 
-                                    <Box borderBottom='1px solid' borderColor='#E4E4E7' py='16px'>
+                                    <Box borderBottom='1px solid' borderColor='border' py='16px'>
                                         <VStack align='stretch' gap='4px'>
                                             <Text
                                                 fontSize={{ base: 'lg', md: 'xl' }}
@@ -549,7 +549,7 @@ export const ProfilePage = () => {
 
                             <Box
                                 bg='white'
-                                borderColor='border.default'
+                                borderColor='border'
                                 borderRadius={{ base: '16px', md: '20px' }}
                                 borderWidth={{ base: '1px', md: '0' }}
                                 p={{ base: '16px', md: '24px' }}
@@ -558,7 +558,7 @@ export const ProfilePage = () => {
                                     {snilsDocument?.document_number && (
                                         <Box
                                             borderBottom='1px solid'
-                                            borderColor='#E4E4E7'
+                                            borderColor='border'
                                             pb='16px'
                                         >
                                             <VStack align='stretch' gap='4px'>

@@ -26,24 +26,24 @@ const formatSnils = (snils?: string): string => {
 const CertificateField = ({ label, value, isRed }: { label: string; value: string; isRed?: boolean }) => (
     <Box
         borderBottom="1px solid"
-        borderColor="#E4E4E7"
+        borderColor="border"
         pb="16px"
         pt="16px"
     >
         <Text
-            fontSize="14px"
-            lineHeight="20px"
+            fontSize={"lg"}
+            lineHeight="28px"
             fontWeight="normal"
-            color="#52525B"
+            color="gray.600"
             mb="4px"
         >
             {label}
         </Text>
         <Text
-            fontSize="18px"
-            lineHeight="24px"
+            fontSize={"xl"}
+            lineHeight="30px"
             fontWeight="bold"
-            color={isRed ? "#DC2626" : "#27272A"}
+            color={isRed ? "red.solid" : "gray.800"}
             textTransform="uppercase"
         >
             {value}
@@ -68,21 +68,21 @@ export const CertificateDrawer = ({
     const getDocumentTitle = (type: string): string => {
         switch (type) {
             case 'pensioners':
-                return 'Свидетельство\nпенсионера'
+                return 'Свидетельство пенсионера'
             case 'disabled':
-                return 'Справка\nинвалида'
+                return 'Справка инвалида'
             case 'students':
-                return 'Студенческий\nбилет'
+                return 'Студенческий билет'
             case 'young_families':
-                return 'Удостоверение\nмолодой семьи'
+                return 'Удостоверение молодой семьи'
             case 'large_families':
-                return 'Удостоверение\nмногодетной семьи'
+                return 'Удостоверение многодетной семьи'
             case 'low_income':
-                return 'Справка\nмалоимущего'
+                return 'Справка малоимущего'
             case 'children':
-                return 'Свидетельство\nо рождении'
+                return 'Свидетельство о рождении'
             case 'veterans':
-                return 'Удостоверение\nветерана'
+                return 'Удостоверение ветерана'
             default:
                 return 'Удостоверение'
         }
@@ -98,10 +98,9 @@ export const CertificateDrawer = ({
             <Box pt="8px" pb="16px">
                 <Heading
                     as="h2"
-                    fontSize="24px"
+                    fontSize={"2xl"}
                     lineHeight="32px"
                     fontWeight="bold"
-                    color="#27272A"
                     textTransform="uppercase"
                     letterSpacing="-0.2px"
                     dangerouslySetInnerHTML={{ __html: documentTitle.replace('\n', '<br />') }}
