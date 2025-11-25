@@ -97,17 +97,17 @@ export const HomePage = () => {
                         bgImage={
                             isOnline
                                 ? {
-                                    base: `url(${mainBannerImage})`,
-                                    md: `url(${bannerDesktopImage})`,
-                                }
+                                      base: `url(${mainBannerImage})`,
+                                      md: `url(${bannerDesktopImage})`,
+                                  }
                                 : undefined
                         }
                         style={
                             isOnline
                                 ? {
-                                    backgroundPosition: 'center',
-                                    backgroundRepeat: 'no-repeat',
-                                }
+                                      backgroundPosition: 'center',
+                                      backgroundRepeat: 'no-repeat',
+                                  }
                                 : undefined
                         }
                     >
@@ -141,6 +141,7 @@ export const HomePage = () => {
                             <Button
                                 _active={{ bg: 'blue.700' }}
                                 borderRadius='20px'
+                                colorPalette='blue'
                                 display={{ base: 'none', md: 'flex' }}
                                 fontSize='xl'
                                 fontWeight='semibold'
@@ -148,9 +149,8 @@ export const HomePage = () => {
                                 lineHeight='36px'
                                 size='2xl'
                                 transition='all 0.2s'
-                                w='280px'
-                                colorPalette='blue'
                                 variant='solid'
+                                w='280px'
                                 onClick={() => navigate({ to: '/benefits' })}
                             >
                                 Смотреть льготы
@@ -162,15 +162,15 @@ export const HomePage = () => {
                     <Button
                         _active={{ bg: 'blue.700' }}
                         borderRadius='16px'
+                        colorPalette='blue'
                         display={{ base: 'flex', md: 'none' }}
                         fontSize='xl'
                         fontWeight='semibold'
                         lineHeight='30px'
                         size='2xl'
                         transition='all 0.2s'
-                        w='full'
-                        colorPalette='blue'
                         variant='solid'
+                        w='full'
                         onClick={() => navigate({ to: '/benefits' })}
                     >
                         Смотреть льготы
@@ -241,7 +241,9 @@ export const HomePage = () => {
                                         bg: 'gray.300',
                                         transform: 'scale(1.02)',
                                     }}
-                                    onClick={() => navigate({ to: isAuthenticated ? '/benefits' : '/login' })}
+                                    onClick={() =>
+                                        navigate({ to: isAuthenticated ? '/benefits' : '/login' })
+                                    }
                                 >
                                     <VStack
                                         align='center'

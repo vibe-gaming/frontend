@@ -3,10 +3,10 @@ import * as isvek from '@blasdfaa/bvi'
 import { Button, Show, useMediaQuery } from '@chakra-ui/react'
 import { EyeIcon } from 'lucide-react'
 
-import '@blasdfaa/bvi/dist/css/bvi.min.css'
+import './bvi.css'
 
 export const BviButton = () => {
-    const bviRef = useRef(null)
+    const bviRef = useRef<any>(null)
     const [isDesktop] = useMediaQuery(['(min-width: 768px)'])
 
     useEffect(() => {

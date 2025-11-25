@@ -38,6 +38,7 @@ export default defineConfig([
             '**/generated/',
             '**/mocks/**',
             '**/route-tree.generated.ts',
+            '**/*.css',
         ],
     },
     {
