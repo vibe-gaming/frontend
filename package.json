@@ -23,6 +23,7 @@
         "cspell": "yarn cspell src/**/*.{ts,tsx,css,scss} --config .cspell.json --words-only --unique"
     },
     "dependencies": {
+        "@blasdfaa/bvi": "^1.0.0",
         "@chakra-ui/react": "^3.29.0",
         "@emotion/react": "^11.14.0",
         "@emotion/styled": "^11.14.1",

@@ -15,6 +15,7 @@ import { User } from 'lucide-react'
 import { useAuthState } from '@/entities/auth'
 import logoIcon from '@/shared/assets/icons/logo.svg'
 import { useOnlineStatus } from '@/shared/hooks/use-online-status'
+import { BviButton } from '@/shared/libs/bvi'
 
 export const AppHeader = ({ isAuthPages = false }) => {
     const navigate = useNavigate()
@@ -36,15 +37,20 @@ export const AppHeader = ({ isAuthPages = false }) => {
     return (
         <Box
             maxW='1200px'
-            mt={{ base: 4, md: 10 }}
             mb={{ base: 5, md: 0 }}
+            mt={{ base: 4, md: 10 }}
             mx='auto'
             position='sticky'
             top={0}
             w='100%'
             zIndex={1000}
         >
-            <Box bg='white' py={{ base: 2, md: 5 }} px={{ base: 4, md: 6 }} rounded={{ base: '0', md: '3xl' }}>
+            <Box
+                bg='white'
+                px={{ base: 4, md: 6 }}
+                py={{ base: 2, md: 5 }}
+                rounded={{ base: '0', md: '3xl' }}
+            >
                 <Flex align='center' justify='space-between'>
                     {/* Логотип слева */}
                     <HStack gap={2}>
@@ -96,28 +102,32 @@ export const AppHeader = ({ isAuthPages = false }) => {
 
                     {/* Кнопка навигации и иконка профиля справа */}
                     <HStack gap='8px'>
-                        {!isAuthPages && <Button
-                            _active={{ bg: 'blue.50', borderColor: 'blue.300' }}
-                            borderColor='blue.muted'
-                            borderRadius={{ base: 'xl', md: "2xl" }}
-                            color='blue.solid'
-                            colorPalette='blue'
-                            fontSize={{ base: "lg", md: "xl" }}
-                            fontWeight='medium'
-                            px='32px'
-                            size={{ base: "xl", md: "2xl" }}
-                            transition='all 0.2s'
-                            variant='outline'
-                            onClick={() => {
-                                if (isHomePage) {
-                                    onBenefitsClick()
-                                } else {
-                                    onHomeClick()
-                                }
-                            }}
-                        >
-                            {isHomePage ? 'Льготы' : 'Главная'}
-                        </Button>}
+                        <BviButton />
+
+                        {!isAuthPages && (
+                            <Button
+                                _active={{ bg: 'blue.50', borderColor: 'blue.300' }}
+                                borderColor='blue.muted'
+                                borderRadius={{ base: 'xl', md: '2xl' }}
+                                color='blue.solid'
+                                colorPalette='blue'
+                                fontSize={{ base: 'lg', md: 'xl' }}
+                                fontWeight='medium'
+                                px={{ base: 5, md: 7 }}
+                                size={{ base: 'xl', md: '2xl' }}
+                                transition='all 0.2s'
+                                variant='outline'
+                                onClick={() => {
+                                    if (isHomePage) {
+                                        onBenefitsClick()
+                                    } else {
+                                        onHomeClick()
+                                    }
+                                }}
+                            >
+                                {isHomePage ? 'Льготы' : 'Главная'}
+                            </Button>
+                        )}
 
                         {/* Кнопка профиля - скрыта в офлайне */}
                         {isOnline && !isAuthPages && (
@@ -125,12 +135,12 @@ export const AppHeader = ({ isAuthPages = false }) => {
                                 _active={{ bg: 'blue.50', borderColor: 'blue.300' }}
                                 aria-label={isAuthenticated ? 'Профиль' : 'Войти'}
                                 borderColor='blue.muted'
-                                borderRadius={{ base: 'xl', md: "2xl" }}
+                                borderRadius={{ base: 'xl', md: '2xl' }}
                                 color='blue.solid'
                                 colorPalette='blue'
-                                fontSize={{ base: "lg", md: "xl" }}
+                                fontSize={{ base: 'lg', md: 'xl' }}
                                 fontWeight='medium'
-                                size={{ base: "xl", md: "2xl" }}
+                                size={{ base: 'xl', md: '2xl' }}
                                 transition='all 0.2s'
                                 variant='outline'
                                 onClick={isAuthenticated ? onProfileClick : onLoginClick}
