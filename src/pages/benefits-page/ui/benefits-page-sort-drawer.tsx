@@ -42,11 +42,13 @@ export const BenefitsPageSortDrawer = ({
     const footer = (
         <HStack gap={4} w='full'>
             <Button
+                _active={{ bg: 'gray.100' }}
                 borderColor={'blue.muted'}
                 colorPalette='blue'
                 flex={1}
                 rounded={'2xl'}
                 size='2xl'
+                transition='all 0.2s'
                 variant='plain'
                 onClick={() => {
                     reset(
@@ -61,10 +63,12 @@ export const BenefitsPageSortDrawer = ({
                 Сбросить
             </Button>
             <Button
+                _active={{ bg: 'blue.700' }}
                 colorPalette='blue'
                 flex={1}
                 rounded={'2xl'}
                 size='2xl'
+                transition='all 0.2s'
                 variant='solid'
                 onClick={() => {
                     handleSubmit(onSubmit)()
@@ -109,16 +113,22 @@ export const BenefitsPageSortDrawer = ({
                                             <RadioCard.ItemHiddenInput />
                                             <RadioCard.ItemControl>
                                                 <Button
-                                                    color={'blue.fg'}
-                                                    colorPalette='blue'
-                                                    rounded={'xl'}
-                                                    size='lg'
-                                                    variant={isSelected ? 'subtle' : 'outline'}
+                                                    _active={
+                                                        isSelected
+                                                            ? { bg: 'blue.200' }
+                                                            : { bg: 'blue.50', borderColor: 'blue.300' }
+                                                    }
                                                     bg={
                                                         field.value === item.value
                                                             ? 'blue.muted'
                                                             : 'transparent'
                                                     }
+                                                    color={'blue.fg'}
+                                                    colorPalette='blue'
+                                                    rounded={'xl'}
+                                                    size='lg'
+                                                    transition='all 0.2s'
+                                                    variant={isSelected ? 'subtle' : 'outline'}
                                                     onClick={() => {
                                                         field.onChange(item.value)
                                                     }}

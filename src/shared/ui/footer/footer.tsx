@@ -107,7 +107,7 @@ export const Footer = () => {
                             style={{ display: 'block' }}
                             width='56'
                         />
-                        <Heading as='h3' fontSize='32px' fontWeight='extrabold' lineHeight='40px'>
+                        <Heading as='h3' fontSize='3xl' fontWeight='extrabold' lineHeight='40px'>
                             мои
                             <Text
                                 as='span'

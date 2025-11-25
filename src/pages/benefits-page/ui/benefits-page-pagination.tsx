@@ -29,7 +29,13 @@ export const BenefitsPagePagination = ({
         >
             <ButtonGroup gap='6' size='lg' variant='ghost'>
                 <Pagination.PrevTrigger asChild>
-                    <IconButton>
+                    <IconButton
+                        _active={{ bg: 'blue.200' }}
+                        colorPalette='blue'
+                        transition='all 0.2s'
+                        variant='ghost'
+                        rounded='xl'
+                    >
                         <LuChevronLeft />
                     </IconButton>
                 </Pagination.PrevTrigger>
@@ -37,7 +43,13 @@ export const BenefitsPagePagination = ({
                     {currentPage} из {Math.ceil(total / ITEMS_PER_PAGE)}
                 </Text>
                 <Pagination.NextTrigger asChild>
-                    <IconButton>
+                    <IconButton
+                        _active={{ bg: 'blue.200' }}
+                        colorPalette='blue'
+                        transition='all 0.2s'
+                        variant='ghost'
+                        rounded='xl'
+                    >
                         <LuChevronRight />
                     </IconButton>
                 </Pagination.NextTrigger>

@@ -81,10 +81,16 @@ export const RegisterCategoryPage = () => {
 
                                 return (
                                     <Button
+                                        _active={
+                                            isActive
+                                                ? { bg: 'blue.200' }
+                                                : { bg: 'gray.200' }
+                                        }
                                         key={type}
                                         borderRadius='xl'
                                         colorPalette={isActive ? 'blue' : 'gray'}
                                         size='xl'
+                                        transition='all 0.2s'
                                         variant={isActive ? 'subtle' : 'surface'}
                                         onClick={() => toggleType(type)}
                                     >

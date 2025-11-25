@@ -65,6 +65,7 @@ export const BenefitsPageFilterDrawer = ({
             isOpen={isOpen}
             title='Фильтр'
             onOpenChange={onOpenChange}
+            isPaddingBottom={false}
         >
             <BenefitsFilterForm searchValues={searchValues} onReset={onReset} onSubmit={onSubmit} />
         </BaseDrawer>

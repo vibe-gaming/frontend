@@ -49,15 +49,19 @@ export const AppHeader = ({ isAuthPages = false }) => {
                     {/* Логотип слева */}
                     <HStack gap={2}>
                         <IconButton
+                            _active={{ bg: 'rgba(255, 255, 255, 0.1)', opacity: 0.9 }}
                             _hover={{ opacity: 0.8 }}
                             aria-label='Логотип'
                             bg='transparent'
                             borderRadius='16px'
                             color='white'
+                            colorPalette='gray'
                             h='48px'
                             minW='48px'
                             p={0}
                             size='lg'
+                            transition='all 0.2s'
+                            variant='ghost'
                             onClick={() => {
                                 if (!isAuthPages) onLogoClick()
                             }}
@@ -93,15 +97,16 @@ export const AppHeader = ({ isAuthPages = false }) => {
                     {/* Кнопка навигации и иконка профиля справа */}
                     <HStack gap='8px'>
                         {!isAuthPages && <Button
-                            _hover={{ bg: 'blue.50' }}
-                            bg='white'
+                            _active={{ bg: 'blue.50', borderColor: 'blue.300' }}
                             borderColor='blue.muted'
                             borderRadius={{ base: 'xl', md: "2xl" }}
                             color='blue.solid'
+                            colorPalette='blue'
                             fontSize={{ base: "lg", md: "xl" }}
                             fontWeight='medium'
                             px='32px'
                             size={{ base: "xl", md: "2xl" }}
+                            transition='all 0.2s'
                             variant='outline'
                             onClick={() => {
                                 if (isHomePage) {
@@ -117,15 +122,16 @@ export const AppHeader = ({ isAuthPages = false }) => {
                         {/* Кнопка профиля - скрыта в офлайне */}
                         {isOnline && !isAuthPages && (
                             <IconButton
-                                _hover={{ bg: 'blue.50' }}
+                                _active={{ bg: 'blue.50', borderColor: 'blue.300' }}
                                 aria-label={isAuthenticated ? 'Профиль' : 'Войти'}
-                                bg='white'
                                 borderColor='blue.muted'
                                 borderRadius={{ base: 'xl', md: "2xl" }}
                                 color='blue.solid'
+                                colorPalette='blue'
                                 fontSize={{ base: "lg", md: "xl" }}
                                 fontWeight='medium'
                                 size={{ base: "xl", md: "2xl" }}
+                                transition='all 0.2s'
                                 variant='outline'
                                 onClick={isAuthenticated ? onProfileClick : onLoginClick}
                             >

@@ -149,7 +149,7 @@ export const BenefitCard = ({
                 w='100%'
                 _hover={{
                     borderColor: 'border.accent',
-                    boxShadow: 'md',
+                    // boxShadow: 'md',
                 }}
                 style={{
                     wordBreak: 'break-word',
@@ -224,8 +224,7 @@ export const BenefitCard = ({
                     {/* Кнопки внизу */}
                     <HStack flexShrink={0} gap={4} justify='space-between' mt='auto'>
                         <Button
-                            _hover={{ bg: 'blue.solidHover' }}
-                            bg='blue.solid'
+                            _active={{ bg: 'blue.700' }}
                             color='white'
                             colorPalette='blue'
                             flex={1}
@@ -234,6 +233,7 @@ export const BenefitCard = ({
                             lineHeight='30px'
                             rounded='2xl'
                             size='2xl'
+                            transition='all 0.1s'
                             variant='solid'
                             onClick={handleDetailsClick}
                         >
@@ -242,16 +242,14 @@ export const BenefitCard = ({
                         {/* Кнопка избранного - скрыта в офлайне */}
                         {isOnline && (
                             <IconButton
+                                _active={{ bg: localIsFavorite ? 'red.100' : 'blue.100' }}
                                 aria-label='Добавить в избранное'
-                                bg='blue.50'
-                                color='blue.fg'
+                                colorPalette={localIsFavorite ? 'red' : 'blue'}
                                 loading={favoriteMutation.isPending}
                                 rounded='2xl'
                                 size='2xl'
-                                variant='solid'
-                                _hover={{
-                                    bg: localIsFavorite ? 'red.100' : 'blue.100',
-                                }}
+                                transition='all 0.2s'
+                                variant='subtle'
                                 onClick={handleFavoriteClick}
                             >
                                 {localIsFavorite ? <FaHeart size={24} /> : <LuHeart size={24} />}

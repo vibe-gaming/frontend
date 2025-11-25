@@ -93,10 +93,16 @@ export const BenefitsPageSearchControls = () => {
         <>
             <Flex gap={2}>
                 <Button
+                    _active={
+                        isFilterChanged
+                            ? { bg: 'blue.200' }
+                            : { bg: 'blue.50', borderColor: 'blue.300' }
+                    }
                     color={isFilterChanged ? 'blue.fg' : undefined}
                     colorPalette={isFilterChanged ? 'blue' : undefined}
                     rounded='xl'
                     size='xl'
+                    transition='all 0.2s'
                     variant={isFilterChanged ? 'subtle' : 'outline'}
                     onClick={() => setIsFiltersOpen(true)}
                 >
@@ -104,10 +110,16 @@ export const BenefitsPageSearchControls = () => {
                     <LuChevronDown />
                 </Button>
                 <Button
+                    _active={
+                        isSortChanged
+                            ? { bg: 'blue.200' }
+                            : { bg: 'blue.50', borderColor: 'blue.300' }
+                    }
                     color={isSortChanged ? 'blue.fg' : undefined}
                     colorPalette={isSortChanged ? 'blue' : undefined}
                     rounded='xl'
                     size='xl'
+                    transition='all 0.2s'
                     variant={isSortChanged ? 'subtle' : 'outline'}
                     onClick={() => setIsSortOpen(true)}
                 >

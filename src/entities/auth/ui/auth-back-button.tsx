@@ -8,13 +8,16 @@ export const AuthBackButton: React.FC<ButtonProps> = ({ children, ...props }) =>
 
     return (
         <Button
-            bg='white'
+            _active={{ bg: 'blue.50', borderColor: 'blue.300' }}
             border='1px solid'
             borderColor='blue.muted'
             borderRadius='2xl'
             color='blue.fg'
+            colorPalette='blue'
             fontSize='xl'
             size='2xl'
+            transition='all 0.2s'
+            variant='outline'
             w={isDesktop ? 'auto' : '100%'}
             {...props}
         >

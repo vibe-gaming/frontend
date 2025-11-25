@@ -11,12 +11,13 @@ import { BenefitsFilterFormCity } from './benefits-filter-form-city'
 import { BenefitsFilterFormTags } from './benefits-filter-form-tags'
 import { BenefitsFilterFormTargetGroups } from './benefits-filter-form-target-groups'
 import { BenefitsFilterFormType } from './benefits-filter-form-type'
+import { BenefitsDownloadButton } from '../benefits-download-button'
 
 export interface BenefitsFilterFormValues
     extends Pick<
         BenefitsSearchParams,
         'benefit_types' | 'tags' | 'categories' | 'city_id' | 'target_groups'
-    > {}
+    > { }
 
 export const BENEFIT_FILTER_FORM_DEFAULT_VALUES: BenefitsFilterFormValues = {
     benefit_types: [],
@@ -97,34 +98,41 @@ export const BenefitsFilterForm: React.FC<BenefitsFilterFormProps> = ({
                     <BenefitsFilterFormCategory />
                 </VStack>
                 {isDesktop ? (
-                    <Button
-                        colorPalette='blue'
-                        mt={6}
-                        rounded={'xl'}
-                        size='lg'
-                        type='button'
-                        variant='outline'
-                        w='full'
-                        onClick={(event) => {
-                            event.preventDefault()
-                            event.stopPropagation()
-
-                            onReset()
-
-                            reset(BENEFIT_FILTER_FORM_DEFAULT_VALUES, { keepValues: false })
-                        }}
-                    >
-                        Сбросить
-                    </Button>
-                ) : (
-                    <HStack bottom={0} gap={4} mt={4} position='sticky' w='full'>
+                    <VStack align='flex-start' gap={4} p={1} position='sticky' bottom={0} bg='white'>
                         <Button
-                            bg='white'
+                            _active={{ bg: 'blue.50', borderColor: 'blue.300' }}
+                            colorPalette='blue'
+                            mt={6}
+                            rounded={'xl'}
+                            size='xl'
+                            transition='all 0.2s'
+                            type='button'
+                            variant='outline'
+                            w='full'
+                            onClick={(event) => {
+                                event.preventDefault()
+                                event.stopPropagation()
+
+                                onReset()
+
+                                reset(BENEFIT_FILTER_FORM_DEFAULT_VALUES, { keepValues: false })
+                            }}
+                        >
+                            Сбросить
+                        </Button>
+                        {/* Кнопка скачивания PDF */}
+                        <BenefitsDownloadButton />
+                    </VStack>
+                ) : (
+                    <HStack bottom={0} gap={4} pt={4} pb={6} position='sticky' w='full' bg='white'>
+                        <Button
+                            _active={{ bg: 'gray.100' }}
                             borderColor={'blue.muted'}
                             colorPalette='blue'
                             flex={1}
                             rounded={'2xl'}
                             size='2xl'
+                            transition='all 0.2s'
                             variant='plain'
                             onClick={() => {
                                 reset(BENEFIT_FILTER_FORM_DEFAULT_VALUES, { keepValues: false })
@@ -134,10 +142,12 @@ export const BenefitsFilterForm: React.FC<BenefitsFilterFormProps> = ({
                             Сбросить
                         </Button>
                         <Button
+                            _active={{ bg: 'blue.700' }}
                             colorPalette='blue'
                             flex={1}
                             rounded={'2xl'}
                             size='2xl'
+                            transition='all 0.2s'
                             variant='solid'
                             onClick={() => {
                                 methods.handleSubmit(onSubmit)()
