@@ -10,3 +10,4 @@ index.html
 *.yaml
 README.md
 .gitlab-ci.yml
+*.css
