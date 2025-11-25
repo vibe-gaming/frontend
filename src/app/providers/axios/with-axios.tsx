@@ -10,7 +10,7 @@ export const WithAxios = () => {
         /**
          * Устанавливаем базовый URL для axios перед тем, как приложение будет инициализировано
          */
-        AXIOS_INSTANCE.defaults.baseURL = 'https://backend-production-10ec.up.railway.app/api/v1'
+        AXIOS_INSTANCE.defaults.baseURL = VITE_API_URL
         AXIOS_INSTANCE.defaults.timeout = VITE_API_TIMEOUT ? Number(VITE_API_TIMEOUT) : 10_000
 
         /**
@@ -30,6 +30,7 @@ export const WithAxios = () => {
                         console.error('Error parsing auth data from localStorage:', error)
                     }
                 }
+
                 return config
             },
             (error) => {

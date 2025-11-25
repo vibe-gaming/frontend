@@ -7,10 +7,9 @@ RUN corepack enable && corepack prepare yarn@4.9.1 --activate
 WORKDIR /app
 
 # Аргументы сборки
-ARG VITE_API_URL
-ARG VITE_API_TIMEOUT
-ARG VITE_APP_TAG_VERSION
+ARG VITE_API_TIMEOUT = 8000
 ARG NODE_ENV=production
+ARG VITE_API_URL = https://backend-production-10ec.up.railway.app/api/v1
 
 # Переменные окружения
 ENV VITE_API_URL=$VITE_API_URL

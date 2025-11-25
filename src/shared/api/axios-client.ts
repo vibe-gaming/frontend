@@ -50,7 +50,7 @@ export type ResponseErrorConfig<TError = ErrorStructWithValidationErrors> = TErr
 // В development и production используем прокси (/api) для обхода CORS
 const getApiBaseURL = () => {
     // В Vite переменные окружения доступны через import.meta.env
-    const apiUrl = 'https://backend-production-10ec.up.railway.app/api/v1'
+    const apiUrl = import.meta.env.VITE_API_URL
 
     // Если VITE_API_URL установлен, используем его (для кастомных конфигураций)
     if (apiUrl) {
@@ -71,7 +71,7 @@ export const AXIOS_INSTANCE = axios.create({
     // Если в будущем понадобятся cookies, установить true и настроить CORS на бэкенде
     withCredentials: false,
     // Таймаут 60 секунд для всех запросов (особенно важно для распознавания речи)
-    timeout: 60000,
+    timeout: 60_000,
     headers: {
         'Content-Type': 'application/json',
     },
@@ -105,7 +105,7 @@ export const axiosClient = async <TData, TError = unknown, TVariables = unknown>
                     'Request timeout:',
                     config.url,
                     'timeout:',
-                    config.timeout ?? 60000,
+                    config.timeout ?? 60_000,
                     'ms'
                 )
                 throw {
