@@ -125,6 +125,7 @@ export default defineConfig({
     plugins,
     server,
     build: {
+        cssMinify: false,
         sourcemap: true,
         target: browserslistToEsbuild(),
         rollupOptions: {
@@ -141,7 +142,7 @@ export default defineConfig({
                         },
                         {
                             name: 'tanstack',
-                            test: /node_modules\/@tanstack/,
+                            test: /node_modules\/@tanstack /,
                         },
                     ],
                 },
@@ -153,6 +154,7 @@ export default defineConfig({
         postcss: {
             plugins: [autoprefixer()],
         },
+        transformer: 'postcss',
     },
 
     define: {

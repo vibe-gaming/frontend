@@ -52,8 +52,8 @@ body,
 
 // Улучшение отзывчивости кнопок на мобильных устройствах
 button {
-    touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
 }
 
 
