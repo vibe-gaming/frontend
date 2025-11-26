@@ -4,12 +4,12 @@ import { CircleCheckBig, FileCheck, HandHeart } from 'lucide-react'
 import { LuSearchCheck } from 'react-icons/lu'
 
 import { useAuthState } from '@/entities/auth'
-import bannerDesktopImage from '@/shared/assets/images/banner_desktop.png'
-import mainBannerImage from '@/shared/assets/images/main-banner.png'
-import popular1Image from '@/shared/assets/images/popular-1.png'
-import popular2Image from '@/shared/assets/images/popular-2.png'
-import popular3Image from '@/shared/assets/images/popular-3.png'
-import popular4Image from '@/shared/assets/images/popular-4.png'
+import bannerDesktopImage from '@/shared/assets/images/banner-desktop.webp'
+import mainBannerImage from '@/shared/assets/images/banner-mobile.webp'
+import popular1Image from '@/shared/assets/images/popular-1.webp'
+import popular2Image from '@/shared/assets/images/popular-2.webp'
+import popular3Image from '@/shared/assets/images/popular-3.webp'
+import popular4Image from '@/shared/assets/images/popular-4.webp'
 import { useDeviceDetect } from '@/shared/hooks/use-device-detect'
 import { useOnlineStatus } from '@/shared/hooks/use-online-status'
 import { AppHeader } from '@/shared/ui/app-header'
@@ -33,11 +33,11 @@ export const HomePage = () => {
         },
         {
             title: 'Льготный проездной',
-            image: popular4Image,
+            image: popular3Image,
         },
         {
             title: 'Бесплатное лечение',
-            image: popular3Image,
+            image: popular4Image,
         },
     ]
 
