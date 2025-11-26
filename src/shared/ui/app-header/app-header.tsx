@@ -83,7 +83,7 @@ export const AppHeader = ({ isAuthPages = false }) => {
                         <Show when={isDesktop}>
                             <Heading
                                 as='h3'
-                                fontSize='3xl'
+                                fontSize='4xl'
                                 fontWeight='extrabold'
                                 lineHeight='40px'
                             >
