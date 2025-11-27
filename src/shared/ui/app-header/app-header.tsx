@@ -33,13 +33,19 @@ export const AppHeader = ({ isAuthPages = false }) => {
 
     // Определяем, находимся ли мы на главной странице
     const isHomePage = location.pathname === '/'
+    const isChatPage = location.pathname === '/chat' || location.pathname.startsWith('/chat/')
+    const isMobileLoginPage = location.pathname === '/login' && !isDesktop
 
     return (
         <Box
+            cursor={isChatPage || isMobileLoginPage ? 'not-allowed' : 'pointer'}
+            height={isChatPage || isMobileLoginPage ? '0' : 'auto'}
             maxW='1280px'
             mb={{ base: 5, md: 0 }}
-            mt={{ base: 4, md: 10 }}
+            mt={isChatPage || isMobileLoginPage ? 0 : { base: 4, md: 10 }}
             mx='auto'
+            opacity={isChatPage || isMobileLoginPage ? 0 : 1}
+            pointerEvents={isChatPage || isMobileLoginPage ? 'none' : 'auto'}
             position='sticky'
             top={0}
             w='100%'

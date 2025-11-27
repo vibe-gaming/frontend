@@ -1,11 +1,14 @@
 import { useCallback } from 'react'
-import { Box, Text } from '@chakra-ui/react'
+import { Box, IconButton, Show, Text, useMediaQuery } from '@chakra-ui/react'
+import { useNavigate } from '@tanstack/react-router'
+import { XIcon } from 'lucide-react'
 
 import {
     AuthButton,
     AuthButtonBox,
     AuthContent,
     AuthContentBox,
+    AuthHeaderMobile,
     AuthHeading,
     AuthPageBox,
 } from '@/entities/auth'
@@ -16,9 +19,25 @@ export const LoginPage = () => {
 
         window.open(keycloakEndpoint, '_self')
     }, [])
+    const navigate = useNavigate()
+    const [isMobile] = useMediaQuery(['(max-width: 767px)'])
 
     return (
         <AuthPageBox>
+            <Show when={isMobile}>
+                <AuthHeaderMobile
+                    postfixElement={
+                        <IconButton
+                            aria-label='Закрыть'
+                            background='transparent'
+                            size='2xl'
+                            onClick={() => navigate({ to: '/' })}
+                        >
+                            <XIcon color='#27272A' size={24} />
+                        </IconButton>
+                    }
+                />
+            </Show>
             <AuthContentBox pt='36px'>
                 <AuthHeading>Вход</AuthHeading>
 
