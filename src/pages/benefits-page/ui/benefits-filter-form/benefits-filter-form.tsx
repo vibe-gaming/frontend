@@ -6,18 +6,18 @@ import { useDebouncedCallback } from 'use-debounce'
 
 import type { BenefitsSearchParams } from '@/entities/benefits'
 
+import { BenefitsDownloadButton } from '../benefits-download-button'
 import { BenefitsFilterFormCategory } from './benefits-filter-form-category'
 import { BenefitsFilterFormCity } from './benefits-filter-form-city'
 import { BenefitsFilterFormTags } from './benefits-filter-form-tags'
 import { BenefitsFilterFormTargetGroups } from './benefits-filter-form-target-groups'
 import { BenefitsFilterFormType } from './benefits-filter-form-type'
-import { BenefitsDownloadButton } from '../benefits-download-button'
 
 export interface BenefitsFilterFormValues
     extends Pick<
         BenefitsSearchParams,
         'benefit_types' | 'tags' | 'categories' | 'city_id' | 'target_groups'
-    > { }
+    > {}
 
 export const BENEFIT_FILTER_FORM_DEFAULT_VALUES: BenefitsFilterFormValues = {
     benefit_types: [],
@@ -98,7 +98,14 @@ export const BenefitsFilterForm: React.FC<BenefitsFilterFormProps> = ({
                     <BenefitsFilterFormCategory />
                 </VStack>
                 {isDesktop ? (
-                    <VStack align='flex-start' gap={4} p={1} position='sticky' bottom={0} bg='white'>
+                    <VStack
+                        align='flex-start'
+                        bg='white'
+                        bottom={0}
+                        gap={4}
+                        p={1}
+                        position='sticky'
+                    >
                         <Button
                             _active={{ bg: 'blue.50', borderColor: 'blue.300' }}
                             colorPalette='blue'
@@ -124,7 +131,7 @@ export const BenefitsFilterForm: React.FC<BenefitsFilterFormProps> = ({
                         <BenefitsDownloadButton />
                     </VStack>
                 ) : (
-                    <HStack bottom={0} gap={4} pt={4} pb={6} position='sticky' w='full' bg='white'>
+                    <HStack bg='white' bottom={0} gap={4} pb={6} position='sticky' pt={4} w='full'>
                         <Button
                             _active={{ bg: 'gray.100' }}
                             borderColor={'blue.muted'}

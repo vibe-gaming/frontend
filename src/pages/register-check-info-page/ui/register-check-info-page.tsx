@@ -6,7 +6,6 @@ import { AuthButtonBox, AuthHeading, AuthPageBox, useAuth } from '@/entities/aut
 import { AuthButton } from '@/entities/auth/ui/auth-button'
 import { AuthContentBox } from '@/entities/auth/ui/auth-content-box'
 import { useDeviceDetect } from '@/shared/hooks/use-device-detect'
-import { AppHeader } from '@/shared/ui/app-header/app-header'
 import { formatPhoneNumber } from '@/shared/utils/format-phone-number'
 import { formatSnils } from '@/shared/utils/format-snils'
 
@@ -22,7 +21,6 @@ export const RegisterCheckInfoPage = () => {
 
     return (
         <AuthPageBox>
-            {isDesktop && <AppHeader isAuthPages />}
             <AuthContentBox>
                 <AuthHeading>Проверьте ваши данные</AuthHeading>
                 <Box display='flex' flexDirection='column' flexGrow={1} mt='6'>

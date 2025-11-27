@@ -1,28 +1,25 @@
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import * as isvek from '@blasdfaa/bvi'
 import { Button, Show, useMediaQuery } from '@chakra-ui/react'
+import { useLocation } from '@tanstack/react-router'
 import { EyeIcon } from 'lucide-react'
 
-import './bvi.css'
-
 export const BviButton = () => {
-    const bviRef = useRef<any>(null)
     const [isDesktop] = useMediaQuery(['(min-width: 768px)'])
+    const location = useLocation()
 
     useEffect(() => {
-        if (bviRef.current) return
-        bviRef.current = new isvek.Bvi({
-            target: '.bvi-open-btn',
-        })
+        new isvek.Bvi()
     }, [])
 
     return (
         <Button
             _active={{ bg: 'blue.50', borderColor: 'blue.300' }}
             borderRadius={{ base: 'xl', md: '2xl' }}
-            className='bvi-open-btn'
+            className='bvi-open'
             color='blue.solid'
             colorPalette='blue'
+            disabled={location.pathname === '/benefits'}
             fontSize={{ base: 'lg', md: 'xl' }}
             px={{ base: 3.5, md: 7 }}
             size={{ base: 'xl', md: '2xl' }}
