@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import type { ReactNode } from 'react'
 
 interface MarkdownNode {
     type: 'text' | 'bold' | 'italic' | 'code' | 'link' | 'lineBreak'
@@ -17,66 +17,66 @@ interface MarkdownNode {
  */
 export const parseMarkdown = (text: string): MarkdownNode[] => {
     const nodes: MarkdownNode[] = []
-    let i = 0
+    let index = 0
 
-    while (i < text.length) {
+    while (index < text.length) {
         // Проверяем ссылки [текст](url)
-        const linkMatch = text.slice(i).match(/^\[([^\]]+)\]\(([^)]+)\)/)
+        const linkMatch = text.slice(index).match(/^\[([^\]]+)\]\(([^)]+)\)/)
         if (linkMatch) {
             nodes.push({
                 type: 'link',
                 content: linkMatch[1],
                 url: linkMatch[2],
             })
-            i += linkMatch[0].length
+            index += linkMatch[0].length
             continue
         }
 
         // Проверяем жирный текст **текст**
-        const boldMatch = text.slice(i).match(/^\*\*([^*]+)\*\*/)
+        const boldMatch = text.slice(index).match(/^\*\*([^*]+)\*\*/)
         if (boldMatch) {
             nodes.push({
                 type: 'bold',
                 content: boldMatch[1],
             })
-            i += boldMatch[0].length
+            index += boldMatch[0].length
             continue
         }
 
         // Проверяем курсив *текст* (но не **)
-        const italicMatch = text.slice(i).match(/^\*([^*\n]+)\*/)
-        if (italicMatch && !text.slice(i).startsWith('**')) {
+        const italicMatch = text.slice(index).match(/^\*([^*\n]+)\*/)
+        if (italicMatch && !text.slice(index).startsWith('**')) {
             nodes.push({
                 type: 'italic',
                 content: italicMatch[1],
             })
-            i += italicMatch[0].length
+            index += italicMatch[0].length
             continue
         }
 
         // Проверяем код `текст`
-        const codeMatch = text.slice(i).match(/^`([^`]+)`/)
+        const codeMatch = text.slice(index).match(/^`([^`]+)`/)
         if (codeMatch) {
             nodes.push({
                 type: 'code',
                 content: codeMatch[1],
             })
-            i += codeMatch[0].length
+            index += codeMatch[0].length
             continue
         }
 
         // Проверяем перенос строки
-        if (text[i] === '\n') {
+        if (text[index] === '\n') {
             nodes.push({
                 type: 'lineBreak',
                 content: '\n',
             })
-            i++
+            index++
             continue
         }
 
         // Обычный текст - собираем до следующего специального символа
-        let textEnd = i
+        let textEnd = index
         while (
             textEnd < text.length &&
             text[textEnd] !== '*' &&
@@ -87,19 +87,19 @@ export const parseMarkdown = (text: string): MarkdownNode[] => {
             textEnd++
         }
 
-        if (textEnd > i) {
+        if (textEnd > index) {
             nodes.push({
                 type: 'text',
-                content: text.slice(i, textEnd),
+                content: text.slice(index, textEnd),
             })
-            i = textEnd
+            index = textEnd
         } else {
             // Если не нашли совпадений, добавляем один символ как текст
             nodes.push({
                 type: 'text',
-                content: text[i],
+                content: text[index],
             })
-            i++
+            index++
         }
     }
 
@@ -113,21 +113,23 @@ export const renderMarkdown = (text: string): ReactNode => {
 
     for (const node of nodes) {
         switch (node.type) {
-            case 'bold':
+            case 'bold': {
                 result.push(
                     <strong key={key++} style={{ fontWeight: 'bold' }}>
                         {node.content}
                     </strong>
                 )
                 break
-            case 'italic':
+            }
+            case 'italic': {
                 result.push(
                     <em key={key++} style={{ fontStyle: 'italic' }}>
                         {node.content}
                     </em>
                 )
                 break
-            case 'code':
+            }
+            case 'code': {
                 result.push(
                     <code
                         key={key++}
@@ -143,13 +145,14 @@ export const renderMarkdown = (text: string): ReactNode => {
                     </code>
                 )
                 break
-            case 'link':
+            }
+            case 'link': {
                 result.push(
                     <a
                         key={key++}
                         href={node.url}
-                        target='_blank'
                         rel='noopener noreferrer'
+                        target='_blank'
                         style={{
                             color: 'inherit',
                             textDecoration: 'underline',
@@ -159,15 +162,17 @@ export const renderMarkdown = (text: string): ReactNode => {
                     </a>
                 )
                 break
-            case 'lineBreak':
+            }
+            case 'lineBreak': {
                 result.push(<br key={key++} />)
                 break
-            case 'text':
+            }
+            case 'text': {
                 result.push(node.content)
                 break
+            }
         }
     }
 
     return <>{result}</>
 }
-
