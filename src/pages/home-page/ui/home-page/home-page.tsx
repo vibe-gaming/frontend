@@ -12,9 +12,7 @@ import popular3Image from '@/shared/assets/images/popular-3.webp'
 import popular4Image from '@/shared/assets/images/popular-4.webp'
 import { useDeviceDetect } from '@/shared/hooks/use-device-detect'
 import { useOnlineStatus } from '@/shared/hooks/use-online-status'
-import { AppHeader } from '@/shared/ui/app-header'
 import { FeatureCard } from '@/shared/ui/feature-card'
-import { Footer } from '@/shared/ui/footer'
 
 export const HomePage = () => {
     const navigate = useNavigate()
@@ -66,18 +64,6 @@ export const HomePage = () => {
 
     return (
         <Box minH='100dvh'>
-            <Box
-                bg='white'
-                maxW='1280px'
-                mx='auto'
-                position='sticky'
-                top={0}
-                w='100%'
-                zIndex={1000}
-            >
-                <AppHeader />
-            </Box>
-
             <Box
                 maxW='1280px'
                 mx='auto'
@@ -275,8 +261,6 @@ export const HomePage = () => {
                     </VStack>
                 </VStack>
             </Box>
-
-            <Footer />
         </Box>
     )
 }

@@ -36,7 +36,7 @@ export const AppHeader = ({ isAuthPages = false }) => {
 
     return (
         <Box
-            maxW='1200px'
+            maxW='1280px'
             mb={{ base: 5, md: 0 }}
             mt={{ base: 4, md: 10 }}
             mx='auto'
