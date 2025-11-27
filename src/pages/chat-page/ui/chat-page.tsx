@@ -11,16 +11,16 @@ import {
     Text,
     VStack,
     HStack,
+    InputGroup,
 } from '@chakra-ui/react'
-import { ArrowLeft, Send } from 'lucide-react'
+import { X, SendHorizontal } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'
 
 import { usePostChatStart } from '@/shared/api/generated/hooks/usePostChatStart'
 import { usePostChatMessage } from '@/shared/api/generated/hooks/usePostChatMessage'
 import { AppHeader } from '@/shared/ui/app-header'
 import { chatStorage, type ChatMessage } from '@/shared/utils/chat-storage'
-import { renderMarkdown } from '@/shared/utils/markdown-parser'
-import { ChatBenefitCard } from './chat-benefit-card'
+import { ChatMessage as ChatMessageComponent } from './chat-message'
 import { BenefitDrawer } from '@/pages/benefits-page/ui/benefit-drawer'
 import { useDeviceDetect } from '@/shared/hooks/use-device-detect'
 
@@ -33,12 +33,12 @@ export const ChatPage = () => {
     const [isSendingMessage, setIsSendingMessage] = useState(false)
     const [selectedBenefitId, setSelectedBenefitId] = useState<string | null>(null)
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
-    const messagesEndRef = useRef<HTMLDivElement>(null)
+    const messagesContainerRef = useRef<HTMLDivElement>(null)
     const hasStartedChatRef = useRef(false)
     const chatStartMutation = usePostChatStart()
     const chatMessageMutation = usePostChatMessage()
     const chatStartMutationRef = useRef(chatStartMutation)
-    
+
     // Обновляем ref при изменении мутации
     useEffect(() => {
         chatStartMutationRef.current = chatStartMutation
@@ -46,7 +46,7 @@ export const ChatPage = () => {
 
     const handleStartChat = useCallback(async () => {
         if (isStartingChat || hasStartedChatRef.current) return // Предотвращаем множественные вызовы
-        
+
         hasStartedChatRef.current = true
         setIsStartingChat(true)
         try {
@@ -105,17 +105,32 @@ export const ChatPage = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
+    // Устанавливаем синий фон для html элемента на странице чата
+    useEffect(() => {
+        const htmlElement = document.documentElement
+        const originalBgColor = htmlElement.style.backgroundColor
+
+        htmlElement.style.backgroundColor = '#2563eb' // blue.600
+
+        return () => {
+            // Восстанавливаем исходный цвет при размонтировании
+            htmlElement.style.backgroundColor = originalBgColor || ''
+        }
+    }, [])
+
     // Прокрутка к последнему сообщению
     useEffect(() => {
         // Используем setTimeout чтобы дождаться рендеринга карточек
         const timer = setTimeout(() => {
-            messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+            scrollToBottom();
         }, 100)
         return () => clearTimeout(timer)
-    }, [messages])
+    }, [messages, isSendingMessage])
 
     const handleSendMessage = async () => {
         if (!inputValue.trim() || isSendingMessage) return
+
+        scrollToBottom();
 
         const userMessage: ChatMessage = {
             id: `user-${Date.now()}`,
@@ -148,10 +163,10 @@ export const ChatPage = () => {
             const updatedMessages = [...newMessages, botMessage]
             setMessages(updatedMessages)
             chatStorage.saveMessages(updatedMessages)
-            
+
             // Прокручиваем к концу после добавления карточек
             setTimeout(() => {
-                messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+                scrollToBottom();
             }, 200)
         } catch (error) {
             console.error('Failed to send message:', error)
@@ -179,42 +194,76 @@ export const ChatPage = () => {
         hasStartedChatRef.current = true
     }
 
+    const scrollToBottom = () => {
+        const container = messagesContainerRef.current
+        if (container) {
+            container.scrollTop = container.scrollHeight + 32
+        }
+    }
+
+    const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+        const container = e.currentTarget
+        console.log(container.scrollTop, container.clientHeight)
+        // if (container.scrollTop + container.clientHeight >= container.scrollHeight - 32) {
+        //     scrollToBottom()
+        // }
+    }
+
     return (
-        <Box minH='100vh' bg='gray.50' display='flex' flexDirection='column'>
-            <AppHeader />
-            <Box maxW='1200px' mx='auto' px={{ base: 4, md: 6 }} flex={1} display='flex' flexDirection='column' pb={{ base: 24, md: 28 }}>
-                <VStack align='stretch' gap={{ base: 4, md: 6 }} pt={{ base: 6, md: 8 }} flex={1} minH={0}>
+        <Box minH='100vh' bg='blue.600' display='flex' flexDirection='column'>
+            <Box maxW='1200px' w='100%' mx='auto' flex={1} display='flex' flexDirection='column' pb={{ base: 24, md: 28 }}>
+                <VStack align='stretch' gap={0} flex={1} minH={0} w='100%'>
                     {/* Заголовок с кнопкой назад */}
-                    <HStack gap={4} flexShrink={0}>
+                    <Box position='relative' height='56px' borderBottomRadius='3xl'>
+                        <Heading
+                            height='100%'
+                            display='flex'
+                            alignItems='center'
+                            justifyContent='center'
+                            fontSize={{ base: 'xl', md: '2xl' }}
+                            lineHeight={{ base: '30px', md: '30px' }}
+                            fontWeight='bold'
+                            w='100%'
+                            textAlign='center'
+                            color='white'
+                        >
+                            Чат бот
+                        </Heading>
                         <IconButton
-                            aria-label='Назад'
-                            borderRadius='xl'
-                            colorPalette='blue'
+                            position='absolute'
                             variant='ghost'
-                            size={{ base: 'xl', md: 'lg' }}
-                            minH={{ base: '48px', md: '40px' }}
-                            minW={{ base: '48px', md: '40px' }}
+                            right={0}
+                            top={0}
+                            aria-label='Назад'
+                            minH={{ base: '56px', md: '56px' }}
+                            minW={{ base: '56px', md: '56px' }}
                             onClick={() => navigate({ to: '/benefits' })}
                         >
-                            <ArrowLeft size={isMobile ? 28 : 24} />
+                            <X color='white' size={isMobile ? 24 : 24} />
                         </IconButton>
-                        <Heading size={{ base: '2xl', md: '4xl' }} fontWeight='bold'>
-                            Чат-бот
-                        </Heading>
-                    </HStack>
+                    </Box>
 
                     {/* Кнопка начать новый чат */}
-                    {messages.length > 0 && (
-                        <Box flexShrink={0}>
+                    {messages.length > 1 && (
+                        <Box flexShrink={0} mx={4} borderBottomRadius='3xl' mt={2}>
                             <Button
-                                colorPalette='gray'
-                                size={{ base: 'lg', md: 'lg' }}
-                                variant='outline'
-                                w={{ base: '100%', md: 'fit-content' }}
+                                variant='surface'
+                                color='blue.fg'
+                                colorPalette='blue'
+                                borderRadius='2xl'
+                                border='1px solid'
+                                borderColor='blue.600'
+                                size={{ base: '2xl', md: '2xl' }}
+                                // variant='outline'
+                                w={{ base: '100%', md: '100%' }}
                                 onClick={handleNewChat}
                                 disabled={isStartingChat}
                                 minH={{ base: '48px', md: '48px' }}
-                                fontSize={{ base: 'md', md: 'lg' }}
+                                fontSize={{ base: 'lg', md: 'lg' }}
+                                _active={{
+                                    bg: 'white',
+                                }}
+                                zIndex={1}
                             >
                                 Начать новый чат
                             </Button>
@@ -223,85 +272,66 @@ export const ChatPage = () => {
 
                     {/* Область сообщений */}
                     <Box
-                        bg='white'
-                        borderRadius='2xl'
-                        borderBottomRadius={{ base: '2xl', md: '2xl' }}
+                        ref={messagesContainerRef}
+                        px={{ base: 4, md: 6 }}
+                        // position='relative'
+                        mt={"-16px"}
+                        mb={"-32px"}
+                        pt={"32px"}
+                        pb={"16px"}
                         flex={1}
                         minH={0}
+                        maxH={messages.length > 1 ? 'calc(100vh - 176px)' : 'calc(100vh - 112px)'}
+                        w='100%'
                         overflowY='auto'
                         overflowX='hidden'
-                        p={{ base: 4, md: 6 }}
-                        shadow='sm'
+                        display='flex'
+                        flexDirection='column'
                         style={{
                             WebkitOverflowScrolling: 'touch',
-                            borderBottomLeftRadius: '24px',
-                            borderBottomRightRadius: '24px',
                         }}
+                        onScroll={handleScroll}
                     >
-                        <VStack align='stretch' gap={{ base: 4, md: 6 }}>
+                        <VStack
+                            align='stretch'
+                            gap={{ base: 4, md: 4 }}
+                            flex={1}
+                            justifyContent='flex-end'
+                            flexDirection='column'
+                            mb={"16px"}
+                        >
                             {messages.length === 0 && isStartingChat && (
-                                <Box textAlign='center' pt={8}>
-                                    <Text color='gray.500' fontSize='lg' lineHeight='28px'>
+                                <Box textAlign='center' pb={8}>
+                                    <Text color='white' fontSize='lg' lineHeight='28px'>
                                         Загрузка...
                                     </Text>
                                 </Box>
                             )}
 
-                            {messages.length === 0 && !isStartingChat && (
-                                <Box textAlign='center' pt={8}>
-                                    <Text color='gray.500' fontSize='lg' lineHeight='28px'>
+                            {/* {messages.length === 0 && !isStartingChat && (
+                                <Box textAlign='center' pb={8}>
+                                    <Text color='white' fontSize='lg' lineHeight='28px'>
                                         Нажмите кнопку выше, чтобы начать чат
                                     </Text>
                                 </Box>
-                            )}
+                            )} */}
 
                             {messages.map((message) => (
-                                <VStack key={message.id} align='stretch' gap={3}>
-                                    <Flex justify={message.isBot ? 'flex-start' : 'flex-end'}>
-                                        <Box
-                                            bg={message.isBot ? 'gray.100' : 'blue.solid'}
-                                            borderRadius='xl'
-                                            color={message.isBot ? 'gray.800' : 'white'}
-                                            maxW='80%'
-                                            p={{ base: 4, md: 5 }}
-                                        >
-                                            <Text
-                                                fontSize='lg'
-                                                lineHeight='28px'
-                                                whiteSpace='pre-wrap'
-                                            >
-                                                {renderMarkdown(message.text)}
-                                            </Text>
-                                        </Box>
-                                    </Flex>
-                                    {/* Отображаем карточки льгот если они есть */}
-                                    {message.isBot && message.benefits && message.benefits.length > 0 && (
-                                        <Box mt={3}>
-                                            <Grid
-                                                gap={3}
-                                                templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)' }}
-                                            >
-                                                {message.benefits.map((benefit) => (
-                                                    <ChatBenefitCard
-                                                        key={benefit.id}
-                                                        benefit={benefit}
-                                                        onClick={(benefitId) => {
-                                                            setSelectedBenefitId(benefitId)
-                                                            setIsDrawerOpen(true)
-                                                        }}
-                                                    />
-                                                ))}
-                                            </Grid>
-                                        </Box>
-                                    )}
-                                </VStack>
+                                <ChatMessageComponent
+                                    key={message.id}
+                                    message={message}
+                                    onBenefitClick={(benefitId) => {
+                                        setSelectedBenefitId(benefitId)
+                                        setIsDrawerOpen(true)
+                                    }}
+                                />
                             ))}
                             {isSendingMessage && (
                                 <Flex justify='flex-start'>
                                     <Box
                                         bg='gray.100'
                                         borderRadius='xl'
-                                        p={{ base: 4, md: 5 }}
+                                        p={{ base: 4, md: 4 }}
                                     >
                                         <HStack gap={3}>
                                             <Spinner size={{ base: 'md', md: 'md' }} />
@@ -312,38 +342,52 @@ export const ChatPage = () => {
                                     </Box>
                                 </Flex>
                             )}
-                            <div ref={messagesEndRef} />
                         </VStack>
                     </Box>
                 </VStack>
 
                 {/* Поле ввода - зафиксировано внизу */}
                 <Box
-                    bg='white'
-                    borderTop='1px solid'
-                    borderColor='gray.200'
-                    borderRadius='2xl'
+                    bg='blue.600'
                     position='fixed'
                     bottom={0}
-                    left={0}
-                    right={0}
+                    left={4}
+                    right={4}
+                    pb={4}
                     zIndex={100}
-                    px={{ base: 4, md: 6 }}
-                    py={{ base: 4, md: 5 }}
-                    pb={{ base: 6, md: 6 }}
                     maxW='1200px'
                     mx='auto'
-                    shadow='lg'
-                    style={{
-                        borderTopLeftRadius: '24px',
-                        borderTopRightRadius: '24px',
-                        borderBottomLeftRadius: '24px',
-                        borderBottomRightRadius: '24px',
-                    }}
+                    borderTopRadius='3xl'
                 >
-                    <HStack gap={3} maxW='1200px' mx='auto'>
+                    <InputGroup
+                        bg='white'
+                        gap={3}
+                        w='100%'
+                        h={{ base: '64px', md: '64px' }}
+                        borderRadius='2xl'
+                        position='relative'
+                        endElement={
+                            <IconButton
+                                aria-label='Отправить сообщение'
+                                variant='ghost'
+                                disabled={!inputValue.trim() || isSendingMessage}
+                                loading={isSendingMessage}
+                                onClick={handleSendMessage}
+                                px={4}
+                                position='absolute'
+                                right={5}
+                                top={3}
+                                h="40px"
+                                w="40px"
+                                color='blue.600'
+                                zIndex={1000}
+                            >
+                                <SendHorizontal size={20} />
+                            </IconButton>
+                        }
+                    >
                         <Input
-                            placeholder='Введите сообщение...'
+                            placeholder='Введите запрос...'
                             value={inputValue}
                             onChange={(e) => setInputValue(e.target.value)}
                             onKeyDown={(e) => {
@@ -353,24 +397,14 @@ export const ChatPage = () => {
                                 }
                             }}
                             fontSize='lg'
-                            size={{ base: 'xl', md: 'xl' }}
-                            minH={{ base: '56px', md: '64px' }}
+                            h="100%"
+                            w="100%"
+                            border='none'
+                            bg='transparent'
+                            borderRadius='2xl'
+                            color='fg.subtle'
                         />
-                        <Button
-                            aria-label='Отправить сообщение'
-                            colorPalette='blue'
-                            disabled={!inputValue.trim() || isSendingMessage}
-                            loading={isSendingMessage}
-                            onClick={handleSendMessage}
-                            size='xl'
-                            minH={{ base: '56px', md: '64px' }}
-                            minW={{ base: '56px', md: '64px' }}
-                            px={4}
-                            fontSize='lg'
-                        >
-                            <Send size={24} />
-                        </Button>
-                    </HStack>
+                    </InputGroup>
                 </Box>
             </Box>
             <BenefitDrawer

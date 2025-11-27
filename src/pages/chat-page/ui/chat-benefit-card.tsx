@@ -1,4 +1,4 @@
-import { Box, Heading, Text, VStack } from '@chakra-ui/react'
+import { Box, Button, Heading, Text, VStack } from '@chakra-ui/react'
 
 import type { V1BenefitResponse } from '@/shared/api/generated/entities/v1/BenefitResponse'
 
@@ -17,44 +17,52 @@ export const ChatBenefitCard = ({ benefit, onClick }: ChatBenefitCardProps) => {
     return (
         <Box
             bg='white'
-            borderColor='gray.300'
-            borderRadius='lg'
-            borderStyle='solid'
-            borderWidth='2px'
+            borderRadius='2xl'
             cursor='pointer'
-            p={{ base: 4, md: 3 }}
+            p={{ base: 5, md: 5 }}
             transition='all 0.2s'
-            minH={{ base: '80px', md: 'auto' }}
+            minH={{ base: '168px', md: '168px' }}
             _hover={{
-                borderColor: 'blue.400',
                 shadow: 'md',
             }}
             _active={{
-                borderColor: 'blue.500',
                 shadow: 'sm',
             }}
             onClick={handleClick}
         >
-            <VStack align='stretch' gap={3}>
+            <VStack align='stretch' gap={5} justify='space-between' h='100%'>
                 <Heading
-                    fontSize='2xl'
+                    fontSize='xl'
                     fontWeight='bold'
-                    lineHeight='32px'
-                    noOfLines={2}
-                    color='gray.900'
+                    lineHeight='30px'
                 >
                     {benefit.title || 'Без названия'}
                 </Heading>
-                {benefit.description && (
+                <Button
+                    variant='surface'
+                    borderRadius='xl'
+                    size='xl'
+                    fontSize='lg'
+                    lineHeight='28px'
+                    w='100%'
+                    color='blue.fg'
+                    colorPalette='blue'
+                    onClick={handleClick}
+                    _active={{
+                        bg: 'white',
+                    }}
+                >
+                    Смотреть
+                </Button>
+                {/* {benefit.description && (
                     <Text
                         color='gray.600'
                         fontSize='lg'
                         lineHeight='28px'
-                        noOfLines={2}
                     >
                         {benefit.description}
                     </Text>
-                )}
+                )} */}
             </VStack>
         </Box>
     )

@@ -44,8 +44,8 @@ const customConfig = defineConfig({
         '*': {
             // Глобальная настройка focus ring - более заметное синее кольцо
             focusRingColor: 'blue.800 !important',
-            focusRingWidth: '3px !important',
-            focusVisibleRing: 'outside !important',
+            focusRingWidth: '1px !important',
+            focusVisibleRing: 'inside !important',
         },
     },
 })
