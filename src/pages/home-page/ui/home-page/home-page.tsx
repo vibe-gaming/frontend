@@ -1,15 +1,15 @@
-import { Box, Button, Grid, Heading, Image, Text, VStack } from '@chakra-ui/react'
+import { Box, Button, Grid, Heading, Image, Show, Text, VStack } from '@chakra-ui/react'
 import { useNavigate } from '@tanstack/react-router'
 import { CircleCheckBig, FileCheck, HandHeart } from 'lucide-react'
 import { LuSearchCheck } from 'react-icons/lu'
 
 import { useAuthState } from '@/entities/auth'
-import bannerDesktopImage from '@/shared/assets/images/banner_desktop.png'
-import mainBannerImage from '@/shared/assets/images/main-banner.png'
-import popular1Image from '@/shared/assets/images/popular-1.png'
-import popular2Image from '@/shared/assets/images/popular-2.png'
-import popular3Image from '@/shared/assets/images/popular-3.png'
-import popular4Image from '@/shared/assets/images/popular-4.png'
+import bannerDesktopImage from '@/shared/assets/images/banner-desktop.webp'
+import mainBannerImage from '@/shared/assets/images/banner-mobile.webp'
+import popular1Image from '@/shared/assets/images/popular-1.webp'
+import popular2Image from '@/shared/assets/images/popular-2.webp'
+import popular3Image from '@/shared/assets/images/popular-3.webp'
+import popular4Image from '@/shared/assets/images/popular-4.webp'
 import { useDeviceDetect } from '@/shared/hooks/use-device-detect'
 import { useOnlineStatus } from '@/shared/hooks/use-online-status'
 import { AppHeader } from '@/shared/ui/app-header'
@@ -20,6 +20,7 @@ export const HomePage = () => {
     const navigate = useNavigate()
     const { isAuthenticated } = useAuthState()
     const isOnline = useOnlineStatus()
+    const { isDesktop } = useDeviceDetect()
 
     const popularBenefits = [
         {
@@ -32,38 +33,36 @@ export const HomePage = () => {
         },
         {
             title: 'Льготный проездной',
-            image: popular4Image,
+            image: popular3Image,
         },
         {
             title: 'Бесплатное лечение',
-            image: popular3Image,
+            image: popular4Image,
         },
     ]
 
     const features = [
         {
-            icon: <HandHeart size={32} />,
+            icon: <HandHeart size={isDesktop ? 40 : 32} />,
             title: 'Нужные льготы — рядом',
             description: 'Без сложных поисков и лишних хлопот',
         },
         {
-            icon: <LuSearchCheck size={32} />,
+            icon: <LuSearchCheck size={isDesktop ? 40 : 32} />,
             title: 'Подберём льготы для вас',
             description: 'Учитываем возраст, семью и ситуацию',
         },
         {
-            icon: <CircleCheckBig size={32} />,
+            icon: <CircleCheckBig size={isDesktop ? 40 : 32} />,
             title: 'Подскажем, как оформить',
             description: 'Без бюрократии и запутанных слов',
         },
         {
-            icon: <FileCheck size={32} />,
+            icon: <FileCheck size={isDesktop ? 40 : 32} />,
             title: 'Поможем с документами',
             description: 'Подскажем списки и что куда нести',
         },
     ]
-
-    const { isDesktop } = useDeviceDetect()
 
     return (
         <Box minH='100dvh'>
@@ -91,8 +90,8 @@ export const HomePage = () => {
                         bg={isOnline ? undefined : 'blue.50'}
                         bgSize='cover'
                         borderRadius={{ base: '20px', md: '32px' }}
-                        h={{ base: '500px', md: '480px' }}
-                        p={{ base: '20px', md: '48px' }}
+                        h={{ base: '500px', md: '558px' }}
+                        p={{ base: '20px', md: '60px' }}
                         position='relative'
                         bgImage={
                             isOnline
@@ -113,7 +112,7 @@ export const HomePage = () => {
                     >
                         <VStack
                             align='start'
-                            gap={{ base: '10px', md: '20px' }}
+                            gap={{ base: '8px', md: '28px' }}
                             h={{ base: 'auto', md: 'full' }}
                             justify={{ base: 'flex-start', md: 'space-between' }}
                             maxW={{ base: '100%', md: '580px' }}
@@ -125,10 +124,10 @@ export const HomePage = () => {
                                     fontWeight='bold'
                                     lineHeight={{ base: '38px', md: '92px' }}
                                 >
-                                    Все льготы —<br />в одном месте
+                                    Все льготы <Show when={!isDesktop}>—</Show>
+                                    <br />в одном месте
                                 </Heading>
                                 <Text
-                                    color='gray.800'
                                     fontSize={{ base: 'lg', md: '3xl' }}
                                     lineHeight={{ base: '28px', md: '38px' }}
                                 >
@@ -140,17 +139,16 @@ export const HomePage = () => {
                             {/* CTA Button - внутри баннера только на desktop */}
                             <Button
                                 _active={{ bg: 'blue.700' }}
-                                borderRadius='20px'
                                 colorPalette='blue'
                                 display={{ base: 'none', md: 'flex' }}
                                 fontSize='xl'
                                 fontWeight='semibold'
-                                h='64px'
-                                lineHeight='36px'
+                                lineHeight='30px'
+                                rounded='2xl'
                                 size='2xl'
                                 transition='all 0.2s'
                                 variant='solid'
-                                w='280px'
+                                w='343px'
                                 onClick={() => navigate({ to: '/benefits' })}
                             >
                                 Смотреть льготы
@@ -161,12 +159,11 @@ export const HomePage = () => {
                     {/* CTA Button - вне баннера только на mobile */}
                     <Button
                         _active={{ bg: 'blue.700' }}
-                        borderRadius='16px'
-                        colorPalette='blue'
                         display={{ base: 'flex', md: 'none' }}
                         fontSize='xl'
-                        fontWeight='semibold'
+                        fontWeight='medium'
                         lineHeight='30px'
+                        rounded='2xl'
                         size='2xl'
                         transition='all 0.2s'
                         variant='solid'
@@ -181,7 +178,7 @@ export const HomePage = () => {
                         align='stretch'
                         gap={{ base: 5, md: 8 }}
                         maxW='1020px'
-                        mt={{ base: 0, md: 4 }}
+                        mt={{ base: 4, md: 3 }}
                         mx='auto'
                         w='100%'
                     >
@@ -197,7 +194,7 @@ export const HomePage = () => {
                         </Heading>
 
                         <Grid
-                            gap={{ base: 5, md: 7 }}
+                            gap={{ base: 5, md: 8 }}
                             templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)' }}
                         >
                             {features.map((feature, index) => (
@@ -213,16 +210,18 @@ export const HomePage = () => {
 
                     <VStack
                         align='stretch'
-                        gap={{ base: 5, md: 8 }}
+                        gap={{ base: 5, md: 10 }}
                         maxW='1020px'
+                        mb={{ base: 0, md: 9 }}
+                        mt={{ base: 4, md: 3 }}
                         mx='auto'
                         w='100%'
                     >
                         <Heading
                             as='h2'
-                            fontSize={{ base: '2xl', md: '6xl' }}
+                            fontSize={{ base: '2xl', md: '5xl' }}
                             fontWeight='bold'
-                            lineHeight={{ base: '32px', md: '72px' }}
+                            lineHeight={{ base: '32px', md: '60px' }}
                             textAlign={isDesktop ? 'start' : 'center'}
                         >
                             Популярные льготы
@@ -234,12 +233,13 @@ export const HomePage = () => {
                             {popularBenefits.map((benefit, index) => (
                                 <Box
                                     key={index}
-                                    borderRadius={{ base: '16px', md: '20px' }}
                                     cursor='pointer'
                                     transition='all 0.2s'
+                                    _active={{
+                                        transform: 'translateY(2px)',
+                                    }}
                                     _hover={{
-                                        bg: 'gray.300',
-                                        transform: 'scale(1.02)',
+                                        transform: 'translateY(-6px)',
                                     }}
                                     onClick={() =>
                                         navigate({ to: isAuthenticated ? '/benefits' : '/login' })
@@ -247,7 +247,7 @@ export const HomePage = () => {
                                 >
                                     <VStack
                                         align='center'
-                                        gap={{ base: 2, md: 3 }}
+                                        gap={{ base: 2, md: 4 }}
                                         h='full'
                                         justify='center'
                                     >
