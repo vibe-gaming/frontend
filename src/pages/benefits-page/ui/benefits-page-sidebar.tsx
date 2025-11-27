@@ -2,7 +2,6 @@ import React from 'react'
 import { Box, ScrollArea, Text, VStack } from '@chakra-ui/react'
 import { useNavigate, useSearch } from '@tanstack/react-router'
 
-import { BenefitsDownloadButton } from './benefits-download-button'
 import {
     BenefitsFilterForm,
     type BenefitsFilterFormValues,
@@ -29,9 +28,9 @@ export const BenefitsPageSidebar = () => {
             navigate({
                 to: '/benefits',
                 search: {
-                    page: 1,
                     ...data,
                     ...searchParams,
+                    page: 1,
                 },
             })
         },
@@ -72,7 +71,6 @@ export const BenefitsPageSidebar = () => {
                                 onReset={handleReset}
                                 onSubmit={handleSubmit}
                             />
-
                         </VStack>
                     </ScrollArea.Content>
                 </ScrollArea.Viewport>

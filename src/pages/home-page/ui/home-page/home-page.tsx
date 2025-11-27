@@ -12,9 +12,7 @@ import popular3Image from '@/shared/assets/images/popular-3.webp'
 import popular4Image from '@/shared/assets/images/popular-4.webp'
 import { useDeviceDetect } from '@/shared/hooks/use-device-detect'
 import { useOnlineStatus } from '@/shared/hooks/use-online-status'
-import { AppHeader } from '@/shared/ui/app-header'
 import { FeatureCard } from '@/shared/ui/feature-card'
-import { Footer } from '@/shared/ui/footer'
 
 export const HomePage = () => {
     const navigate = useNavigate()
@@ -67,18 +65,6 @@ export const HomePage = () => {
     return (
         <Box minH='100dvh'>
             <Box
-                bg='white'
-                maxW='1280px'
-                mx='auto'
-                position='sticky'
-                top={0}
-                w='100%'
-                zIndex={1000}
-            >
-                <AppHeader />
-            </Box>
-
-            <Box
                 maxW='1280px'
                 mx='auto'
                 {...(isDesktop && { pt: '22px' })}
@@ -96,17 +82,17 @@ export const HomePage = () => {
                         bgImage={
                             isOnline
                                 ? {
-                                    base: `url(${mainBannerImage})`,
-                                    md: `url(${bannerDesktopImage})`,
-                                }
+                                      base: `url(${mainBannerImage})`,
+                                      md: `url(${bannerDesktopImage})`,
+                                  }
                                 : undefined
                         }
                         style={
                             isOnline
                                 ? {
-                                    backgroundPosition: 'center',
-                                    backgroundRepeat: 'no-repeat',
-                                }
+                                      backgroundPosition: 'center',
+                                      backgroundRepeat: 'no-repeat',
+                                  }
                                 : undefined
                         }
                     >
@@ -124,7 +110,8 @@ export const HomePage = () => {
                                     fontWeight='bold'
                                     lineHeight={{ base: '38px', md: '92px' }}
                                 >
-                                    Все льготы <Show when={!isDesktop}>—</Show><br />в одном месте
+                                    Все льготы <Show when={!isDesktop}>—</Show>
+                                    <br />в одном месте
                                 </Heading>
                                 <Text
                                     fontSize={{ base: 'lg', md: '3xl' }}
@@ -138,16 +125,16 @@ export const HomePage = () => {
                             {/* CTA Button - внутри баннера только на desktop */}
                             <Button
                                 _active={{ bg: 'blue.700' }}
-                                rounded='2xl'
+                                colorPalette='blue'
                                 display={{ base: 'none', md: 'flex' }}
                                 fontSize='xl'
                                 fontWeight='semibold'
                                 lineHeight='30px'
+                                rounded='2xl'
                                 size='2xl'
                                 transition='all 0.2s'
-                                w='343px'
-                                colorPalette='blue'
                                 variant='solid'
+                                w='343px'
                                 onClick={() => navigate({ to: '/benefits' })}
                             >
                                 Смотреть льготы
@@ -158,16 +145,15 @@ export const HomePage = () => {
                     {/* CTA Button - вне баннера только на mobile */}
                     <Button
                         _active={{ bg: 'blue.700' }}
-                        rounded='2xl'
                         display={{ base: 'flex', md: 'none' }}
                         fontSize='xl'
                         fontWeight='medium'
                         lineHeight='30px'
+                        rounded='2xl'
                         size='2xl'
                         transition='all 0.2s'
-                        w='full'
-                        colorPalette='blue'
                         variant='solid'
+                        w='full'
                         onClick={() => navigate({ to: '/benefits' })}
                     >
                         Смотреть льготы
@@ -212,10 +198,10 @@ export const HomePage = () => {
                         align='stretch'
                         gap={{ base: 5, md: 10 }}
                         maxW='1020px'
+                        mb={{ base: 0, md: 9 }}
+                        mt={{ base: 4, md: 3 }}
                         mx='auto'
                         w='100%'
-                        mt={{ base: 4, md: 3}}
-                        mb={{ base: 0, md: 9 }}
                     >
                         <Heading
                             as='h2'
@@ -235,13 +221,15 @@ export const HomePage = () => {
                                     key={index}
                                     cursor='pointer'
                                     transition='all 0.2s'
-                                    _hover={{
-                                        transform: 'translateY(-6px)',
-                                    }}
                                     _active={{
                                         transform: 'translateY(2px)',
                                     }}
-                                    onClick={() => navigate({ to: isAuthenticated ? '/benefits' : '/login' })}
+                                    _hover={{
+                                        transform: 'translateY(-6px)',
+                                    }}
+                                    onClick={() =>
+                                        navigate({ to: isAuthenticated ? '/benefits' : '/login' })
+                                    }
                                 >
                                     <VStack
                                         align='center'
@@ -273,8 +261,6 @@ export const HomePage = () => {
                     </VStack>
                 </VStack>
             </Box>
-
-            <Footer />
         </Box>
     )
 }

@@ -13,7 +13,6 @@ import {
 } from '@/entities/auth'
 import { AuthContent } from '@/entities/auth/ui/auth-content'
 import { useDeviceDetect } from '@/shared/hooks/use-device-detect'
-import { AppHeader } from '@/shared/ui/app-header'
 
 // Константы для типов групп
 const GROUP_TYPES = {
@@ -69,8 +68,6 @@ export const RegisterCategoryPage = () => {
 
     return (
         <AuthPageBox>
-            {isDesktop && <AppHeader />}
-
             <AuthContentBox>
                 <AuthHeading>Выберите категорию льготы</AuthHeading>
                 <AuthContent>
@@ -81,12 +78,8 @@ export const RegisterCategoryPage = () => {
 
                                 return (
                                     <Button
-                                        _active={
-                                            isActive
-                                                ? { bg: 'blue.200' }
-                                                : { bg: 'gray.200' }
-                                        }
                                         key={type}
+                                        _active={isActive ? { bg: 'blue.200' } : { bg: 'gray.200' }}
                                         borderRadius='xl'
                                         colorPalette={isActive ? 'blue' : 'gray'}
                                         size='xl'

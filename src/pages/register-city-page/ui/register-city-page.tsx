@@ -15,7 +15,6 @@ import {
 } from '@/entities/auth'
 import { DomainGroupTypeEnum, useGetCities, usePostUsersUpdateInfo } from '@/shared/api/generated'
 import { useDeviceDetect } from '@/shared/hooks/use-device-detect'
-import { AppHeader } from '@/shared/ui/app-header'
 
 interface CityOption {
     label: string
@@ -80,8 +79,6 @@ export const RegisterCityPage = () => {
 
     return (
         <AuthPageBox>
-            {isDesktop && <AppHeader />}
-
             <AuthContentBox>
                 <AuthHeading>Ваш город</AuthHeading>
                 <AuthContent>

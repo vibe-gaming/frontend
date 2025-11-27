@@ -21,8 +21,6 @@ import { AXIOS_INSTANCE } from '@/shared/api/axios-client'
 import { type DomainUserDocument } from '@/shared/api/generated'
 import { useGetBenefitsUserStats } from '@/shared/api/generated/hooks/useGetBenefitsUserStats'
 import { TAGS_ENUMS } from '@/shared/model/constants'
-import { AppHeader } from '@/shared/ui/app-header'
-import { Footer } from '@/shared/ui/footer'
 import { formatPhoneNumber } from '@/shared/utils/format-phone-number'
 import { formatSnils } from '@/shared/utils/format-snils'
 
@@ -191,11 +189,6 @@ export const ProfilePage = () => {
 
     return (
         <Box bg={{ base: 'white', md: 'gray.100' }} minH='100vh'>
-            {/* Header */}
-            <Box maxW='1280px' mx='auto' position='sticky' top={0} w='100%' zIndex={1000}>
-                <AppHeader />
-            </Box>
-
             <Container maxW='640px' mx='auto' pb='16px' pt={{ base: 0, md: 10 }} px='20px'>
                 <VStack align='stretch' gap='40px'>
                     {/* Benefits Section */}
@@ -485,7 +478,6 @@ export const ProfilePage = () => {
                                                     {group.status ===
                                                         VERIFICATION_STATUS.VERIFIED && (
                                                         <Button
-                                                            _active={{ bg: 'blue.50', borderColor: 'blue.300' }}    
                                                             aria-label='Просмотреть удостоверение'
                                                             borderRadius={'2xl'}
                                                             colorPalette='blue'
@@ -493,6 +485,10 @@ export const ProfilePage = () => {
                                                             transition='all 0.2s'
                                                             variant='outline'
                                                             w='full'
+                                                            _active={{
+                                                                bg: 'blue.50',
+                                                                borderColor: 'blue.300',
+                                                            }}
                                                         >
                                                             <Flex align='center' gap='12px'>
                                                                 <Icon
@@ -637,8 +633,6 @@ export const ProfilePage = () => {
                 onDownloadPDF={handleDownloadPDF}
                 onOpenChange={setIsCertificateDrawerOpen}
             />
-
-            <Footer />
         </Box>
     )
 }
