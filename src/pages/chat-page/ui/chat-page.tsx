@@ -14,7 +14,7 @@ import {
     InputGroup,
 } from '@chakra-ui/react'
 import { X, SendHorizontal } from 'lucide-react'
-import { useNavigate } from '@tanstack/react-router'
+import { useCanGoBack, useNavigate, useRouter } from '@tanstack/react-router'
 
 import { usePostChatStart } from '@/shared/api/generated/hooks/usePostChatStart'
 import { usePostChatMessage } from '@/shared/api/generated/hooks/usePostChatMessage'
@@ -26,6 +26,8 @@ import { useDeviceDetect } from '@/shared/hooks/use-device-detect'
 
 export const ChatPage = () => {
     const navigate = useNavigate()
+    const router = useRouter()
+    const canGoBack = useCanGoBack()
     const { isMobile } = useDeviceDetect()
     const [messages, setMessages] = useState<ChatMessage[]>([])
     const [inputValue, setInputValue] = useState('')
@@ -237,7 +239,7 @@ export const ChatPage = () => {
                             aria-label='Назад'
                             minH={{ base: '56px', md: '56px' }}
                             minW={{ base: '56px', md: '56px' }}
-                            onClick={() => navigate({ to: '/benefits' })}
+                            onClick={() => canGoBack ? router.history.back() : navigate({ to: '/' })}
                         >
                             <X color='white' size={isMobile ? 24 : 24} />
                         </IconButton>

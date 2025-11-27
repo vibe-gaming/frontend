@@ -1,42 +1,41 @@
 import { Box, IconButton } from '@chakra-ui/react'
-import { MessageCircle } from 'lucide-react'
 import { useLocation, useNavigate } from '@tanstack/react-router'
 
-import { useDeviceDetect } from '@/shared/hooks/use-device-detect'
+import chatBotIcon from '@/shared/assets/icons/chat-bot.svg'
 
 export const ChatWidget = () => {
     const navigate = useNavigate()
     const location = useLocation()
-    const { isMobile } = useDeviceDetect()
 
-    // Скрываем кнопку на странице чата
-    const isChatPage = location.pathname === '/chat'
+    // Скрываем кнопку на странице чата и страницах регистрации
+    const isChatPage = location.pathname === '/chat' || location.pathname.startsWith('/chat/')
+    const isRegisterPage = location.pathname.startsWith('/register') || location.pathname.startsWith('/login')
 
     const handleOpenChat = () => {
         navigate({ to: '/chat' })
     }
 
-    if (isChatPage) {
+    if (isChatPage || isRegisterPage) {
         return null
     }
 
     return (
         <Box
             position='fixed'
-            bottom={{ base: 4, md: 4 }}
-            right={{ base: 4, md: 4 }}
+            right={{ base: 3, md: 6 }}
+            top='65%'
+            transform='translateY(-50%)'
             zIndex={1000}
         >
             <IconButton
                 aria-label='Открыть чат'
-                bg='blue.solid'
+                variant='ghost'
                 borderRadius='full'
-                color='white'
-                colorPalette='blue'
-                h={{ base: '56px', md: '64px' }}
+
+                h={{ base: '88px', md: '88px' }}
                 shadow='xl'
                 size='xl'
-                w={{ base: '56px', md: '64px' }}
+                w={{ base: '88px', md: '88px' }}
                 onClick={handleOpenChat}
                 _hover={{
                     transform: 'scale(1.05)',
@@ -47,7 +46,15 @@ export const ChatWidget = () => {
                 }}
                 transition='all 0.2s'
             >
-                <MessageCircle size={isMobile ? 28 : 32} />
+                <img
+                    alt='Чат бот'
+                    src={chatBotIcon}
+                    style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'contain',
+                    }}
+                />
             </IconButton>
         </Box>
     )
