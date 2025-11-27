@@ -17,20 +17,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 function Root() {
     return (
         <>
-            {globalThis.location.pathname !== '/login' && (
-                // <Box
-                //     bg='white'
-                //     maxW='1280px'
-                //     mx='auto'
-                //     position='sticky'
-                //     top={0}
-                //     w='100%'
-                //     zIndex={1000}
-                // >
-                //     <AppHeader />
-                // </Box>
-                <AppHeader />
-            )}
+            <AppHeader />
             <Outlet />
             <Footer />
         </>

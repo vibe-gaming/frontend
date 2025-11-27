@@ -19,8 +19,10 @@ export const BviButton = () => {
             className='bvi-open'
             color='blue.solid'
             colorPalette='blue'
-            disabled={location.pathname === '/benefits'}
+            cursor={location.pathname === '/benefits' ? 'not-allowed' : 'pointer'}
             fontSize={{ base: 'lg', md: 'xl' }}
+            opacity={location.pathname === '/benefits' ? 0 : 1}
+            pointerEvents={location.pathname === '/benefits' ? 'none' : 'auto'}
             px={{ base: 3.5, md: 7 }}
             size={{ base: 'xl', md: '2xl' }}
             transition='all 0.2s'
