@@ -1,6 +1,8 @@
 import { type QueryClient } from '@tanstack/react-query'
 import { createRootRouteWithContext, Outlet } from '@tanstack/react-router'
 
+import { ChatWidget } from '@/widgets/chat-widget'
+
 export interface MyRouterContext {
     queryClient: QueryClient
     isAuthenticated?: boolean
@@ -15,6 +17,7 @@ function Root() {
     return (
         <>
             <Outlet />
+            <ChatWidget />
         </>
     )
 }
