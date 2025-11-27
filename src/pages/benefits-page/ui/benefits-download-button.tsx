@@ -57,7 +57,9 @@ export const BenefitsDownloadButton = () => {
 
     return (
         <Button
-            _active={{ bg: 'blue.100' }}
+            _active={{ bg: 'white' }}
+            variant='surface'
+            color='blue.fg'
             colorPalette='blue'
             disabled={isDownloadingPDF}
             loading={isDownloadingPDF}
@@ -65,7 +67,6 @@ export const BenefitsDownloadButton = () => {
             rounded={{ base: '2xl', md: 'xl' }}
             size={{ base: '2xl', md: 'xl' }}
             transition='all 0.2s'
-            variant='surface'
             w='full'
             onClick={handleDownloadPDF}
         >

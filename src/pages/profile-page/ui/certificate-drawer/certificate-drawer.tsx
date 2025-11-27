@@ -167,19 +167,17 @@ export const CertificateDrawer = ({
 
     const downloadButton = (
         <Button
-            _active={{ bg: 'blue.100' }}
-            border="1px solid"
-            borderColor="blue.muted"
-            borderRadius="2xl"
-            color="blue.fg"
+            _active={{ bg: 'white' }}
+            variant='surface'
+            color='blue.fg'
             colorPalette='blue'
+            borderRadius="2xl"
             fontSize="xl"
             fontWeight="normal"
             lineHeight="30px"
             loading={isDownloading}
             size="2xl"
             transition='all 0.2s'
-            variant='surface'
             w="full"
             onClick={onDownloadPDF}
         >

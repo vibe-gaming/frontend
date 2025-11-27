@@ -646,11 +646,8 @@ export const BenefitDrawer = ({
                     {/* Кнопка скачивания PDF - только когда есть интернет */}
                     {!isOfflineMode && (
                         <Button
-                            _active={{ bg: 'blue.100' }}
-                            // _hover={{ bg: 'blue.subtleHover' }}
-                            // bg='blue.subtle'
-                            border='1px solid'
-                            borderColor='blue.muted'
+                            _active={{ bg: 'white' }}
+                            variant='surface'
                             borderRadius='2xl'
                             color='blue.fg'
                             colorPalette='blue'
@@ -662,7 +659,6 @@ export const BenefitDrawer = ({
                             ml={{ base: 'auto', md: 'auto' }}
                             size='2xl'
                             transition='all 0.2s'
-                            variant='surface'
                             w={{ base: 'full', md: '218px' }}
                             onClick={handleDownloadPDF}
                         >
