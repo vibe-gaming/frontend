@@ -35,8 +35,10 @@ export const ChatPage = () => {
     const [isSendingMessage, setIsSendingMessage] = useState(false)
     const [selectedBenefitId, setSelectedBenefitId] = useState<string | null>(null)
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+    const [isInitialLoading, setIsInitialLoading] = useState(true)
     const messagesContainerRef = useRef<HTMLDivElement>(null)
     const hasStartedChatRef = useRef(false)
+    const isInitialLoadingRef = useRef(true)
     const chatStartMutation = usePostChatStart()
     const chatMessageMutation = usePostChatMessage()
     const chatStartMutationRef = useRef(chatStartMutation)
@@ -82,6 +84,8 @@ export const ChatPage = () => {
             // Если сообщений нет и чат еще не был запущен, запускаем чат
             hasStartedChatRef.current = true
             setIsStartingChat(true)
+            setIsInitialLoading(true) // Показываем loader при первом заходе
+            isInitialLoadingRef.current = true
             chatStartMutationRef.current.mutateAsync()
                 .then((response) => {
                     if (response.message) {
@@ -99,6 +103,8 @@ export const ChatPage = () => {
                 .catch((error) => {
                     console.error('Failed to start chat:', error)
                     hasStartedChatRef.current = false // Разрешаем повторную попытку при ошибке
+                    setIsInitialLoading(false)
+                    isInitialLoadingRef.current = false
                 })
                 .finally(() => {
                     scrollToBottom()
@@ -199,10 +205,47 @@ export const ChatPage = () => {
     }
 
     const scrollToBottom = () => {
-        const container = messagesContainerRef.current
-        if (container) {
-            container.scrollTop = container.scrollHeight + 32
-        }
+        // Прокручиваем body или window
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                // Прокручиваем к самому низу документа + 50px отступ
+                window.scrollTo({
+                    top: document.documentElement.scrollHeight + 50,
+                    behavior: 'smooth',
+                })
+                
+                // Если показывается initial loader, проверяем завершение скролла
+                if (isInitialLoadingRef.current) {
+                    // Проверяем каждые 50ms, доскроллился ли до конца
+                    const checkScrollComplete = () => {
+                        const scrollTop = window.pageYOffset || document.documentElement.scrollTop
+                        const scrollHeight = document.documentElement.scrollHeight
+                        const clientHeight = window.innerHeight
+                        const isAtBottom = scrollTop + clientHeight >= scrollHeight - 10 // Небольшой допуск
+                        
+                        if (isAtBottom) {
+                            setTimeout(() => {
+                                setIsInitialLoading(false)
+                                isInitialLoadingRef.current = false
+                            }, 100)
+                        } else {
+                            setTimeout(checkScrollComplete, 50)
+                        }
+                    }
+                    
+                    // Начинаем проверку после небольшой задержки
+                    setTimeout(checkScrollComplete, 100)
+                    
+                    // Fallback: убираем loader через 3 секунды на случай, если скролл не сработал
+                    setTimeout(() => {
+                        if (isInitialLoadingRef.current) {
+                            setIsInitialLoading(false)
+                            isInitialLoadingRef.current = false
+                        }
+                    }, 3000)
+                }
+            })
+        })
     }
 
     const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
@@ -420,6 +463,23 @@ export const ChatPage = () => {
                     setSelectedBenefitId(null)
                 }}
             />
+            {/* Loader при первом заходе */}
+            {isInitialLoading && (
+                <Box
+                    position='fixed'
+                    top={"56px"}
+                    left={0}
+                    right={0}
+                    bottom={0}
+                    bg='blue.600'
+                    zIndex={10000}
+                    display='flex'
+                    alignItems='center'
+                    justifyContent='center'
+                >
+                    <Spinner size='xl' color='white' />
+                </Box>
+            )}
         </Box>
     )
 }
