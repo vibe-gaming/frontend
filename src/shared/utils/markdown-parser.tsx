@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import { type ReactNode } from 'react'
 
 interface MarkdownNode {
     type: 'text' | 'bold' | 'italic' | 'code' | 'link' | 'lineBreak'
