@@ -23,7 +23,7 @@ export const LoginPage = () => {
     const [isMobile] = useMediaQuery(['(max-width: 767px)'])
 
     return (
-        <AuthPageBox>
+        <AuthPageBox minH={{ base: 'calc(100dvh - 56px)', md: 'calc(100dvh - 144px)' }}>
             <Show when={isMobile}>
                 <AuthHeaderMobile
                     postfixElement={

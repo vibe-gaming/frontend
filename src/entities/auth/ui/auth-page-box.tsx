@@ -1,9 +1,9 @@
 import React from 'react'
-import { Box } from '@chakra-ui/react'
+import { Box, type BoxProps } from '@chakra-ui/react'
 
 import { useDeviceDetect } from '@/shared/hooks/use-device-detect'
 
-export const AuthPageBox: React.FC<React.PropsWithChildren> = ({ children }) => {
+export const AuthPageBox: React.FC<BoxProps> = ({ children, ...props }) => {
     const { isDesktop } = useDeviceDetect()
 
     return (
@@ -16,6 +16,7 @@ export const AuthPageBox: React.FC<React.PropsWithChildren> = ({ children }) => 
             px={{ base: '16px', md: '0' }}
             py={isDesktop ? '0' : '20px'}
             w='100%'
+            {...props}
         >
             {children}
         </Box>
