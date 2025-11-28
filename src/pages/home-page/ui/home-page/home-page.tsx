@@ -155,6 +155,7 @@ export const HomePage = () => {
                         transition='all 0.2s'
                         variant='solid'
                         w='full'
+                        colorPalette='blue'
                         onClick={() => navigate({ to: '/benefits' })}
                     >
                         Смотреть льготы

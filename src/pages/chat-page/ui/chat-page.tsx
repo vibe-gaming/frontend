@@ -246,7 +246,7 @@ export const ChatPage = () => {
                     </Box>
 
                     {/* Кнопка начать новый чат */}
-                    {messages.length > 1 && (
+                    {/* {messages.length > 1 && (
                         <Box flexShrink={0} mx={4} borderBottomRadius='3xl' mt={2}>
                             <Button
                                 variant='surface'
@@ -270,20 +270,20 @@ export const ChatPage = () => {
                                 Начать новый чат
                             </Button>
                         </Box>
-                    )}
+                    )} */}
 
                     {/* Область сообщений */}
                     <Box
                         ref={messagesContainerRef}
                         px={{ base: 4, md: 6 }}
                         // position='relative'
-                        mt={"-16px"}
+                        // mt={"-16px"}
                         mb={"-32px"}
-                        pt={"32px"}
+                        // pt={"32px"}
                         pb={"16px"}
                         flex={1}
                         minH={0}
-                        maxH={messages.length > 1 ? 'calc(100vh - 176px)' : 'calc(100vh - 112px)'}
+                        maxH={'calc(100vh - 120px)'}
                         w='100%'
                         overflowY='auto'
                         overflowX='hidden'
