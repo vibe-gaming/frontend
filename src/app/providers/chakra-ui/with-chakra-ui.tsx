@@ -7,8 +7,8 @@ import { customSystem } from './theme'
 
 export const WithChakraUI: React.FC<React.PropsWithChildren> = ({ children }) => {
     return (
-        <LightMode>
-            <ChakraProvider value={customSystem}>{children}</ChakraProvider>
-        </LightMode>
+        <ChakraProvider value={customSystem}>
+            <LightMode>{children}</LightMode>
+        </ChakraProvider>
     )
 }
