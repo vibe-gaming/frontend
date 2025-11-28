@@ -257,18 +257,18 @@ export const ChatPage = () => {
     }
 
     return (
-        <Box minH='100vh' bg='blue.600' display='flex' flexDirection='column'>
+        <Box minH='100vh' bg='blue.600' display='flex' flexDirection='column' position='absolute' left={0} right={0} top={0} bottom={0} zIndex={10}>
             <Box maxW='1200px' w='100%' mx='auto' flex={1} display='flex' flexDirection='column' pb={{ base: 24, md: 28 }}>
-                <VStack align='stretch' gap={0} flex={1} minH={0} w='100%' position='relative'>
+                <VStack align='stretch' gap={0} flex={1} minH={0} w='100%' maxW='600px' mx='auto' position='relative'>
                     {/* Заголовок с кнопкой назад */}
-                    <Box height='56px' w='100%' position='fixed' top={0} zIndex={100} bg='blue.600'>
+                    <Box height={{ base: '56px', md: '64px' }} w='100%' maxW='600px' mx='auto' position='fixed' top={0} left={0} right={0} zIndex={100} bg='blue.600'>
                         <Heading
                             height='100%'
                             display='flex'
                             alignItems='center'
                             justifyContent='center'
                             fontSize={{ base: 'xl', md: '2xl' }}
-                            lineHeight={{ base: '30px', md: '30px' }}
+                            lineHeight={{ base: '30px', md: '38px' }}
                             fontWeight='bold'
                             w='100%'
                             textAlign='center'
@@ -282,11 +282,11 @@ export const ChatPage = () => {
                             right={0}
                             top={0}
                             aria-label='Назад'
-                            minH={{ base: '56px', md: '56px' }}
-                            minW={{ base: '56px', md: '56px' }}
+                            minH={{ base: '56px', md: '64px' }}
+                            minW={{ base: '56px', md: '64px' }}
                             onClick={() => canGoBack ? router.history.back() : navigate({ to: '/' })}
                         >
-                            <X color='white' size={isMobile ? 24 : 24} />
+                            {isMobile ? <X color='white' size={24} /> : <X color='white' size={40} />}
                         </IconButton>
                     </Box>
                     {/* Кнопка начать новый чат */}
@@ -319,8 +319,8 @@ export const ChatPage = () => {
                     {/* Область сообщений */}
                     <Box
                         ref={messagesContainerRef}
-                        px={{ base: 4, md: 6 }}
-                        pt={'72px'}
+                        px={{ base: 4, md: 0 }}
+                        pt={'88px'}
                         // position='relative'
                         // mt={"-16px"}
                         // mb={"-32px"}
@@ -342,7 +342,7 @@ export const ChatPage = () => {
                     >
                         <VStack
                             align='stretch'
-                            gap={{ base: 4, md: 4 }}
+                            gap={{ base: 4, md: 5 }}
                             flex={1}
                             justifyContent='flex-end'
                             flexDirection='column'
@@ -402,7 +402,7 @@ export const ChatPage = () => {
                     left={4}
                     right={4}
                     pb={4}
-                    maxW='1200px'
+                    maxW='600px'
                     mx='auto'
                     borderTopRadius='3xl'
                 >
