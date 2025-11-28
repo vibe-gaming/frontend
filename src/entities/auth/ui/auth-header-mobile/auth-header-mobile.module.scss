@@ -11,8 +11,7 @@
     justify-content: space-between;
     background-color: #fff;
     grid-area: header;
-    grid-template:
-        'title postfix' 56px / 1fr 56px;
+
 
     &__title {
         font-size: 18px;
@@ -23,8 +22,6 @@
 
     &__postfix {
         display: flex;
-        width: 56px;
-        height: 56px;
         align-items: center;
         justify-content: center;
         grid-area: postfix;
