@@ -1,10 +1,9 @@
 import { type QueryClient } from '@tanstack/react-query'
 import { createRootRouteWithContext, Outlet, useLocation } from '@tanstack/react-router'
 
-import { ChatWidget } from '@/widgets/chat-widget'
-
 import { AppHeader } from '@/shared/ui/app-header'
 import { Footer } from '@/shared/ui/footer'
+import { ChatWidget } from '@/widgets/chat-widget'
 
 export interface MyRouterContext {
     queryClient: QueryClient
@@ -19,11 +18,10 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 function Root() {
     const location = useLocation()
     const isChatPage = location.pathname === '/chat' || location.pathname.startsWith('/chat/')
-    const isLoginPage = location.pathname === '/login'
 
     return (
         <>
-            {!isLoginPage && !isChatPage && <AppHeader />}
+            <AppHeader />
             <Outlet />
             <ChatWidget />
             {!isChatPage && <Footer />}

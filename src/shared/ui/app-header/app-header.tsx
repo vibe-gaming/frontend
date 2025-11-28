@@ -33,13 +33,19 @@ export const AppHeader = ({ isAuthPages = false }) => {
 
     // Определяем, находимся ли мы на главной странице
     const isHomePage = location.pathname === '/'
+    const isChatPage = location.pathname === '/chat' || location.pathname.startsWith('/chat/')
+    const isMobileLoginPage = location.pathname === '/login' && !isDesktop
 
     return (
         <Box
+            cursor={isChatPage || isMobileLoginPage ? 'not-allowed' : 'pointer'}
+            height={isChatPage || isMobileLoginPage ? '0' : 'auto'}
             maxW='1280px'
             mb={{ base: 5, md: 0 }}
-            mt={{ base: 4, md: 10 }}
+            mt={isChatPage || isMobileLoginPage ? 0 : { base: 4, md: 10 }}
             mx='auto'
+            opacity={isChatPage || isMobileLoginPage ? 0 : 1}
+            pointerEvents={isChatPage || isMobileLoginPage ? 'none' : 'auto'}
             position='sticky'
             top={0}
             w='100%'
@@ -47,9 +53,9 @@ export const AppHeader = ({ isAuthPages = false }) => {
         >
             <Box
                 bg='white'
-                px={{ base: 4, md: 6 }}
+                px={{ base: 4, md: 12 }}
                 py={{ base: 2, md: 5 }}
-                rounded={{ base: '0', md: '3xl' }}
+                roundedBottom={{ base: '0', md: '3xl' }}
             >
                 <Flex align='center' justify='space-between'>
                     {/* Логотип слева */}
@@ -60,7 +66,6 @@ export const AppHeader = ({ isAuthPages = false }) => {
                             aria-label='Логотип'
                             bg='transparent'
                             borderRadius='16px'
-                            color='white'
                             colorPalette='gray'
                             h='48px'
                             minW='48px'
@@ -79,25 +84,25 @@ export const AppHeader = ({ isAuthPages = false }) => {
                                 style={{ display: 'block' }}
                                 width='48'
                             />
-                        </IconButton>
-                        <Show when={isDesktop}>
-                            <Heading
-                                as='h3'
-                                fontSize='4xl'
-                                fontWeight='extrabold'
-                                lineHeight='40px'
-                            >
-                                мои
-                                <Text
-                                    as='span'
-                                    color='blue.solid'
+                            <Show when={isDesktop}>
+                                <Heading
+                                    as='h3'
+                                    fontSize='4xl'
                                     fontWeight='extrabold'
                                     lineHeight='40px'
                                 >
-                                    льготы
-                                </Text>
-                            </Heading>
-                        </Show>
+                                    мои
+                                    <Text
+                                        as='span'
+                                        color='blue.solid'
+                                        fontWeight='extrabold'
+                                        lineHeight='40px'
+                                    >
+                                        льготы
+                                    </Text>
+                                </Heading>
+                            </Show>
+                        </IconButton>
                     </HStack>
 
                     {/* Кнопка навигации и иконка профиля справа */}
