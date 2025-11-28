@@ -101,6 +101,7 @@ export const ChatPage = () => {
                     hasStartedChatRef.current = false // Разрешаем повторную попытку при ошибке
                 })
                 .finally(() => {
+                    scrollToBottom()
                     setIsStartingChat(false)
                 })
         }
@@ -123,6 +124,7 @@ export const ChatPage = () => {
     // Прокрутка к последнему сообщению
     useEffect(() => {
         // Используем setTimeout чтобы дождаться рендеринга карточек
+        scrollToBottom()
         const timer = setTimeout(() => {
             scrollToBottom();
         }, 100)
@@ -214,9 +216,9 @@ export const ChatPage = () => {
     return (
         <Box minH='100vh' bg='blue.600' display='flex' flexDirection='column'>
             <Box maxW='1200px' w='100%' mx='auto' flex={1} display='flex' flexDirection='column' pb={{ base: 24, md: 28 }}>
-                <VStack align='stretch' gap={0} flex={1} minH={0} w='100%'>
+                <VStack align='stretch' gap={0} flex={1} minH={0} w='100%' position='relative'>
                     {/* Заголовок с кнопкой назад */}
-                    <Box position='relative' height='56px' borderBottomRadius='3xl'>
+                    <Box height='56px' w='100%' position='fixed' top={0} zIndex={100} bg='blue.600'>
                         <Heading
                             height='100%'
                             display='flex'
@@ -229,7 +231,7 @@ export const ChatPage = () => {
                             textAlign='center'
                             color='white'
                         >
-                            Чат бот
+                            Виртуальный помощник
                         </Heading>
                         <IconButton
                             position='absolute'
@@ -244,9 +246,8 @@ export const ChatPage = () => {
                             <X color='white' size={isMobile ? 24 : 24} />
                         </IconButton>
                     </Box>
-
                     {/* Кнопка начать новый чат */}
-                    {messages.length > 1 && (
+                    {/* {messages.length > 1 && (
                         <Box flexShrink={0} mx={4} borderBottomRadius='3xl' mt={2}>
                             <Button
                                 variant='surface'
@@ -270,20 +271,22 @@ export const ChatPage = () => {
                                 Начать новый чат
                             </Button>
                         </Box>
-                    )}
+                    )} */}
 
                     {/* Область сообщений */}
                     <Box
                         ref={messagesContainerRef}
                         px={{ base: 4, md: 6 }}
+                        pt={'72px'}
                         // position='relative'
-                        mt={"-16px"}
-                        mb={"-32px"}
-                        pt={"32px"}
-                        pb={"16px"}
+                        // mt={"-16px"}
+                        // mb={"-32px"}
+                        // pt={"32px"}
+                        // pb={"16px"}
                         flex={1}
                         minH={0}
-                        maxH={messages.length > 1 ? 'calc(100vh - 176px)' : 'calc(100vh - 112px)'}
+                        // maxH={'calc(100dvh - 120px)'}
+                        h={'100%'}
                         w='100%'
                         overflowY='auto'
                         overflowX='hidden'
@@ -300,7 +303,6 @@ export const ChatPage = () => {
                             flex={1}
                             justifyContent='flex-end'
                             flexDirection='column'
-                            mb={"16px"}
                         >
                             {messages.length === 0 && isStartingChat && (
                                 <Box textAlign='center' pb={8}>
@@ -352,11 +354,11 @@ export const ChatPage = () => {
                 <Box
                     bg='blue.600'
                     position='fixed'
+                    zIndex={100}
                     bottom={0}
                     left={4}
                     right={4}
                     pb={4}
-                    zIndex={100}
                     maxW='1200px'
                     mx='auto'
                     borderTopRadius='3xl'
@@ -405,6 +407,7 @@ export const ChatPage = () => {
                             bg='transparent'
                             borderRadius='2xl'
                             color='fg.subtle'
+                            pr={"60px !important"}
                         />
                     </InputGroup>
                 </Box>

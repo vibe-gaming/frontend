@@ -23,8 +23,8 @@ export const ChatWidget = () => {
         <Box
             position='fixed'
             right={{ base: 3, md: 6 }}
-            top='65%'
-            transform='translateY(-50%)'
+            bottom='40px'
+            // transform='translateY(-50%)'
             zIndex={1000}
         >
             <IconButton
