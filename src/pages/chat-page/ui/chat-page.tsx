@@ -101,6 +101,7 @@ export const ChatPage = () => {
                     hasStartedChatRef.current = false // Разрешаем повторную попытку при ошибке
                 })
                 .finally(() => {
+                    scrollToBottom()
                     setIsStartingChat(false)
                 })
         }
@@ -123,6 +124,7 @@ export const ChatPage = () => {
     // Прокрутка к последнему сообщению
     useEffect(() => {
         // Используем setTimeout чтобы дождаться рендеринга карточек
+        scrollToBottom()
         const timer = setTimeout(() => {
             scrollToBottom();
         }, 100)
@@ -405,6 +407,7 @@ export const ChatPage = () => {
                             bg='transparent'
                             borderRadius='2xl'
                             color='fg.subtle'
+                            pr={"60px !important"}
                         />
                     </InputGroup>
                 </Box>
