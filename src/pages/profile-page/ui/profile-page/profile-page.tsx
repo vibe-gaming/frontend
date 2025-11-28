@@ -180,7 +180,7 @@ export const ProfilePage = () => {
                 bg='gray.50'
                 display='flex'
                 justifyContent='center'
-                minH='100vh'
+                minH={{ base: 'calc(100dvh - 100px)', md: 'calc(100dvh - 144px)' }}
             >
                 <Spinner color='blue.500' size='xl' />
             </Box>

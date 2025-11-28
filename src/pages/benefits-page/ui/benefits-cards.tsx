@@ -17,7 +17,11 @@ export const BenefitsCards: React.FC<BenefitsCardsProps> = ({ benefits, isLoadin
 
     if (isLoading) {
         return (
-            <Box py={12} textAlign='center'>
+            <Box
+                minH={{ base: 'calc(100dvh - 100px)', md: 'calc(100dvh - 144px)' }}
+                py={12}
+                textAlign='center'
+            >
                 <Spinner size='lg' />
             </Box>
         )

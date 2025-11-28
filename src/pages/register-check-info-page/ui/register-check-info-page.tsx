@@ -36,6 +36,7 @@ export const RegisterCheckInfoPage = () => {
                             border={isDesktop ? 'none' : '1px solid'}
                             borderColor='blue.200'
                             borderRadius='20px'
+                            minH={{ base: 'calc(100dvh - 100px)', md: 'calc(100dvh - 144px)' }}
                             p='16px'
                         >
                             {isLoading ? (
