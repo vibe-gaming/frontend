@@ -18,13 +18,15 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 function Root() {
     const location = useLocation()
     const isChatPage = location.pathname === '/chat' || location.pathname.startsWith('/chat/')
+    const isAuthPages =
+        location.pathname.startsWith('/login') || location.pathname.startsWith('/register')
 
     return (
         <>
             <AppHeader />
             <Outlet />
             <ChatWidget />
-            {!isChatPage && <Footer />}
+            {!isChatPage && !isAuthPages && <Footer />}
         </>
     )
 }

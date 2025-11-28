@@ -5,7 +5,7 @@ import { useLocation } from '@tanstack/react-router'
 import { EyeIcon } from 'lucide-react'
 
 export const BviButton = () => {
-    const [isDesktop] = useMediaQuery(['(min-width: 768px)'])
+    const [isMobile] = useMediaQuery(['(max-width: 1023px)'])
     const location = useLocation()
 
     useEffect(() => {
@@ -23,7 +23,7 @@ export const BviButton = () => {
             fontSize={{ base: 'lg', md: 'xl' }}
             opacity={location.pathname === '/benefits' ? 0 : 1}
             pointerEvents={location.pathname === '/benefits' ? 'none' : 'auto'}
-            px={{ base: 3.5, md: 7 }}
+            px={{ base: 3.5, lg: 7 }}
             size={{ base: 'xl', md: '2xl' }}
             transition='all 0.2s'
             variant='outline'
@@ -32,7 +32,7 @@ export const BviButton = () => {
             }}
         >
             <EyeIcon />
-            <Show when={isDesktop}>Версия для Слабовидящих</Show>
+            <Show when={!isMobile}>Версия для Слабовидящих</Show>
         </Button>
     )
 }
