@@ -11,7 +11,7 @@ export const AuthPageBox: React.FC<React.PropsWithChildren> = ({ children }) => 
             display='flex'
             flexDirection='column'
             maxW='1280px'
-            minH={{ base: 'calc(100dvh - 84px)', md: 'calc(100dvh - 144px)' }}
+            minH={{ base: 'calc(100dvh - 100px)', md: 'calc(100dvh - 144px)' }}
             mx='auto'
             px={{ base: '16px', md: '0' }}
             py={isDesktop ? '0' : '20px'}
