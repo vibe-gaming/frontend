@@ -41,7 +41,7 @@ export const AppHeader = ({ isAuthPages = false }) => {
             cursor={isChatPage || isMobileLoginPage ? 'not-allowed' : 'pointer'}
             height={isChatPage || isMobileLoginPage ? '0' : 'auto'}
             maxW='1280px'
-            mb={{ base: 5, md: 0 }}
+            mb={isChatPage || isMobileLoginPage ? 0 : { base: 5, md: 0 }}
             mt={isChatPage || isMobileLoginPage ? 0 : { base: 4, md: 10 }}
             mx='auto'
             opacity={isChatPage || isMobileLoginPage ? 0 : 1}
