@@ -145,6 +145,7 @@ export const HomePage = () => {
                     {/* CTA Button - вне баннера только на mobile */}
                     <Button
                         _active={{ bg: 'blue.700' }}
+                        colorPalette='blue'
                         display={{ base: 'flex', md: 'none' }}
                         fontSize='xl'
                         fontWeight='medium'
