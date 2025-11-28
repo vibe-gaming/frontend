@@ -17,7 +17,7 @@ import logoIcon from '@/shared/assets/icons/logo.svg'
 import { useOnlineStatus } from '@/shared/hooks/use-online-status'
 import { BviButton } from '@/shared/libs/bvi'
 
-export const AppHeader = ({ isAuthPages = false }) => {
+export const AppHeader = () => {
     const navigate = useNavigate()
     const location = useLocation()
     const [isDesktop] = useMediaQuery(['(min-width: 768px)']) // 768px is the breakpoint for desktop
@@ -35,6 +35,8 @@ export const AppHeader = ({ isAuthPages = false }) => {
     const isHomePage = location.pathname === '/'
     const isChatPage = location.pathname === '/chat' || location.pathname.startsWith('/chat/')
     const isMobileLoginPage = location.pathname === '/login' && !isDesktop
+    const isAuthPages =
+        location.pathname.startsWith('/login') || location.pathname.startsWith('/register')
 
     return (
         <Box

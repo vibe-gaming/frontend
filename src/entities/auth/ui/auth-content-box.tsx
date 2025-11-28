@@ -7,7 +7,7 @@ export const AuthContentBox: React.FC<BoxProps> = ({ children, ...props }) => {
             display='flex'
             flexDirection='column'
             flexGrow={1}
-            pt={{ base: '20px', md: '34px' }}
+            pt={{ base: 0, md: '34px' }}
             px={{ base: 0, md: 12 }}
             {...props}
         >
